@@ -36,7 +36,7 @@ https://nodejs.org
 
 ⚙️ Cài đặt project
 1. Clone repository
-git clone https://github.com/ten-repo.git
+git clone https://github.com/duy-301205/summarize_papers.git
 2. Di chuyển vào thư mục chứa file src project
 cd summarize_papers
 3. Cài đặt dependencies
@@ -47,3 +47,13 @@ npm run dev
 Sau đó truy cập:
 
 http://localhost:5173
+
+🤝 Đóng góp
+
+- Tạo branch mới
+
+- Commit thay đổi
+
+- Push lên GitHub
+
+- Tạo Pull Request
