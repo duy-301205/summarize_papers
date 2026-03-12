@@ -4,12 +4,12 @@
 
 🛠️ Công nghệ sử dụng
 
-React
+- React
 
-Vite
+- Vite
 
-JavaScript
+- JavaScript
 
-Axios / Fetch API
+- Axios / Fetch API
 
-CSS / TailwindCSS
+- CSS / TailwindCSS
