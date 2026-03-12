@@ -18,17 +18,17 @@
 
 Trước khi chạy project, cần cài đặt:
 
-Node.js (>= 18.x)
+- Node.js (>= 18.x)
 
-npm (được cài sẵn cùng Node.js)
+- npm (được cài sẵn cùng Node.js)
 
 Kiểm tra Node.js đã được cài đặt hay chưa:
 
-node -v
+- node -v
 
 Kiểm tra npm:
 
-npm -v
+- npm -v
 
 Nếu chưa cài đặt Node.js, tải tại:
 
