@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Thêm useNavigate
+import { useNavigate } from "react-router-dom";
 import {
   Beaker,
   UploadCloud,
@@ -20,7 +20,7 @@ import TopicsChart from "../components/TopicsChart";
 import NotificationDropdown from "../components/NotificationDropdown";
 
 const Dashboard = () => {
-  const navigate = useNavigate(); // Khởi tạo navigate để chuyển trang
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen bg-[#f6f6f8] font-display text-slate-900 overflow-hidden">
@@ -31,7 +31,7 @@ const Dashboard = () => {
             <Beaker size={24} strokeWidth={2.5} />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-slate-900 text-lg font-bold leading-tight tracking-tight font-display">
+            <h1 className="text-slate-900 text-lg font-bold leading-tight tracking-tight font-display text-nowrap">
               SciSum AI
             </h1>
             <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
@@ -60,7 +60,7 @@ const Dashboard = () => {
           <NavItem
             to="/settings"
             icon={<Settings size={18} />}
-            label="AI Settings"
+            label="Settings Profile"
           />
         </nav>
 
@@ -89,7 +89,6 @@ const Dashboard = () => {
 
       {/* 2. Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden font-display">
-        {/* Top Header Bar */}
         <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
           <div className="flex-1 max-w-xl">
             <div className="relative group">
@@ -107,11 +106,15 @@ const Dashboard = () => {
 
           <div className="flex items-center gap-6">
             <NotificationDropdown />
-
             <div className="h-8 w-px bg-slate-200"></div>
-            <div className="flex items-center gap-3 pl-2">
+
+            {/* PHẦN CLICK VÀO AVATAR ĐỂ VÀO PROFILE */}
+            <div
+              onClick={() => navigate("/settings")}
+              className="flex items-center gap-3 pl-2 cursor-pointer hover:opacity-80 transition-all group"
+            >
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold text-slate-900 leading-none">
+                <p className="text-sm font-bold text-slate-900 leading-none group-hover:text-[#1111d4] transition-colors">
                   Hoàng Mạnh Duy
                 </p>
                 <p className="text-[10px] font-bold text-[#1111d4] uppercase mt-1 tracking-tighter">
@@ -119,7 +122,7 @@ const Dashboard = () => {
                 </p>
               </div>
               <img
-                className="size-10 rounded-full border-2 border-blue-100 shadow-sm object-cover"
+                className="size-10 rounded-full border-2 border-blue-100 shadow-sm object-cover group-hover:border-[#1111d4] transition-all"
                 src="https://i.pravatar.cc/150?u=duy"
                 alt="Profile"
               />
@@ -127,7 +130,6 @@ const Dashboard = () => {
           </div>
         </header>
 
-        {/* Dashboard Content */}
         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar bg-[#f6f6f8]">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="flex justify-between items-end">
@@ -136,7 +138,7 @@ const Dashboard = () => {
                   Analytics Dashboard
                 </h2>
                 <p className="text-slate-500 mt-1 font-light text-lg italic tracking-tight">
-                  Chào bạn, hôm nay bạn muốn tóm tắt tài liệu gì?
+                  Chào Duy, hôm nay bạn muốn tóm tắt tài liệu gì?
                 </p>
               </div>
               <button
@@ -189,7 +191,6 @@ const Dashboard = () => {
                 <h4 className="font-black text-slate-900 uppercase tracking-tight">
                   Recent Research Activity
                 </h4>
-                {/* NÚT VIEW ALL ĐÃ ĐƯỢC CHỈNH SỬA */}
                 <button
                   onClick={() => navigate("/summaries")}
                   className="text-xs font-black text-[#1111d4] hover:underline cursor-pointer uppercase tracking-widest"

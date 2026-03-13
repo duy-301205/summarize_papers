@@ -94,7 +94,7 @@ const UploadArticle = () => {
           <NavItem
             to="/settings"
             icon={<Settings size={18} />}
-            label="AI Settings"
+            label="Settings Profile"
           />
         </nav>
 

@@ -6,6 +6,7 @@ import Dashboard from "./assets/pages/Dashboard";
 import UploadArticle from "./assets/pages/UploadArticle";
 import ArticleAnalysis from "./assets/pages/ArticleAnalysis";
 import MySummaries from "./assets/pages/MySummaries";
+import Profile from "./assets/pages/Profile";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/upload" element={<UploadArticle />} />
         <Route path="/analysis" element={<ArticleAnalysis />} />
         <Route path="/summaries" element={<MySummaries />} />
+        <Route path="/settings" element={<Profile />} />
 
         <Route
           path="*"

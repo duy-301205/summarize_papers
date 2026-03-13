@@ -28,7 +28,7 @@ const ArticleAnalysis = () => {
 
   return (
     <div className="flex h-screen bg-[#f6f6f8] font-display text-slate-900 overflow-hidden">
-      {/* 1. SIDEBAR NAVIGATION */}
+      {/* 1. SIDEBAR NAVIGATION - Thêm z-20 để không bị shadow che */}
       <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 z-20">
         <div className="p-6 flex items-center gap-3">
           <div className="bg-[#1111d4] size-10 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-900/20">
@@ -45,7 +45,6 @@ const ArticleAnalysis = () => {
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-1">
-          {/* GIỮ ACTIVE Ở ĐÂY - Vì đây là kết quả của quá trình Upload */}
           <NavItem
             to="/upload"
             icon={<UploadCloud size={18} />}
@@ -65,7 +64,7 @@ const ArticleAnalysis = () => {
           <NavItem
             to="/settings"
             icon={<Settings size={18} />}
-            label="AI Model Settings"
+            label="Settings Profile"
           />
         </nav>
 
@@ -102,14 +101,14 @@ const ArticleAnalysis = () => {
 
       {/* 2. MAIN WORKSPACE AREA */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* --- HEADER --- */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10 shrink-0">
+        {/* --- HEADER - Nâng lên z-50 để đè lên mọi nội dung bên dưới --- */}
+        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-50 shrink-0 sticky top-0 font-display">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/upload")}
-              className="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors text-sm font-bold"
+              className="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors text-sm font-bold uppercase tracking-tighter cursor-pointer"
             >
-              <ArrowLeft size={18} />{" "}
+              <ArrowLeft size={18} />
               <span className="hidden sm:inline">Back to Upload</span>
             </button>
           </div>
@@ -118,13 +117,20 @@ const ArticleAnalysis = () => {
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black border border-emerald-100 mr-2 uppercase tracking-tighter">
               <CheckCircle2 size={14} /> Summary Generated
             </div>
+
             <HeaderAction icon={<Download size={18} />} label="Download" />
             <HeaderAction icon={<Copy size={18} />} label="Copy" />
-            <button className="flex items-center gap-2 bg-[#1111d4] text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+
+            <button className="flex items-center gap-2 bg-[#1111d4] text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-blue-900/20 active:scale-95 uppercase tracking-tighter mr-2 cursor-pointer">
               <Share2 size={18} /> Share
             </button>
-            <div className="h-6 w-px bg-slate-200 mx-2"></div>
-            <NotificationDropdown />
+
+            <div className="h-8 w-px bg-slate-200 mx-2"></div>
+
+            {/* Đảm bảo NotificationDropdown nằm trong một wrapper có z-index cao nhất */}
+            <div className="relative z-[100]">
+              <NotificationDropdown />
+            </div>
           </div>
         </header>
 
@@ -136,7 +142,7 @@ const ArticleAnalysis = () => {
               <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded uppercase tracking-widest mb-2 inline-block">
                 Original Article
               </span>
-              <h2 className="text-xl font-bold leading-tight mb-2 truncate font-display">
+              <h2 className="text-xl font-bold leading-tight mb-2 truncate font-display text-slate-900">
                 {ARTICLE_DATA.title}
               </h2>
               <div className="flex items-center gap-4 text-[11px] font-bold text-slate-400 uppercase tracking-tighter font-display">
@@ -155,7 +161,7 @@ const ArticleAnalysis = () => {
                   Abstract
                 </h3>
                 <p>{ARTICLE_DATA.abstract}</p>
-                <div className="bg-[#1111d4]/5 border-l-4 border-[#1111d4] p-5 rounded-r-2xl italic text-slate-700 text-sm">
+                <div className="bg-[#1111d4]/5 border-l-4 border-[#1111d4] p-5 rounded-r-2xl italic text-slate-700 text-sm font-medium">
                   "{ARTICLE_DATA.highlights[0]}"
                 </div>
                 <h3 className="font-bold text-lg text-slate-900 font-display uppercase tracking-tight">
@@ -164,16 +170,18 @@ const ArticleAnalysis = () => {
                 <p>
                   Genomic data is inherently high-dimensional and complex.
                   Traditional machine learning methods often struggle to capture
-                  the long-range dependencies within DNA sequences...
+                  the long-range dependencies within DNA sequences.
+                  Convolutional Neural Networks (CNNs) have been widely used,
+                  but they are limited by their local receptive fields...
                 </p>
               </div>
             </div>
           </section>
 
           {/* RIGHT PANEL: AI Summary */}
-          <section className="flex-1 flex flex-col bg-white min-w-0 overflow-hidden shadow-[-10px_0_30px_rgba(0,0,0,0.02)] z-10 font-display">
+          <section className="flex-1 flex flex-col bg-white min-w-0 overflow-hidden shadow-[-10px_0_30px_rgba(0,0,0,0.02)] z-10 font-display border-l border-slate-100">
             <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
-              <span className="px-2 py-0.5 bg-primary text-white text-[10px] font-black rounded uppercase tracking-widest">
+              <span className="px-3 py-1 bg-primary text-white text-[10px] font-black rounded-lg uppercase tracking-widest shadow-sm">
                 AI Analysis
               </span>
               <div className="flex items-center gap-6">
@@ -192,10 +200,10 @@ const ArticleAnalysis = () => {
 
             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8 font-display">
               {/* Objectives Section */}
-              <div className="rounded-3xl border border-primary/10 p-6 bg-primary/5">
+              <div className="rounded-3xl border border-primary/10 p-6 bg-primary/5 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
                   <Target size={22} className="text-primary" />
-                  <h3 className="text-sm font-black uppercase tracking-widest">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">
                     Objectives
                   </h3>
                 </div>
@@ -213,10 +221,10 @@ const ArticleAnalysis = () => {
               </div>
 
               {/* Methodology Section */}
-              <div className="rounded-3xl border border-slate-100 p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="rounded-3xl border border-slate-100 p-6 shadow-sm bg-white">
+                <div className="flex items-center gap-3 mb-6 border-b border-slate-50 pb-4">
                   <Beaker size={20} className="text-slate-500" />
-                  <h3 className="text-sm font-black uppercase tracking-widest font-display">
+                  <h3 className="text-sm font-black uppercase tracking-widest font-display text-slate-800">
                     Methodology
                   </h3>
                 </div>
@@ -224,9 +232,9 @@ const ArticleAnalysis = () => {
                   {AI_SUMMARY.metrics.map((m, i) => (
                     <div
                       key={i}
-                      className="p-3 bg-slate-50 rounded-2xl text-center border border-slate-100 font-display"
+                      className="p-3 bg-slate-50 rounded-2xl text-center border border-slate-100 transition-all hover:border-primary/20"
                     >
-                      <p className="text-[9px] text-slate-400 uppercase font-black mb-1">
+                      <p className="text-[9px] text-slate-400 uppercase font-black mb-1 tracking-tighter">
                         {m.label}
                       </p>
                       <p className="text-[11px] font-bold text-primary">
@@ -246,7 +254,7 @@ const ArticleAnalysis = () => {
 
 // --- HELPER COMPONENTS ---
 const HeaderAction = ({ icon, label }) => (
-  <button className="flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-xl text-sm font-bold transition-all cursor-pointer">
+  <button className="flex items-center gap-2 px-3 py-2 text-slate-500 hover:text-primary hover:bg-slate-50 rounded-xl text-sm font-bold transition-all cursor-pointer uppercase tracking-tighter">
     {icon} <span className="hidden lg:inline">{label}</span>
   </button>
 );
@@ -258,24 +266,6 @@ const MetricSmall = ({ icon, label, value }) => (
     </p>
     <div className="flex items-center justify-end gap-1 text-xs font-bold text-primary font-display">
       {icon} {value}
-    </div>
-  </div>
-);
-
-const ResultRow = ({ icon, title, desc, color }) => (
-  <div className="flex gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
-    <div
-      className={`size-10 rounded-xl ${color} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}
-    >
-      {icon}
-    </div>
-    <div>
-      <p className="text-xs font-black text-slate-900 uppercase tracking-tighter leading-none mb-1 font-display">
-        {title}
-      </p>
-      <p className="text-[12px] text-slate-500 leading-snug font-display">
-        {desc}
-      </p>
     </div>
   </div>
 );
