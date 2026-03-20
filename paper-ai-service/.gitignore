@@ -1,0 +1,15 @@
+# Environments
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# Data & OS
+data/raw/
+data/vector_store/
+.DS_Store
