@@ -1,0 +1,20 @@
+# Web & Server
+fastapi
+uvicorn
+requests
+python-dotenv
+pydantic
+python-multipart
+
+# PDF & Text Processing
+PyMuPDF
+langchain
+langchain-community
+
+# AI & Vector DB
+google-generativeai
+sentence-transformers
+faiss-cpu
+
+# Evaluation
+rouge-score
