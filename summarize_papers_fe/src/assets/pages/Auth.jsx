@@ -174,7 +174,7 @@ const Auth = () => {
               {!isLogin && (
                 <>
                   <InputGroup
-                    label="Full Name"
+                    label="Username"
                     placeholder="Hoàng Mạnh Duy"
                     icon={<User size={18} />}
                     type="text"
