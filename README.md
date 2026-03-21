@@ -43,7 +43,7 @@ Kết quả là người dùng có thể nhanh chóng hiểu:
 
 # 🏗 Kiến trúc hệ thống
 
-Hệ thống được xây dựng theo kiến trúc **Frontend – CMS Backend – AI Backend**.
+Hệ thống được xây dựng theo kiến trúc **Frontend – Spring Boot Backend – AI Service**.
 
 ```
 Users
@@ -54,7 +54,7 @@ React Frontend
    ├───────────────┐
    │               │
    ▼               ▼
-Drupal CMS API     FastAPI AI API
+Spring Boot API    FastAPI AI API
 (User / Auth /     (Summarization
  Paper Management)   + RAG Pipeline)
    │               │
@@ -72,12 +72,17 @@ PostgreSQL        Vector Database
 * Hiển thị bản tóm tắt
 * Tìm kiếm và xem lịch sử paper
 
-**Drupal CMS Backend**
+Spring Boot Backend (Core Backend)
 
-* Quản lý người dùng
-* Quản lý paper
-* Lưu metadata và file
-* Cung cấp API cho frontend
+Đây là backend chính của hệ thống.
+
+Chức năng:
+
+Quản lý người dùng (Authentication, Authorization – JWT)
+Quản lý paper
+Lưu metadata và file PDF
+Cung cấp API cho frontend
+Giao tiếp với AI Backend (FastAPI)
 
 **FastAPI AI Backend**
 
@@ -101,10 +106,11 @@ PostgreSQL        Vector Database
 * Vite
 * Axios
 
-### Backend CMS
+### Backend 
 
-* Drupal
-* PHP
+* Spring Boot
+* Java
+* Spring Security (JWT)
 * PostgreSQL
 
 ### AI Backend
@@ -179,13 +185,13 @@ summarize-papers/
 │
 ├── frontend-react/
 │
-├── drupal-backend/
+├── springboot-backend/
 │
 └── ai-service-fastapi/
 ```
 
 * **frontend-react**: giao diện người dùng
-* **drupal-backend**: CMS quản lý user và paper
+* **springboot-backend**: backend quản lý user và paper
 * **ai-service-fastapi**: hệ thống AI tóm tắt
 
 ---
