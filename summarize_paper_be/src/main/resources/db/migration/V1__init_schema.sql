@@ -1,50 +1,50 @@
 CREATE TABLE users (
                        id BIGSERIAL PRIMARY KEY,
-                       username VARCHAR(50) UNIQUE NOT NULL,
+                       username VARCHAR(50) NOT NULL UNIQUE,
                        password VARCHAR(255) NOT NULL,
-                       email VARCHAR(100) UNIQUE NOT NULL,
+                       email VARCHAR(100) NOT NULL UNIQUE,
+                       full_name VARCHAR(100), -- Thêm để hiện tên thật
                        institution VARCHAR(255),
                        avatar_url VARCHAR(500),
-                       role VARCHAR(20) DEFAULT 'ROLE_USER',
+                       role VARCHAR(20) NOT NULL DEFAULT 'ROLE_USER',
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. BẢNG PAPERS (Quản lý Metadata bài báo)
-
 CREATE TABLE papers (
                         id BIGSERIAL PRIMARY KEY,
                         title VARCHAR(255) NOT NULL,
+                        content_text TEXT, -- Lưu text thô sau khi parse để dùng lại
                         file_path VARCHAR(500) NOT NULL,
                         file_size BIGINT,
-                        status VARCHAR(20) DEFAULT 'UPLOADED',
-                        user_id BIGINT NOT NULL,
+                        status VARCHAR(20) DEFAULT 'PROCESSING',
+                        user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                         upload_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    -- Ràng buộc khóa ngoại: Xóa user thì xóa luôn papers của user đó
-                        CONSTRAINT fk_paper_user
-                            FOREIGN KEY (user_id)
-                                REFERENCES users(id)
-                                ON DELETE CASCADE
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. BẢNG SUMMARIES (Lưu lịch sử tóm tắt từ AI)
-
-CREATE TABLE summaries (
-                           id BIGSERIAL PRIMARY KEY,
-                           paper_id BIGINT NOT NULL,
-                           content TEXT NOT NULL,
-                           method VARCHAR(50) DEFAULT 'RAG',
-                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    -- Ràng buộc khóa ngoại: Xóa paper thì xóa luôn bản tóm tắt liên quan
-                           CONSTRAINT fk_summary_paper
-                               FOREIGN KEY (paper_id)
-                                   REFERENCES papers(id)
-                                   ON DELETE CASCADE
+CREATE TABLE analysis (
+                          id BIGSERIAL PRIMARY KEY,
+                          paper_id BIGINT NOT NULL REFERENCES papers(id) ON DELETE CASCADE,
+                          user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                          summary_title VARCHAR(255), -- Tiêu đề bản tóm tắt
+                          content TEXT NOT NULL,
+                          method VARCHAR(50), -- VD: Short, Detailed
+                          status VARCHAR(20) DEFAULT 'COMPLETED',
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. INDEXES (Tối ưu hóa truy vấn)
-CREATE INDEX idx_users_username ON users(username);
-CREATE INDEX idx_papers_user_id ON papers(user_id);
-CREATE INDEX idx_summaries_paper_id ON summaries(paper_id);
+CREATE TABLE notifications (
+                               id BIGSERIAL PRIMARY KEY,
+                               user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                               message TEXT,
+                               type VARCHAR(50),
+                               is_read BOOLEAN DEFAULT FALSE,
+                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE invalidated_tokens (
+                                    id VARCHAR(255) PRIMARY KEY, -- JTI (JWT ID) của token
+                                    expiry_time TIMESTAMP NOT NULL,
+                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

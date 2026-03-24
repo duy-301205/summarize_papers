@@ -14,7 +14,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(2003, "User not found", HttpStatus.NOT_FOUND),
     USER_EXISTED(2004, "User already exists", HttpStatus.BAD_REQUEST),
     EMAIL_EXISTED(2005, "Email already exists", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(2006, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    EMAIL_ALREADY_EXISTS(2006, "Email already exists" , HttpStatus.BAD_REQUEST ),
+    INVALID_PASSWORD(2007, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
 
     PAPER_NOT_FOUND(3001, "Paper not found", HttpStatus.NOT_FOUND),
     INVALID_FILE_FORMAT(3002, "Only PDF files are supported", HttpStatus.BAD_REQUEST),

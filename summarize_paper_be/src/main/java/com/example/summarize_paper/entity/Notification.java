@@ -1,31 +1,35 @@
 package com.example.summarize_paper.entity;
 
-import com.example.summarize_paper.enums.SummaryMethod;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "summaries")
-@Data
-public class Summary {
+@Table(name = "notifications")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "paper_id", nullable = false)
-    private Paper paper;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String message;
 
-    @Enumerated(EnumType.STRING)
     @Column(length = 50)
-    private SummaryMethod method = SummaryMethod.RAG;
+    private String type;
+
+    @Column(name = "is_read")
+    private Boolean isRead = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

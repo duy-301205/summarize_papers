@@ -2,15 +2,17 @@ package com.example.summarize_paper.entity;
 
 import com.example.summarize_paper.enums.PaperStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "papers")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Paper {
 
     @Id
@@ -20,8 +22,14 @@ public class Paper {
     @Column(nullable = false)
     private String title;
 
+    @Column(name = "content_text", columnDefinition = "TEXT")
+    private String contentText;
+
     @Column(name = "file_path", nullable = false)
     private String filePath;
+
+    @Column(name = "file_size")
+    private Long fileSize;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
@@ -29,10 +37,7 @@ public class Paper {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User owner;
-
-    @OneToMany(mappedBy = "paper", cascade = CascadeType.ALL)
-    private List<Summary> summaries;
+    private User user;
 
     @CreationTimestamp
     @Column(name = "upload_at", updatable = false)
