@@ -1,5 +1,7 @@
 package com.example.summarize_paper.entity;
 
+import com.example.summarize_paper.enums.NotificationStatus;
+import com.example.summarize_paper.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,11 +27,13 @@ public class Notification {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 50)
-    private String type;
+    private NotificationType type;
 
-    @Column(name = "is_read")
-    private Boolean isRead = false;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private NotificationStatus status = NotificationStatus.UNREAD;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

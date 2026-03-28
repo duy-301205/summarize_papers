@@ -2,9 +2,7 @@ package com.example.summarize_paper.entity;
 
 import com.example.summarize_paper.enums.Role;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +18,9 @@ import java.util.List;
 @Setter
 @Table(name = "users")
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
