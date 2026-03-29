@@ -24,7 +24,8 @@ public enum ErrorCode {
 
     AI_SERVICE_UNAVAILABLE(4001, "AI Backend (FastAPI) is not responding", HttpStatus.SERVICE_UNAVAILABLE),
     SUMMARIZATION_FAILED(4002, "Failed to generate summary", HttpStatus.INTERNAL_SERVER_ERROR),
-    RAG_PIPELINE_ERROR(4003, "Error during RAG context retrieval", HttpStatus.INTERNAL_SERVER_ERROR);
+    RAG_PIPELINE_ERROR(4003, "Error during RAG context retrieval", HttpStatus.INTERNAL_SERVER_ERROR),
+    ERROR_UPLOAD_FILE(5001, "Error uploading file" , HttpStatus.INTERNAL_SERVER_ERROR );
 
     private final int code;
     private final String message;

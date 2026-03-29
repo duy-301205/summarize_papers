@@ -61,6 +61,10 @@ public class User implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
 
+    public String getActualUsername() {
+        return this.username;
+    }
+
     @Override
     public String getUsername() {
         return this.email;

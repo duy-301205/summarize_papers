@@ -33,3 +33,8 @@ app:
   upload:
     dir: ./uploads
     max-size: 10MB
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_NAME:dxobmvnzz}
+  api-key: ${CLOUDINARY_API_KEY:738821659235984}
+  api-secret: ${CLOUDINARY_API_SECRET:Uzs4A4IJ26M1Ey_Xg8knt0_0DSs}
