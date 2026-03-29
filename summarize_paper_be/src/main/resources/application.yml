@@ -20,9 +20,9 @@ spring:
         format_sql: true
 
   jwt:
-    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-    access-expiration: 3600000
-    refresh-expiration: 604800000
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    access-expiration: ${JWT_ACCESS_EXPIRATION:3600000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
   flyway:
     enabled: true
@@ -31,8 +31,8 @@ spring:
 
 app:
   upload:
-    dir: ./uploads
-    max-size: 10MB
+    dir: ${UPLOAD_DIR:./uploads}
+    max-size: ${UPLOAD_MAX_SIZE:10MB}
 
 cloudinary:
   cloud-name: ${CLOUDINARY_NAME:dxobmvnzz}
