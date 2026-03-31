@@ -16,6 +16,8 @@ public enum ErrorCode {
     EMAIL_EXISTED(2005, "Email already exists", HttpStatus.BAD_REQUEST),
     EMAIL_ALREADY_EXISTS(2006, "Email already exists" , HttpStatus.BAD_REQUEST ),
     PASSWORD_INVALID(2007, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_MATCH(2008, "Password does not match", HttpStatus.BAD_REQUEST),
+    PASSWORD_REQUIRED(2009,"Password required", HttpStatus.BAD_REQUEST),
 
     PAPER_NOT_FOUND(3001, "Paper not found", HttpStatus.NOT_FOUND),
     INVALID_FILE_FORMAT(3002, "Only PDF files are supported", HttpStatus.BAD_REQUEST),

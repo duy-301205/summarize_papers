@@ -1,9 +1,11 @@
 package com.example.summarize_paper.controller;
 
+import com.example.summarize_paper.dto.request.ChangePasswordRequest;
 import com.example.summarize_paper.dto.request.UserUpdateRequest;
 import com.example.summarize_paper.dto.response.ApiResponse;
 import com.example.summarize_paper.dto.response.UserResponse;
 import com.example.summarize_paper.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,15 @@ public class UserController {
     public ApiResponse<UserResponse> updateAvatar(@RequestParam("file") MultipartFile file) {
         return ApiResponse.<UserResponse>builder()
                 .data(userService.updateAvatar(file))
+                .build();
+    }
+
+    @PutMapping("/change-password")
+    public ApiResponse<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(request);
+
+        return ApiResponse.<Void>builder()
+                .message("Password changed")
                 .build();
     }
 }

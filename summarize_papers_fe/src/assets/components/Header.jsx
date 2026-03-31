@@ -30,7 +30,7 @@ const Header = () => {
         >
           <div className="text-right hidden sm:block">
             <p className="text-sm font-bold text-slate-900 leading-none group-hover:text-[#1111d4] transition-colors">
-              Hoàng Mạnh Duy
+              DuyHoang
             </p>
             <p className="text-[10px] font-bold text-[#1111d4] uppercase mt-1 tracking-tighter">
               VNU Researcher

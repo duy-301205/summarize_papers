@@ -1,6 +1,6 @@
 package com.example.summarize_paper.service;
 
-import com.cloudinary.Cloudinary;
+import com.example.summarize_paper.dto.request.ChangePasswordRequest;
 import com.example.summarize_paper.dto.request.UserUpdateRequest;
 import com.example.summarize_paper.dto.response.UserResponse;
 import com.example.summarize_paper.entity.User;
@@ -10,6 +10,7 @@ import com.example.summarize_paper.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
+    private final PasswordEncoder passwordEncoder;
 
     public User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -71,5 +73,21 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         return toResponse(savedUser);
+    }
+
+    public void changePassword(ChangePasswordRequest request) {
+        User user = getCurrentUser();
+
+        if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_INVALID);
+        }
+
+        if(!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
     }
 }

@@ -1,24 +1,34 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom"; // Thay đổi Link thành NavLink
 
-const NavItem = ({ icon, label, to = "#", active = false }) => (
-  <Link
+const NavItem = ({ icon, label, to = "#" }) => (
+  <NavLink
     to={to}
-    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${
-      active
-        ? "bg-[#1111d4] text-white shadow-md shadow-blue-900/10"
-        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-    }`}
+    // Sử dụng hàm trong className để kiểm tra trạng thái isActive
+    className={({ isActive }) => `
+      flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
+      ${
+        isActive
+          ? "bg-[#1111d4] text-white shadow-md shadow-blue-900/10" // Khi được chọn
+          : "text-slate-500 hover:bg-slate-50 hover:text-slate-900" // Khi bình thường
+      }
+    `}
   >
-    <span
-      className={`${active ? "text-white" : "group-hover:text-[#1111d4]"} transition-colors`}
-    >
-      {icon}
-    </span>
-    <span className="text-sm font-bold tracking-tight font-display">
-      {label}
-    </span>
-  </Link>
+    {({ isActive }) => (
+      <>
+        <span
+          className={`${
+            isActive ? "text-white" : "group-hover:text-[#1111d4]"
+          } transition-colors`}
+        >
+          {icon}
+        </span>
+        <span className="text-sm font-bold tracking-tight font-display">
+          {label}
+        </span>
+      </>
+    )}
+  </NavLink>
 );
 
 export default NavItem;
