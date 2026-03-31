@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Bật CORS để React gọi API được
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/forgot-password/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

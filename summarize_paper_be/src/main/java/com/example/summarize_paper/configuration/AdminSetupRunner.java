@@ -17,12 +17,12 @@ public class AdminSetupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (userRepository.findByEmail("admin@gmail.com").isEmpty()
-        && userRepository.findByUsername("admin").isEmpty()) {
+        if (userRepository.findByEmail("hduy9863@gmail.com").isEmpty()
+        && userRepository.findByUsername("duy").isEmpty()) {
             User admin = User.builder()
-                    .username("admin")
-                    .password(passwordEncoder.encode("admin123"))
-                    .email("admin@gmail.com")
+                    .username("duy")
+                    .password(passwordEncoder.encode("12345678"))
+                    .email("hduy9863@gmail.com")
                     .institution("VNU HUS")
                     .role(Role.ROLE_ADMIN)
                     .build();
