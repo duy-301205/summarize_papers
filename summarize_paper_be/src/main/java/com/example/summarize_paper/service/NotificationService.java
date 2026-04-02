@@ -9,6 +9,7 @@ import com.example.summarize_paper.repository.NotificationRepository;
 import com.example.summarize_paper.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     private String getCurrentUserEmail() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
@@ -92,5 +94,13 @@ public class NotificationService {
         notification.setStatus(NotificationStatus.UNREAD);
 
         notificationRepository.save(notification);
+
+        NotificationResponse response = mapToResponse(notification);
+
+        messagingTemplate.convertAndSendToUser(
+                user.getEmail(),
+                "/queue/notifications",
+                response
+        );
     }
 }
