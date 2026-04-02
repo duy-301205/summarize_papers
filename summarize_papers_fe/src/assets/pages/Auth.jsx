@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Beaker,
   Sparkles,
@@ -11,29 +11,50 @@ import {
   BadgeCheck,
   LogIn,
   Loader2,
+  ChevronLeft,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom"; // 1. Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(false);
-  const [loading, setLoading] = useState(false); // State để làm hiệu ứng loading cho ngầu
-  const navigate = useNavigate(); // 2. Khởi tạo navigate
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // 3. Hàm xử lý khi nhấn nút Submit
+  // --- LOGIC FORGOT PASSWORD ---
+  // Các bước: "none" (mặc định), "email", "otp", "reset"
+  const [forgotStep, setForgotStep] = useState("none");
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const otpRefs = useRef([]);
+
+  const handleOtpChange = (element, index) => {
+    if (isNaN(element.value)) return;
+    let newOtp = [...otp];
+    newOtp[index] = element.value;
+    setOtp(newOtp);
+    if (element.value !== "" && index < 5) otpRefs.current[index + 1].focus();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Giả lập xử lý API trong 1.5 giây
     setTimeout(() => {
       setLoading(false);
-      navigate("/dashboard"); // 4. Chuyển hướng sang trang dashboard
+      // Điều hướng theo bước quên mật khẩu
+      if (forgotStep === "email") setForgotStep("otp");
+      else if (forgotStep === "otp") setForgotStep("reset");
+      else if (forgotStep === "reset") {
+        setForgotStep("none");
+        setIsLogin(true);
+      } else {
+        navigate("/dashboard");
+      }
     }, 1500);
   };
 
   return (
     <div className="min-h-screen bg-[#f6f6f8] font-display text-slate-900 flex flex-col antialiased">
-      {/* Header */}
+      {/* Header - GIỮ NGUYÊN */}
       <header className="flex items-center justify-between border-b border-blue-100 px-6 md:px-20 py-4 bg-white/70 backdrop-blur-md sticky top-0 z-50">
         <Link to="/" className="flex items-center gap-3 text-[#1111d4]">
           <div className="size-8 flex items-center justify-center bg-[#1111d4] text-white rounded-lg shadow-lg shadow-blue-900/20">
@@ -48,7 +69,10 @@ const Auth = () => {
             {isLogin ? "Don't have an account?" : "Already have an account?"}
           </span>
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setForgotStep("none");
+            }}
             className="h-10 px-6 border border-[#1111d4] text-[#1111d4] hover:bg-blue-50 transition-all rounded-lg text-sm font-bold flex items-center gap-2"
           >
             {isLogin ? (
@@ -66,7 +90,7 @@ const Auth = () => {
 
       <main className="flex-1 flex items-center justify-center p-6 md:p-12">
         <div className="max-w-[1100px] w-full grid md:grid-cols-2 gap-16 items-center">
-          {/* LEFT SIDE: BRANDING */}
+          {/* LEFT SIDE - GIỮ NGUYÊN */}
           <div className="hidden md:flex flex-col gap-8 pr-8">
             <div className="space-y-4">
               <h1 className="text-5xl font-black leading-tight tracking-tight text-slate-900 font-display">
@@ -88,7 +112,6 @@ const Auth = () => {
                   : "Join over 50,000 academics using SciSum AI to synthesize papers and discover breakthroughs faster."}
               </p>
             </div>
-
             <div className="space-y-6">
               <div className="flex items-start gap-4 group">
                 <div className="size-10 rounded-full bg-blue-50 flex items-center justify-center text-[#1111d4] shrink-0 transition-colors group-hover:bg-blue-100">
@@ -117,7 +140,6 @@ const Auth = () => {
                 </div>
               </div>
             </div>
-
             <div className="mt-8 p-6 bg-white rounded-2xl border border-blue-50 shadow-sm">
               <div className="flex -space-x-3 mb-4">
                 {[1, 2, 3].map((i) => (
@@ -144,76 +166,146 @@ const Auth = () => {
 
           {/* RIGHT SIDE: FORM */}
           <div className="bg-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-blue-900/5 border border-blue-50 w-full transition-all duration-300">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-slate-900 font-display">
-                {isLogin ? "Log In" : "Create account"}
+            <div className="mb-8 relative">
+              {forgotStep !== "none" && (
+                <button
+                  type="button"
+                  onClick={() => setForgotStep("none")}
+                  className="absolute -top-1 -left-2 p-2 text-slate-400 hover:text-[#1111d4]"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+              )}
+              <h2
+                className={`text-3xl font-bold text-slate-900 font-display ${forgotStep !== "none" ? "ml-8" : ""}`}
+              >
+                {forgotStep === "none"
+                  ? isLogin
+                    ? "Log In"
+                    : "Create account"
+                  : forgotStep === "email"
+                    ? "Reset Password"
+                    : forgotStep === "otp"
+                      ? "Verify OTP"
+                      : "New Password"}
               </h2>
-              <p className="text-slate-500 mt-2 font-medium">
-                {isLogin
-                  ? "Enter your credentials to continue."
-                  : "Start your 14-day free trial today."}
+              <p
+                className={`text-slate-500 mt-2 font-medium ${forgotStep !== "none" ? "ml-8" : ""}`}
+              >
+                {forgotStep === "none"
+                  ? isLogin
+                    ? "Enter your credentials to continue."
+                    : "Start your 14-day free trial today."
+                  : "Follow the steps to secure your account."}
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              <SocialButton icon="google" />
-              <SocialButton icon="badge" />
-              <SocialButton icon="linkedin" />
-            </div>
+            {forgotStep === "none" && (
+              <div className="grid grid-cols-3 gap-3 mb-8">
+                <SocialButton icon="google" />
+                <SocialButton icon="badge" />
+                <SocialButton icon="linkedin" />
+              </div>
+            )}
 
-            <div className="relative flex items-center mb-8">
-              <div className="flex-grow border-t border-slate-100"></div>
-              <span className="flex-shrink mx-4 text-slate-400 text-[10px] uppercase tracking-[0.2em] font-bold">
-                Or continue with email
-              </span>
-              <div className="flex-grow border-t border-slate-100"></div>
-            </div>
+            {forgotStep === "none" && (
+              <div className="relative flex items-center mb-8">
+                <div className="flex-grow border-t border-slate-100"></div>
+                <span className="flex-shrink mx-4 text-slate-400 text-[10px] uppercase tracking-[0.2em] font-bold">
+                  Or continue with email
+                </span>
+                <div className="flex-grow border-t border-slate-100"></div>
+              </div>
+            )}
 
-            {/* Gán hàm handleSubmit vào form */}
             <form className="space-y-5" onSubmit={handleSubmit}>
-              {!isLogin && (
+              {forgotStep === "none" ? (
                 <>
+                  {!isLogin && (
+                    <>
+                      <InputGroup
+                        label="Username"
+                        placeholder="Hoàng Mạnh Duy"
+                        icon={<User size={18} />}
+                        type="text"
+                      />
+                      <InputGroup
+                        label="Institution"
+                        placeholder="VNU University of Science"
+                        icon={<Building2 size={18} />}
+                        type="text"
+                      />
+                    </>
+                  )}
                   <InputGroup
-                    label="Username"
-                    placeholder="Hoàng Mạnh Duy"
-                    icon={<User size={18} />}
-                    type="text"
+                    label="Work Email"
+                    placeholder="duy.hm@vnu.edu.vn"
+                    icon={<Mail size={18} />}
+                    type="email"
+                    required
                   />
                   <InputGroup
-                    label="Institution"
-                    placeholder="VNU University of Science"
-                    icon={<Building2 size={18} />}
-                    type="text"
+                    label="Password"
+                    placeholder="••••••••"
+                    icon={<Lock size={18} />}
+                    type="password"
+                    required
+                  />
+                  {isLogin && (
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setForgotStep("email")}
+                        className="text-xs font-bold text-[#1111d4] hover:underline"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : forgotStep === "email" ? (
+                <InputGroup
+                  label="Email Address"
+                  placeholder="duy.hm@vnu.edu.vn"
+                  icon={<Mail size={18} />}
+                  type="email"
+                  required
+                />
+              ) : forgotStep === "otp" ? (
+                <div className="flex justify-between gap-2 py-4">
+                  {otp.map((data, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      maxLength={1}
+                      ref={(el) => (otpRefs.current[index] = el)}
+                      value={data}
+                      onChange={(e) => handleOtpChange(e.target, index)}
+                      className="size-12 border-2 border-slate-100 rounded-xl text-center font-bold focus:border-[#1111d4] outline-none transition-all"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <InputGroup
+                    label="New Password"
+                    placeholder="••••••••"
+                    icon={<Lock size={18} />}
+                    type="password"
+                    required
+                  />
+                  <InputGroup
+                    label="Confirm Password"
+                    placeholder="••••••••"
+                    icon={<Lock size={18} />}
+                    type="password"
+                    required
                   />
                 </>
               )}
-              <InputGroup
-                label="Work Email"
-                placeholder="duy.hm@vnu.edu.vn"
-                icon={<Mail size={18} />}
-                type="email"
-                required
-              />
-              <InputGroup
-                label="Password"
-                placeholder="••••••••"
-                icon={<Lock size={18} />}
-                type="password"
-                required
-              />
 
-              {isLogin && (
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    className="text-xs font-bold text-[#1111d4] hover:underline"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-              )}
-
-              {!isLogin && (
+              {/* PHẦN TERM & PRIVACY (Đã khôi phục) */}
+              {!isLogin && forgotStep === "none" && (
                 <div className="flex items-start gap-3 py-2">
                   <input
                     className="mt-1 size-4 rounded border-slate-300 text-[#1111d4] focus:ring-[#1111d4]"
@@ -245,14 +337,22 @@ const Auth = () => {
               )}
 
               <button
-                disabled={loading} // Disable khi đang loading
+                disabled={loading}
                 className="w-full bg-[#1111d4] hover:bg-blue-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {loading ? (
-                  <Loader2 className="animate-spin" size={20} /> // Hiển thị icon xoay xoay
+                  <Loader2 className="animate-spin" size={20} />
                 ) : (
                   <>
-                    {isLogin ? "Log In" : "Create Account"}{" "}
+                    {forgotStep === "none"
+                      ? isLogin
+                        ? "Log In"
+                        : "Create Account"
+                      : forgotStep === "email"
+                        ? "Send OTP"
+                        : forgotStep === "otp"
+                          ? "Verify Code"
+                          : "Update Password"}
                     <ArrowRight
                       size={20}
                       className="group-hover:translate-x-1 transition-transform"
@@ -262,17 +362,19 @@ const Auth = () => {
               </button>
             </form>
 
-            <div className="mt-8 text-center">
-              <p className="text-sm text-slate-500">
-                {isLogin ? "New to SciSum AI?" : "Already have an account?"}{" "}
-                <button
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-[#1111d4] font-bold hover:underline"
-                >
-                  {isLogin ? "Create an account" : "Log in here"}
-                </button>
-              </p>
-            </div>
+            {forgotStep === "none" && (
+              <div className="mt-8 text-center">
+                <p className="text-sm text-slate-500">
+                  {isLogin ? "New to SciSum AI?" : "Already have an account?"}{" "}
+                  <button
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="text-[#1111d4] font-bold hover:underline"
+                  >
+                    {isLogin ? "Create an account" : "Log in here"}
+                  </button>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -292,7 +394,6 @@ const Auth = () => {
   );
 };
 
-// --- Helper Components ---
 const InputGroup = ({ label, placeholder, icon, type, required }) => (
   <div className="space-y-1.5">
     <label className="text-sm font-bold text-slate-700 ml-1 font-display">

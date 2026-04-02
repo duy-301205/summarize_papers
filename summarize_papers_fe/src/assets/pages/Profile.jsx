@@ -1,64 +1,21 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Camera,
-  Mail,
-  Shield,
-  Lock,
-  CreditCard,
-  LogOut,
-  Edit3,
-  X,
-  ChevronLeft,
-} from "lucide-react";
+import { Camera, Mail, Shield, Lock, CreditCard, Edit3, X } from "lucide-react";
 import MainLayout from "../components/MainLayout";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [is2FA, setIs2FA] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-
-  // Quản lý Modal và Step
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [modalStep, setModalStep] = useState("change");
-
-  // Quản lý mã OTP
-  const [otp, setOtp] = useState(new Array(6).fill(""));
-  const otpRefs = useRef([]);
 
   const handleToggleEdit = () => {
     if (isEditing) console.log("Saving changes...");
     setIsEditing(!isEditing);
   };
 
-  const handleLogout = () => navigate("/auth");
-
   const closePasswordModal = () => {
     setShowPasswordModal(false);
-    setModalStep("change");
-    setOtp(new Array(6).fill("")); // Reset OTP khi đóng
-  };
-
-  // Logic xử lý nhập OTP
-  const handleOtpChange = (element, index) => {
-    const value = element.value;
-    if (isNaN(value)) return false; // Chỉ cho phép nhập số
-
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Tự động nhảy sang ô tiếp theo
-    if (value !== "" && index < 5) {
-      otpRefs.current[index + 1].focus();
-    }
-  };
-
-  const handleKeyDown = (e, index) => {
-    // Nhấn Backspace để quay lại ô trước
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      otpRefs.current[index - 1].focus();
-    }
   };
 
   return (
@@ -192,27 +149,15 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* MODAL - CHỈ CÒN CHANGE PASSWORD */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 font-display">
           <div className="bg-white w-full max-w-md rounded-[32px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="p-8">
               <div className="flex justify-between items-center mb-8">
-                <div className="flex items-center gap-2">
-                  {modalStep === "otp" && (
-                    <button
-                      onClick={() => setModalStep("change")}
-                      className="p-1 hover:bg-slate-100 rounded-lg transition-colors text-slate-400"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                  )}
-                  <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">
-                    {modalStep === "change"
-                      ? "Change Password"
-                      : "Verify Email"}
-                  </h3>
-                </div>
+                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">
+                  Change Password
+                </h3>
                 <button
                   onClick={closePasswordModal}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors"
@@ -221,105 +166,49 @@ const Profile = () => {
                 </button>
               </div>
 
-              {modalStep === "change" ? (
-                <div className="space-y-5">
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                        Current Password
-                      </label>
-                      <button
-                        onClick={() => setModalStep("otp")}
-                        className="text-[10px] font-bold text-[#1111d4] hover:underline uppercase tracking-tighter cursor-pointer"
-                      >
-                        Forgot?
-                      </button>
-                    </div>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-[#1111d4]/30 focus:ring-4 focus:ring-[#1111d4]/5 transition-all"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-[#1111d4]/30 focus:ring-4 focus:ring-[#1111d4]/5 transition-all"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                      Confirm New Password
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-[#1111d4]/30 focus:ring-4 focus:ring-[#1111d4]/5 transition-all"
-                    />
-                  </div>
-                  <div className="mt-10 flex gap-3">
-                    <button
-                      onClick={closePasswordModal}
-                      className="flex-1 py-4 rounded-2xl border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest"
-                    >
-                      Cancel
-                    </button>
-                    <button className="flex-1 py-4 rounded-2xl bg-[#1111d4] text-white font-black text-xs uppercase tracking-widest">
-                      Update Now
-                    </button>
-                  </div>
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Current Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-[#1111d4]/30 focus:ring-4 focus:ring-[#1111d4]/5 transition-all"
+                  />
                 </div>
-              ) : (
-                <div className="text-center">
-                  <div className="size-16 bg-blue-50 text-[#1111d4] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Mail size={32} />
-                  </div>
-                  <p className="text-sm font-medium text-slate-600 mb-2">
-                    We've sent a 6-digit code to
-                  </p>
-                  <p className="text-sm font-black text-slate-900 mb-8">
-                    m.duy@vnu.edu.vn
-                  </p>
-
-                  <div className="flex justify-between gap-2 mb-8">
-                    {otp.map((data, index) => (
-                      <input
-                        key={index}
-                        type="text"
-                        maxLength={1}
-                        ref={(el) => (otpRefs.current[index] = el)}
-                        value={data}
-                        onKeyDown={(e) => handleKeyDown(e, index)}
-                        onChange={(e) => handleOtpChange(e.target, index)}
-                        className="size-12 bg-slate-50 border border-slate-100 rounded-xl text-center text-lg font-black text-slate-900 outline-none focus:border-[#1111d4] focus:ring-4 focus:ring-[#1111d4]/5 transition-all"
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-[11px] text-slate-400 font-medium mb-10 italic">
-                    Didn't receive the code?{" "}
-                    <button className="text-[#1111d4] font-black uppercase tracking-tighter">
-                      Resend
-                    </button>
-                  </p>
-
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => setModalStep("change")}
-                      className="flex-1 py-4 rounded-2xl border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest"
-                    >
-                      Back
-                    </button>
-                    <button className="flex-1 py-4 rounded-2xl bg-[#1111d4] text-white font-black text-xs uppercase tracking-widest shadow-lg">
-                      Verify Code
-                    </button>
-                  </div>
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-[#1111d4]/30 focus:ring-4 focus:ring-[#1111d4]/5 transition-all"
+                  />
                 </div>
-              )}
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm outline-none focus:border-[#1111d4]/30 focus:ring-4 focus:ring-[#1111d4]/5 transition-all"
+                  />
+                </div>
+                <div className="mt-10 flex gap-3">
+                  <button
+                    onClick={closePasswordModal}
+                    className="flex-1 py-4 rounded-2xl border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest"
+                  >
+                    Cancel
+                  </button>
+                  <button className="flex-1 py-4 rounded-2xl bg-[#1111d4] text-white font-black text-xs uppercase tracking-widest">
+                    Update Now
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
