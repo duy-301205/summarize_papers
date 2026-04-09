@@ -1,0 +1,37 @@
+Data:  -> PDF → Clean → Chunk
+AI: -> PDF → Clean → Chunk
+Tester: -> Test + Evaluation + Monitoring
+BA: -> Test + Evaluation + Monitoring
+
+Cụ thể:
+
+1. Data
+data/
+services/
+ ├── pdf_service.py
+ ├── preprocessing_service.py
+ └── chunking_service.py
+ 
+2. AI
+models/
+vector_store/
+rag/
+services/
+ ├── embedding_service.py
+ ├── rag_service.py
+ ├── summarize_service.py
+ └── extract_service.py
+
+db/
+
+3. Tester
+tests/
+evaluation/
+monitoring/
+
+4. BA
+api/
+schemas/
+core/
+
+Thứ tự thực hiện: Data → AI → API (BA) → Tester

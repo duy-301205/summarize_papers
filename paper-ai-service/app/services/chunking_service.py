@@ -1,0 +1,1 @@
+# chia text thành chunks

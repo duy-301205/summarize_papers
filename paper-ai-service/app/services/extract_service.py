@@ -1,0 +1,1 @@
+# trích xuất thông tin paper

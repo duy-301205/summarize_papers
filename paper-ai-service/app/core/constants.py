@@ -1,0 +1,1 @@
+# Các hằng số: chunk_size, top_k, model mặc định
