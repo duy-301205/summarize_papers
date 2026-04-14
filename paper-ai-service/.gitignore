@@ -9,7 +9,4 @@ __pycache__/
 venv/
 .venv/
 
-# Data & OS
-data/raw/
-data/vector_store/
-.DS_Store
+storage/
