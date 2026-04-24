@@ -13,8 +13,7 @@ from tqdm import tqdm
 from app.data.processed.parser import PDFParser
 from app.data.processed.cleaner import TextCleaner
 from app.data.chunking.recursive_chunk import TextChunker
-from app.models.embedding.e5_embedding import E5Embedder
-from app.vector_store.base_store import ChromaDBStore
+# Từ giờ model và db do EmbeddingService gọi ngầm nên không cần import lẻ nữa
 
 def run_test_pdf_upload():
     print("="*50)
@@ -75,16 +74,13 @@ def run_test_pdf_upload():
     print(f"📄 Đã lưu file kiểm tra tại: {json_path}")
     # ---------------------------------------------------------
     
-    # 4. Nhúng Số (Embedder)
-    print("🧠 Đang load model nhúng...")
-    e5_model = E5Embedder().get_model()
+    # 4 & 5. Chuyển cho Service chuyên nhúng (PGVector + E5)
+    from app.services.embedding_service import EmbeddingService
+    print("🧠 Gọi Embedding Service dể đưa số vào PostgreSQL (PGVector)...")
+    emb_service = EmbeddingService()
+    emb_service.process_and_save_chunks(all_chunks, all_metadatas)
     
-    # 5. Lưu Database (Vector DB)
-    print(f"💾 Đang ném vector vào ChromaDB: {db_dir}")
-    db_store = ChromaDBStore(embeddings_model=e5_model, db_dir=db_dir)
-    db_store.save_vectors(all_chunks, all_metadatas)
-    
-    print("🎉 THÀNH CÔNG! LUỒNG XỬ LÝ PDF CỦA WEB ĐÃ CHẠY CHUẨN.")
+    print("🎉 THÀNH CÔNG! LUỒNG XỬ LÝ PDF VỚI POSTGRESQL ĐÃ CHẠY CHUẨN.")
 
 if __name__ == "__main__":
     run_test_pdf_upload()

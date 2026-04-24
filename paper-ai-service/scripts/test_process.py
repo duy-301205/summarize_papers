@@ -1,3 +1,4 @@
+# nạp dữ liệu hàng loạt từ file text/JSON đã cào sẵn.
 import os
 import sys
 from pathlib import Path
@@ -6,36 +7,25 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-from app.models.embedding.e5_embedding import E5Embedder
-from app.vector_store.base_store import ChromaDBStore
+from app.services.embedding_service import EmbeddingService
 
 def run_test_search():
     print("="*50)
-    print("🔍 TEST TÌM KIẾM VECTOR (RETRIEVAL)")
+    print("🔍 TEST TÌM KIẾM BẰNG PGVECTOR (TRÊN POSTGRESQL)")
     print("="*50)
     
-    project_root = Path(__file__).resolve().parent.parent
-    db_dir = str(project_root / "storage" / "vector_db")
+    print("🧠 Gọi Embedding Service để tải Model và kết nối DB...")
+    emb_service = EmbeddingService()
     
-    print("🧠 Đang load model nhúng...")
-    e5_model = E5Embedder().get_model()
-    
-    # 1. Khởi tạo kết nối vào DB cũ
-    db_store = ChromaDBStore(embeddings_model=e5_model, db_dir=db_dir)
-    
-    # 2. Câu hỏi truy vấn tùy ý bạn thay đổi
+    # Câu hỏi truy vấn tùy ý
     user_query = "cảm xúc tiêu cực của học sinh"
+    print(f"\n🔎 Đang nhúng câu hỏi ra số và rà soát trong PGVector: '{user_query}'...")
     
-    # Với mô hình multilungual-e5-base ta bắt buộc gán thêm chữ "query: " vào đầu câu hỏi
-    formatted_query = f"query: {user_query}"
-    
-    print(f"\n🔎 Đang nhúng câu hỏi ra số và rà soát trong ChromaDB: '{user_query}'...")
-    
-    # Kéo 3 đoạn kết quả sát nhất
-    results = db_store.search_vectors(formatted_query, k=3)
+    # Kết quả sẽ được EmbeddingService tự chèn prefix "query: "
+    results = emb_service.search_similar_chunks(user_query, top_k=3)
     
     if not results:
-        print("❌ Không tìm thấy kết quả nào!")
+        print("❌ Không tìm thấy hoặc Database đang trống rỗng!")
         return
         
     print("\n✨ 3 KẾT QUẢ TÌM KIẾM TỐT NHẤT LÀ:")

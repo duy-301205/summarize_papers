@@ -4,6 +4,16 @@ from sqlalchemy.sql import func
 from pgvector.sqlalchemy import Vector
 from .postgres import Base
 
+# --- Dummy tables to avoid ForeignKey errors (Managed by Java backend normally) ---
+class User(Base):
+    __tablename__ = "users"
+    id = Column(BigInteger, primary_key=True)
+
+class Conversation(Base):
+    __tablename__ = "conversations"
+    id = Column(BigInteger, primary_key=True)
+# --------------------------------------------------------------------------------
+
 class Paper(Base):
     __tablename__ = "papers"
 
@@ -36,6 +46,7 @@ class PaperChunk(Base):
     id = Column(BigInteger, primary_key=True)
     paper_id = Column(BigInteger, ForeignKey("papers.id", ondelete="CASCADE"))
     content = Column(Text, nullable=False)
+    # Đã sửa thành VECTOR(768) để khớp với output của mô hình multilingual-e5-base (thay vì 1536 của OpenAI)
     embedding = Column(Vector(768), nullable=False)
     page_number = Column(Integer)
     chunk_index = Column(Integer, nullable=False)

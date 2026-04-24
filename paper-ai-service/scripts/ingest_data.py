@@ -7,10 +7,9 @@ from tqdm import tqdm
 paper_ai_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(paper_ai_root))
 
-# Import 3 file chúng ta vừa chia nhỏ ở trên
+# Import xử lý
 from app.data.chunking.recursive_chunk import TextChunker
-from app.models.embedding.e5_embedding import E5Embedder
-from app.vector_store.base_store import ChromaDBStore
+from app.services.embedding_service import EmbeddingService
 
 def ingest_all_data():
     project_root = Path(__file__).resolve().parent.parent.parent
@@ -35,19 +34,15 @@ def ingest_all_data():
         for i, chunk_text in enumerate(chunks):
             all_chunks.append(f"passage: {chunk_text}")
             all_metadatas.append({
-                "article_id": art['id'],
-                "title": art['title'],
+                "source_file": f"article_{art.get('id', 'unknown')}", # Đã sửa thành source_file để PGVector tự động gán ID chống trùng
+                "title": art.get('title', ''),
                 "chunk_index": i
             })
             
-    # 2. Gọi Model nhúng
-    print("Đang tải model Embedding...")
-    e5_model = E5Embedder().get_model()
-    
-    # 3. Lưu vào DB
-    print("Đang lưu vào Vector Database...")
-    db_store = ChromaDBStore(embeddings_model=e5_model, db_dir=db_dir)
-    db_store.save_vectors(all_chunks, all_metadatas)
+    # 2 & 3. Gọi Service nhúng để lưu thẳng vào PostgreSQL
+    print("Đang tải model Embedding và đổ vào PGVector...")
+    emb_service = EmbeddingService()
+    emb_service.process_and_save_chunks(all_chunks, all_metadatas)
     
     print("HOÀN TẤT NẠP DỮ LIỆU VÀO WEB!")
 
