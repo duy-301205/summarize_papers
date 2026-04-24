@@ -1,17 +1,17 @@
 # tạo connection DB
 
-import os
 from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
 
-load_dotenv()
+# Gắn cứng cấu hình kết nối DB cho team
+db_user = "postgres"
+db_pass = "1111"
+db_host = "localhost"
+db_port = "5432"
+db_name = "summarize_db"
 
-# Lấy URL kết nối. Ví dụ: postgresql://user:pass@localhost:5432/dbname
-# Lưu ý: Nếu chạy FastAPI trong Docker, POSTGRES_HOST phải là tên service của DB trong docker-compose
-DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@" \
-               f"{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
+DATABASE_URL = f"postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
 # Tạo Engine kết nối
 # pool_size: Số lượng kết nối tối đa được giữ lại

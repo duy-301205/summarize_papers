@@ -1,23 +1,18 @@
 # interface vector DB
-import os
 from langchain_postgres import PGVector
 from langchain_postgres.vectorstores import PGVector
-from dotenv import load_dotenv
-
-load_dotenv()
 
 class PGVectorStore:
     def __init__(self, embeddings_model, collection_name: str = "paper_chunks"):
         self.embeddings_model = embeddings_model
         self.collection_name = collection_name
         
-        # Build the SQLAlchemy connection string from environment variables
-        # PGVector requires psycopg3 driver formatting (postgresql+psycopg://...)
-        db_user = os.getenv("POSTGRES_USER", "postgres")
-        db_pass = os.getenv("POSTGRES_PASSWORD", "postgres")
-        db_host = os.getenv("POSTGRES_HOST", "localhost")
-        db_port = os.getenv("POSTGRES_PORT", "5432")
-        db_name = os.getenv("POSTGRES_DB", "paper_db")
+        # Gắn cứng cấu hình kết nối DB cho team
+        db_user = "postgres"
+        db_pass = "1111"
+        db_host = "localhost"
+        db_port = "5432"
+        db_name = "summarize_db"
         
         self.connection_string = f"postgresql+psycopg://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
