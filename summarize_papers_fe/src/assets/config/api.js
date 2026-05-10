@@ -40,3 +40,9 @@ export const getPaperSummary = (paperId) => API.get(`/papers/summary/${paperId}`
 export const getMyPapers = (page = 0, size = 10) => {
     return API.get(`/papers/getPaper?page=${page}&size=${size}`);
 };
+
+export const getDashboardSummary = () => API.get("/analytics/summary");
+
+export const getVolumeChartData = () => API.get("/analytics/volume");
+
+export const getTopicsChartData = () => API.get("/analytics/topics");

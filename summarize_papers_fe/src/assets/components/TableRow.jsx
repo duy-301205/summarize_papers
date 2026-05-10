@@ -1,8 +1,9 @@
 import React from "react";
-import { Eye, Download, MoreHorizontal } from "lucide-react"; // Bỏ Share2, thêm MoreHorizontal
+import { Eye, Download, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const TableRow = ({ title, status, category, date }) => {
+// 1. Thêm prop 'id' vào đây
+const TableRow = ({ id, title, status, category, date }) => {
   const navigate = useNavigate();
 
   const statusStyles = {
@@ -31,24 +32,23 @@ const TableRow = ({ title, status, category, date }) => {
       <td className="px-8 py-0 text-sm text-slate-400">{date}</td>
 
       <td className="px-8 py-0 text-right relative">
-        {/* NHÓM ICON KHI HOVER: Chỉ còn 2 Action */}
         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
           <button
-            onClick={() => navigate("/analysis")}
-            className="p-2 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg transition-all"
+            // 2. Sửa lại: Nối ID vào đường dẫn (ví dụ: /analysis/123)
+            onClick={() => navigate(`/analysis/${id}`)}
+            className="p-2 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg transition-all cursor-pointer"
             title="View Summary"
           >
             <Eye size={16} strokeWidth={2.5} />
           </button>
           <button
-            className="p-2 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg transition-all"
+            className="p-2 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg transition-all cursor-pointer"
             title="Download PDF"
           >
             <Download size={16} strokeWidth={2.5} />
           </button>
         </div>
 
-        {/* TRẠNG THÁI TĨNH: Hiện icon 3 chấm của Lucide cho đồng bộ */}
         <div className="absolute right-10 top-1/2 -translate-y-1/2 group-hover:hidden text-slate-300 flex items-center justify-end">
           <MoreHorizontal size={20} />
         </div>

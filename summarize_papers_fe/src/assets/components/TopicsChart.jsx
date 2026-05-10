@@ -1,24 +1,37 @@
 import React from "react";
 
-const TopicsChart = () => {
-  const topics = [
-    { label: "Computer Science", value: 45, color: "#1111d4" },
-    { label: "Medicine", value: 25, color: "#4f46e5" },
-    { label: "Physics", value: 15, color: "#8b5cf6" },
-    { label: "Other", value: 15, color: "#e2e8f0" },
-  ];
+const TopicsChart = ({ data = [] }) => {
+  // 1. Định nghĩa bảng màu cố định cho các tạp chí
+  const colors = ["#1111d4", "#4f46e5", "#8b5cf6", "#e2e8f0"];
+
+  // 2. Tính tổng số lượng bài báo để tính tỷ lệ %
+  const totalArticles = data.reduce((acc, curr) => acc + curr.value, 0);
+
+  // 3. Xử lý dữ liệu hiển thị: Tính % và gán màu
+  const processedTopics = data.map((item, index) => ({
+    label: item.label,
+    value: item.value,
+    percentage:
+      totalArticles > 0 ? Math.round((item.value / totalArticles) * 100) : 0,
+    color: colors[index % colors.length],
+  }));
+
+  // Biến hỗ trợ tính toán vị trí bắt đầu của mỗi cung tròn (offset)
+  let cumulativePercentage = 0;
 
   return (
     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-      <h3 className="text-lg font-bold mb-8 text-slate-900">
-        Top Research Topics
+      <h3 className="text-lg font-bold mb-8 text-slate-900 italic uppercase">
+        Top Research Journals
       </h3>
       <div className="flex flex-col sm:flex-row items-center justify-between gap-10">
+        {/* Vùng vẽ biểu đồ SVG */}
         <div className="relative w-44 h-44 shrink-0">
           <svg
             className="w-full h-full transform -rotate-90"
             viewBox="0 0 36 36"
           >
+            {/* Vòng tròn nền (màu xám nhạt) */}
             <circle
               cx="18"
               cy="18"
@@ -27,63 +40,71 @@ const TopicsChart = () => {
               stroke="#f1f5f9"
               strokeWidth="4"
             />
-            <circle
-              cx="18"
-              cy="18"
-              r="16"
-              fill="transparent"
-              stroke="#1111d4"
-              strokeWidth="4"
-              strokeDasharray="45, 100"
-            />
-            <circle
-              cx="18"
-              cy="18"
-              r="16"
-              fill="transparent"
-              stroke="#4f46e5"
-              strokeWidth="4"
-              strokeDasharray="25, 100"
-              strokeDashoffset="-45"
-            />
-            <circle
-              cx="18"
-              cy="18"
-              r="16"
-              fill="transparent"
-              stroke="#8b5cf6"
-              strokeWidth="4"
-              strokeDasharray="15, 100"
-              strokeDashoffset="-70"
-            />
+
+            {/* Vẽ các cung tròn dựa trên dữ liệu thật */}
+            {processedTopics.map((t, i) => {
+              const strokeDasharray = `${t.percentage}, 100`;
+              const strokeDashoffset = -cumulativePercentage;
+
+              // Cộng dồn phần trăm để cung tròn sau bắt đầu từ vị trí cung tròn trước kết thúc
+              cumulativePercentage += t.percentage;
+
+              return (
+                <circle
+                  key={i}
+                  cx="18"
+                  cy="18"
+                  r="16"
+                  fill="transparent"
+                  stroke={t.color}
+                  strokeWidth="4"
+                  strokeDasharray={strokeDasharray}
+                  strokeDashoffset={strokeDashoffset}
+                  className="transition-all duration-500"
+                />
+              );
+            })}
           </svg>
+
+          {/* Con số tổng ở giữa biểu đồ */}
           <div className="absolute inset-0 flex items-center justify-center flex-col">
-            <span className="text-3xl font-black text-slate-900">12.8k</span>
-            <span className="text-[10px] text-slate-400 font-black uppercase">
+            <span className="text-3xl font-black text-slate-900">
+              {totalArticles}
+            </span>
+            <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">
               Total
             </span>
           </div>
         </div>
+
+        {/* Chú thích bên phải */}
         <div className="flex flex-col gap-4 w-full">
-          {topics.map((t) => (
-            <div
-              key={t.label}
-              className="flex items-center justify-between group cursor-default"
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: t.color }}
-                />
-                <span className="text-sm font-bold text-slate-600 group-hover:text-slate-900 transition-colors">
-                  {t.label}
+          {processedTopics.length > 0 ? (
+            processedTopics.map((t) => (
+              <div
+                key={t.label}
+                className="flex items-center justify-between group cursor-default"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: t.color }}
+                  />
+                  <span
+                    className="text-sm font-bold text-slate-600 group-hover:text-slate-900 transition-colors truncate w-32 md:w-48 text-left"
+                    title={t.label}
+                  >
+                    {t.label}
+                  </span>
+                </div>
+                <span className="text-sm font-black text-slate-900">
+                  {t.percentage}%
                 </span>
               </div>
-              <span className="text-sm font-black text-slate-900">
-                {t.value}%
-              </span>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-sm text-slate-400 italic">No data available</p>
+          )}
         </div>
       </div>
     </div>

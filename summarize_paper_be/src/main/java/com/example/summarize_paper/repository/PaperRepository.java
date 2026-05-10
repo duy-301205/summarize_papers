@@ -32,4 +32,18 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             "GROUP BY month " +
             "ORDER BY month ASC", nativeQuery = true)
     List<Object[]> countPapersByMonthNative(@Param("userId") Long userId);
+
+    @Query(value = "SELECT COALESCE(m.journal, 'Chưa xác định') as label, COUNT(p.id) as value " +
+            "FROM papers p " +
+            "LEFT JOIN paper_metadata m ON p.id = m.paper_id " +
+            "WHERE p.user_id = :userId " +
+            "GROUP BY m.journal " +
+            "ORDER BY value DESC", nativeQuery = true)
+    List<Object[]> countPapersByJournalNative(@Param("userId") Long userId);
+
+    // Đếm tổng số bài của User
+    long countByUserId(Long userId);
+
+    // Đếm số bài có trạng thái DONE của User
+    long countByUserIdAndStatus(Long userId, PaperStatus status);
 }

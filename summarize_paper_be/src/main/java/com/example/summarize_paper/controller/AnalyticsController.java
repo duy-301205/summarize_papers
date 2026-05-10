@@ -2,6 +2,7 @@ package com.example.summarize_paper.controller;
 
 import com.example.summarize_paper.dto.response.ApiResponse;
 import com.example.summarize_paper.dto.response.ChartDataResponse;
+import com.example.summarize_paper.dto.response.DashboardStatsResponse;
 import com.example.summarize_paper.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,4 +25,17 @@ public class AnalyticsController {
                 .build();
     }
 
+    @GetMapping("/topics")
+    public ApiResponse<List<ChartDataResponse>> getTopicsChart() {
+        return ApiResponse.<List<ChartDataResponse>>builder()
+                .data(analyticsService.getTopicsChartData())
+                .build();
+    }
+
+    @GetMapping("/summary")
+    public ApiResponse<DashboardStatsResponse> getSummary() {
+        return ApiResponse.<DashboardStatsResponse>builder()
+                .data(analyticsService.getSummaryStats())
+                .build();
+    }
 }
