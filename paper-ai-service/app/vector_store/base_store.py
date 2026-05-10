@@ -1,5 +1,7 @@
 from app.db.postgres import SessionLocal
-from app.db.repository import search_relevant_chunks, upsert_paper_chunks
+from app.db.repository import upsert_paper_chunks 
+from app.db.models import PaperChunk 
+from sqlalchemy.orm import Session
 
 
 class PGVectorStore:
@@ -30,22 +32,22 @@ class PGVectorStore:
 
                 rows = []
                 for text, metadata, embedding in zip(chunk_batch, metadata_batch, embeddings):
-                    rows.append(
-                        {
-                            "paper_id": paper_id,
-                            "content": self._stored_content(text),
-                            "embedding": embedding,
-                            "page_number": metadata.get("page_number"),
-                            "chunk_index": metadata["chunk_index"],
-                        }
-                    )
-
+                    rows.append({
+                        "paper_id": paper_id,
+                        "content": self._stored_content(text),
+                        "embedding": embedding,
+                        "page_number": metadata.get("page_number", 0), 
+                        "chunk_index": metadata.get("chunk_index", 0),
+                    })
                 upsert_paper_chunks(db, rows)
 
-    def search_vectors(self, query: str, paper_id: int, k: int = 3):
-        if paper_id is None:
-            raise ValueError("paper_id is required to search chunks from paper_chunks")
-
+    def search_vectors(self, query: str, paper_id: int, k: int = 5):
         query_vector = self.embeddings_model.embed_query(query)
+        
         with SessionLocal() as db:
-            return search_relevant_chunks(db, query_vector=query_vector, paper_id=paper_id, limit=k)
+            results = db.query(PaperChunk) \
+                .filter(PaperChunk.paper_id == paper_id) \
+                .order_by(PaperChunk.embedding.cosine_distance(query_vector)) \
+                .limit(k) \
+                .all()
+            return results

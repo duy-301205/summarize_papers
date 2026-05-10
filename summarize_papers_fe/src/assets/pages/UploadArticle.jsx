@@ -175,7 +175,7 @@ const UploadArticle = () => {
                         Drop your PDF or DOCX here
                       </p>
                       <p className="text-slate-400 text-sm mb-8">
-                        Maximum file size: 25MB
+                        Maximum file size: 10MB
                       </p>
                       <button className="bg-[#1111d4] text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-900/20 uppercase">
                         Browse Files
@@ -211,16 +211,10 @@ const UploadArticle = () => {
                   <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
                     Output Language
                   </label>
-                  <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="p-1.5 bg-slate-50 rounded-2xl border border-slate-100">
                     <button
-                      onClick={() => setLanguage("EN")}
-                      className={`py-2.5 rounded-xl text-xs font-black transition-all ${language === "EN" ? "bg-white text-[#1111d4] shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
-                    >
-                      ENGLISH
-                    </button>
-                    <button
-                      onClick={() => setLanguage("VN")}
-                      className={`py-2.5 rounded-xl text-xs font-black transition-all ${language === "VN" ? "bg-white text-[#1111d4] shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                      disabled
+                      className="w-full py-2.5 rounded-xl text-xs font-black bg-white text-[#1111d4] shadow-sm cursor-default"
                     >
                       VIETNAMESE
                     </button>

@@ -3,7 +3,7 @@
 # Khởi tạo global components (DB, model, logger)
 
 from fastapi import FastAPI
-from app.api.routes import extract,embedding, summarize
+from app.api.routes import extract,embedding, summarize, rag
 
 app = FastAPI()
 
@@ -22,4 +22,10 @@ app.include_router(
     summarize.router, 
     prefix="/api/papers", 
     tags=["Analysis"]
+)
+
+app.include_router(
+    rag.router, 
+    prefix="/api/chat", 
+    tags=["Chat"]
 )
