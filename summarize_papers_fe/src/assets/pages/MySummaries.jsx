@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Plus,
@@ -13,17 +13,52 @@ import {
   ChevronRight,
   Sparkles,
   Users,
+  Loader2,
 } from "lucide-react";
 import MainLayout from "../components/MainLayout";
-import { SUMMARIES_LIST } from "../data/summariesData";
+import { getMyPapers } from "../config/api"; // Đảm bảo hàm này gọi tới /api/papers
 
 const MySummaries = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
+
+  // States quản lý dữ liệu từ API
+  const [papers, setPapers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
+  // Hàm fetch dữ liệu
+  const fetchPapers = async (page) => {
+    setLoading(true);
+    try {
+      // Gọi API với page và size mặc định là 10
+      const res = await getMyPapers(page, 10);
+      const pageData = res.data.data; // Đây là đối tượng Page từ Spring
+
+      setPapers(pageData.content);
+      setTotalPages(pageData.totalPages);
+      setTotalElements(pageData.totalElements);
+      setCurrentPage(pageData.number);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách bài báo:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPapers(currentPage);
+  }, [currentPage]);
+
+  // Hàm chuyển hướng sang trang phân tích chi tiết
+  const handleViewAnalysis = (id) => {
+    navigate(`/analysis/${id}`);
+  };
 
   return (
     <MainLayout>
-      <div className="p-6">
+      <div className="p-6 font-display">
         <div className="max-w-6xl mx-auto space-y-5">
           <div className="flex justify-between items-end">
             <div>
@@ -51,13 +86,13 @@ const MySummaries = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden font-display">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <table className="w-full text-left border-collapse table-fixed">
               <thead>
                 <tr className="bg-slate-50/50 text-slate-400 text-[10px] uppercase tracking-widest font-black border-b border-slate-100">
                   <th className="px-6 py-4 w-[45%]">Article Title</th>
-                  <th className="px-4 py-4 text-center w-[12%]">Type</th>
-                  <th className="px-4 py-4 w-[15%]">Language</th>
+                  <th className="px-4 py-4 text-center w-[12%]">Status</th>
+                  <th className="px-4 py-4 w-[15%]">Authors</th>
                   <th className="px-4 py-4 text-center w-[18%]">
                     Date Created
                   </th>
@@ -65,72 +100,116 @@ const MySummaries = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50 font-light">
-                {SUMMARIES_LIST.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="group hover:bg-slate-50/40 transition-colors h-[70px]"
-                  >
-                    <td className="px-6 py-0">
-                      <div className="flex items-center gap-3">
-                        <div className="p-1.5 bg-blue-50 text-[#1111d4] rounded-lg shrink-0 group-hover:scale-105 transition-all">
-                          <FileText size={16} />
-                        </div>
-                        <div className="min-w-0 flex-1 overflow-hidden">
-                          <p
-                            onClick={() => navigate("/analysis")}
-                            className="font-bold text-slate-900 text-[13px] leading-tight truncate group-hover:text-[#1111d4] transition-colors cursor-pointer"
-                          >
-                            {item.title}
-                          </p>
-                          <p className="text-[9px] text-slate-400 uppercase font-black tracking-tight italic truncate">
-                            {item.topic}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-0 text-center">
-                      <TypeBadge type={item.type} />
-                    </td>
-                    <td className="px-4 py-0">
-                      <span className="text-[12px] font-semibold text-slate-600 truncate block">
-                        {item.language}
-                      </span>
-                    </td>
-                    <td className="px-4 py-0 text-center">
-                      <span className="text-[12px] font-medium text-slate-400">
-                        {item.date}
-                      </span>
-                    </td>
-                    <td className="px-6 py-0 text-right relative">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                        <button
-                          onClick={() => navigate("/analysis")}
-                          className="p-1.5 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg"
-                        >
-                          <Eye size={14} strokeWidth={2.5} />
-                        </button>
-                        <button className="p-1.5 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg">
-                          <Download size={14} strokeWidth={2.5} />
-                        </button>
-                      </div>
-                      <div className="absolute inset-y-0 right-6 flex items-center justify-end group-hover:hidden text-slate-300">
-                        <MoreHorizontal size={18} />
+                {loading ? (
+                  <tr>
+                    <td colSpan="5" className="py-20 text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <Loader2
+                          className="animate-spin text-[#1111d4]"
+                          size={32}
+                        />
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                          Đang tải dữ liệu...
+                        </span>
                       </div>
                     </td>
                   </tr>
-                ))}
+                ) : papers.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="py-20 text-center text-slate-400 italic text-sm"
+                    >
+                      Bạn chưa có bản tóm tắt nào.
+                    </td>
+                  </tr>
+                ) : (
+                  papers.map((item) => (
+                    <tr
+                      key={item.id}
+                      className="group hover:bg-slate-50/40 transition-colors h-[70px]"
+                    >
+                      <td className="px-6 py-0">
+                        <div className="flex items-center gap-3">
+                          <div className="p-1.5 bg-blue-50 text-[#1111d4] rounded-lg shrink-0">
+                            <FileText size={16} />
+                          </div>
+                          <div className="min-w-0 flex-1 overflow-hidden">
+                            <p
+                              onClick={() => handleViewAnalysis(item.id)}
+                              title={item.title}
+                              className="font-bold text-slate-900 text-[13px] leading-tight truncate group-hover:text-[#1111d4] transition-colors cursor-pointer"
+                            >
+                              {item.title}
+                            </p>
+                            <p className="text-[9px] text-slate-400 uppercase font-black tracking-tight italic truncate">
+                              {item.fileType} •{" "}
+                              {(item.fileSize / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-0 text-center">
+                        <StatusBadge status={item.status} />
+                      </td>
+                      <td className="px-4 py-0">
+                        <span className="text-[12px] font-semibold text-slate-600 truncate block">
+                          {item.authors || "N/A"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-0 text-center">
+                        <span className="text-[12px] font-medium text-slate-400">
+                          {new Date(item.createdAt).toLocaleDateString("vi-VN")}
+                        </span>
+                      </td>
+                      <td className="px-6 py-0 text-right relative">
+                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                          <button
+                            onClick={() => handleViewAnalysis(item.id)}
+                            className="p-1.5 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg cursor-pointer"
+                          >
+                            <Eye size={14} strokeWidth={2.5} />
+                          </button>
+                          <button className="p-1.5 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg cursor-pointer">
+                            <Download size={14} strokeWidth={2.5} />
+                          </button>
+                        </div>
+                        <div className="absolute inset-y-0 right-6 flex items-center justify-end group-hover:hidden text-slate-300">
+                          <MoreHorizontal size={18} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
+
+            {/* Phân trang */}
             <div className="px-6 py-2 bg-slate-50/30 border-t border-slate-50 flex items-center justify-between">
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                Showing 5 of 124 results
+                Showing page {currentPage + 1} of {totalPages} ({totalElements}{" "}
+                results)
               </p>
               <div className="flex items-center gap-1.5">
-                <PageNavBtn icon={<ChevronLeft size={14} />} />
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(0, prev - 1))
+                  }
+                  disabled={currentPage === 0}
+                  className="disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <PageNavBtn icon={<ChevronLeft size={14} />} />
+                </button>
                 <span className="size-7 flex items-center justify-center text-[11px] font-black text-[#1111d4] bg-white rounded-lg border border-slate-100">
-                  1
+                  {currentPage + 1}
                 </span>
-                <PageNavBtn icon={<ChevronRight size={14} />} />
+                <button
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  disabled={currentPage + 1 >= totalPages}
+                  className="disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <PageNavBtn icon={<ChevronRight size={14} />} />
+                </button>
               </div>
             </div>
           </div>
@@ -156,6 +235,7 @@ const MySummaries = () => {
     </MainLayout>
   );
 };
+
 // --- HELPER COMPONENTS ---
 
 const FilterButton = ({ icon, label }) => (
@@ -164,25 +244,25 @@ const FilterButton = ({ icon, label }) => (
   </button>
 );
 
-const TypeBadge = ({ type }) => {
-  const styles = {
-    Detailed: "bg-indigo-50 text-indigo-600 border-indigo-100",
-    Bulleted: "bg-amber-50 text-amber-600 border-amber-100",
-    Abstract: "bg-emerald-50 text-emerald-600 border-emerald-100",
-  };
+const StatusBadge = ({ status }) => {
+  const isDone = status === "DONE";
   return (
     <span
-      className={`inline-block px-2 py-0.5 border rounded-lg text-[9px] font-black uppercase tracking-tighter min-w-[70px] text-center ${styles[type]}`}
+      className={`inline-block px-2 py-0.5 border rounded-lg text-[9px] font-black uppercase tracking-tighter min-w-[70px] text-center ${
+        isDone
+          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+          : "bg-amber-50 text-amber-600 border-amber-100"
+      }`}
     >
-      {type}
+      {status}
     </span>
   );
 };
 
 const PageNavBtn = ({ icon }) => (
-  <button className="size-7 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 hover:text-[#1111d4] transition-all cursor-pointer">
+  <div className="size-7 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 hover:text-[#1111d4] transition-all cursor-pointer">
     {icon}
-  </button>
+  </div>
 );
 
 const BannerCard = ({ icon, title, desc, variant, btnText }) => {
@@ -215,7 +295,7 @@ const BannerCard = ({ icon, title, desc, variant, btnText }) => {
       <button
         className={`mt-auto flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.1em] transition-all ${
           isPrimary ? "text-white" : "text-primary"
-        } group-hover:gap-4`}
+        } group-hover:gap-4 cursor-pointer`}
       >
         {btnText} <ChevronRight size={14} strokeWidth={3} />
       </button>

@@ -1,1 +1,0 @@
-# interface chung cho LLM

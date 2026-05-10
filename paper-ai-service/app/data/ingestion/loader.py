@@ -170,7 +170,9 @@ class VNUGenericJournalScraper:
             "authors": [],
             "year": 2024,
             "abstract": None,
-            "pdf_url": None
+            "pdf_url": None,
+            "keywords": None,   
+            "doi": None,  
         }
         
         try:
@@ -182,6 +184,8 @@ class VNUGenericJournalScraper:
                 title_meta = soup.find('meta', attrs={'name': 'DC.Title'})
                 if title_meta:
                     metadata['title'] = title_meta.get('content', '').strip()
+
+            
             
             # Authors (lặp lại)
             author_metas = soup.find_all('meta', attrs={'name': 'citation_author'})
@@ -225,6 +229,19 @@ class VNUGenericJournalScraper:
                         if not pdf_href.startswith('http'):
                             pdf_href = urljoin(self.BASE_URL, pdf_href)
                         metadata['pdf_url'] = pdf_href
+            
+            kw_meta = soup.find('meta', attrs={'name': 'citation_keywords'})
+            if not kw_meta:
+                kw_meta = soup.find('meta', attrs={'name': 'DC.Subject'})
+            if kw_meta:
+                metadata['keywords'] = kw_meta.get('content', '').strip() or None
+
+            # DOI
+            doi_meta = soup.find('meta', attrs={'name': 'citation_doi'})
+            if not doi_meta:
+                doi_meta = soup.find('meta', attrs={'name': 'DC.Identifier.DOI'})
+            if doi_meta:
+                metadata['doi'] = doi_meta.get('content', '').strip() or None
         
         except Exception as e:
             logger.warning(f"[WARNING] Lỗi extract metadata: {e}")

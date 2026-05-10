@@ -1,0 +1,430 @@
+{
+  "paper": {
+    "id": 2,
+    "title": "FS_0096",
+    "file_path": "D:\\summarize_papers\\paper-ai-service\\storage\\raw_pdfs\\FS_0096.pdf",
+    "file_size": 264129,
+    "file_type": "pdf",
+    "status": "DONE",
+    "checksum": "617237d9a2e8be81e1817ae5bf164e56a876403176b209e8f2d881ed3201096a"
+  },
+  "chunk_count": 52,
+  "chunks": [
+    {
+      "id": 52,
+      "paper_id": 2,
+      "chunk_index": 0,
+      "page_number": null,
+      "content": "1. Đặt vấn đề*** Nếu như cuối những năm 1990 là thời kì nở rộ của phim điện ảnh và phim truyền hình Hàn Quốc, đầu những năm 2000 là thời kì bắt đầu nổi lên xu hướng học tiếng Hàn thì khoảng 10 năm trở lại đây, giới học thuật Việt Nam còn hay nhắc tới cụm từ “Hàn Quốc học”. Điều này cho thấy rõ rằng đề tài mã số N.20.06.\n https://doi.org/10.25073/2525-2445/vnufs.4765 diện về văn hóa, kinh tế, chính trị, xã hội... của Hàn Quốc.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 53,
+      "paper_id": 2,
+      "chunk_index": 1,
+      "page_number": null,
+      "content": "cùng với các chiến lược quảng bá văn hóa đại chúng và giáo dục tiếng Hàn, gần đây, Chính phủ Hàn Quốc còn đặc biệt coi trọng việc thúc đẩy phát triển nghiên cứu Hàn Quốc học1 ở nước ngoài. Dự án xây dựng trường đại học trọng điểm về Hàn Quốc học được kí kết giữa Viện Hàn lâm nghiên cứu Hàn Quốc học trung ương (AKS) và Khoa Ngôn ngữ và Văn hóa Hàn Quốc, Trường số điểm hạn chế trong nội dung kiến thức và hoạt động dạy – học các học phần Hàn Quốc học của Khoa Ngôn ngữ và Văn hóa Hàn Quốc, Trường Đại học Ngoại ngữ, Đại học Quốc gia Hà Nội. Từ đó, nhóm tác giả đã mạnh dạn đề xuất các phương án nhằm đổi mới hoạt động dạy – học Hàn Quốc học tại trường trên cơ sở vận dụng nguyên lý dạy – học kiến tạo và khảo sát nguyện vọng của người học. Một số phương án được chỉ ra như khảo sát định kì sau khi kết thúc môn học, giới hạn nội dung kiến thức phù hợp với từng nhóm đối tượng người học, kết hợp nhiều hoạt động dạy – học đa dạng, thường xuyên tạo động lực học tập cho người học...",
+      "embedding_dim": 768
+    },
+    {
+      "id": 54,
+      "paper_id": 2,
+      "chunk_index": 2,
+      "page_number": null,
+      "content": "Bên cạnh đó, bài viết cũng thiết kế một số hoạt động dạy – học mẫu Từ khóa: nội dung kiến thức, hoạt động dạy – học Hàn Quốc học, nguyên lý dạy – học kiến tạo, NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 55,
+      "paper_id": 2,
+      "chunk_index": 3,
+      "page_number": null,
+      "content": "Đại học Ngoại ngữ, Đại học Quốc gia Hà Nội năm 2019 có thể coi là dấu mốc đáng chú ý gần đây nhất trong lịch sử nghiên cứu Hàn Quốc học tại Việt Nam. Bên cạnh đó, theo thống kê của T. H. Trần (2019), trong số 21 trường đại học tại Việt Nam đang giảng dạy tiếng Hàn và văn hóa Hàn Quốc thì chỉ có 30% chuyên đào tạo tiếng Hàn, còn 70% đào tạo kết hợp cả tiếng Hàn và Hàn Quốc học (T. H. Trần, 2019, tr. 50). Do vậy, việc nghiên cứu thúc đẩy hoạt động dạy – học Hàn Quốc học tại các trường đại học của Việt Nam là vô cùng cần thiết, nhằm bắt kịp xu hướng trong quan hệ giao lưu, hợp tác giữa hai nước.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 56,
+      "paper_id": 2,
+      "chunk_index": 4,
+      "page_number": null,
+      "content": "Khảo sát tình hình nghiên cứu về Hàn Quốc học tại Việt Nam có thể chia thành hai nhóm. Nhóm thứ nhất là các nghiên cứu về thực trạng và giải pháp đẩy mạnh hoạt động nghiên cứu Hàn Quốc học tại Việt Nam và nhóm thứ hai là các nghiên cứu về thực trạng và phương án thúc đẩy hoạt động giáo dục Hàn Quốc học tại các trường đại học của Việt Nam. Các nghiên cứu tiêu biểu cho nhóm thứ nhất có thể kể đến như Jee (2014), T. T. L. Trần (2014), T. T. Nguyễn (2015), Mai (2017) v.v… Các nghiên cứu tiêu biểu cho nhóm thứ hai có thể kể đến như Ha (2006), A. N. Lee (2007), Lý (2007), T. H.\nTrần và T. T. V. Nguyễn (2012), Nam (2010, 2012), Bùi và G. W. Lee (2014), N. N. H.\nTrần và Võ (2017), T. H. T. Trần (2019, 2020) v.v… Theo đó, nhóm nghiên cứu thứ nhất chiếm số lượng ít hơn và chỉ đề cập đến hoạt động nghiên cứu học thuật mà không bàn đến hoạt động giáo dục hay hoạt động dạy – học liên quan đến Hàn Quốc học. Do vậy, bài viết này sẽ khảo sát trọng tâm vào nhóm nghiên cứu thứ hai.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 57,
+      "paper_id": 2,
+      "chunk_index": 5,
+      "page_number": null,
+      "content": "Điểm đáng chú ý là phần lớn nghiên cứu thuộc nhóm thứ hai đều triển khai bài viết theo hướng thống kê số lượng các cơ quan đào tạo Hàn Quốc học tại Việt Nam, thành tựu và hạn chế trong giảng dạy Hàn Quốc học tại các trường đại học ở Việt Nam như về đội ngũ giảng dạy, giáo trình, số lượng sinh viên v.v…, đề ra giải pháp hay phương án khắc phục các hạn chế nhằm thúc đẩy hoạt động giáo dục Hàn Quốc học tại Việt Nam. Các giải pháp được chỉ ra thường mang tính chung chung và tương đối trùng lặp giữa các nghiên cứu như nâng cao trình độ đội ngũ giảng dạy chuyên ngành Hàn Quốc học (thạc sĩ, tiến sĩ), tăng cường hỗ trợ dịch thuật và biên soạn các giáo trình, tài liệu tham khảo về Hàn Quốc học, xây dựng các nhóm nghiên cứu mạnh về Hàn Quốc học v.v… Trái lại, các nghiên cứu đi sâu tìm hiểu về hạn chế và phương hướng khắc phục để áp dụng cho các bộ môn, khoa còn hạn chế.\nTiếp cận theo hướng nghiên cứu cụ thể này có thể kể đến N. N. H. Trần và Võ (2017), T.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 58,
+      "paper_id": 2,
+      "chunk_index": 6,
+      "page_number": null,
+      "content": "Tiếp cận theo hướng nghiên cứu cụ thể này có thể kể đến N. N. H. Trần và Võ (2017), T.\nB. P. Trần (2020)… Tuy nhiên, hai nghiên cứu này mới dừng lại ở việc đề xuất một số phương pháp giảng dạy hiệu quả với học phần Văn hóa Hàn Quốc và Văn học Hàn Quốc. Bên cạnh đó, các phương pháp giảng dạy được đưa ra trong các nghiên cứu này cũng chưa xoáy sâu vào các hoạt động dạy – học đa dạng dựa trên một nguyên lý giáo dục cụ thể hay trên cơ sở khảo sát lấy ý kiến từ người học. Trong khi để thúc đẩy hoạt động dạy – học Hàn Quốc học tại các trường đại học thì việc đổi mới, thiết kế, triển khai các hoạt động dạy – học như thế nào đóng vai trò vô cùng quan trọng.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 59,
+      "paper_id": 2,
+      "chunk_index": 7,
+      "page_number": null,
+      "content": "Việc thiết kế các hoạt động dạy – học thuộc phạm trù phương pháp giáo dục. Bàn về phương pháp giáo dục hiệu quả lấy người học làm trung tâm, phát huy tối đa tính tự chủ, sáng tạo trong dạy – học không thể không nhắc tới lý thuyết kiến tạo được sáng lập bởi nhà tâm lý học người Thụy Sĩ Jean Piaget. Trong khoảng 10 năm trở lại đây, thuyết kiến tạo đang trở thành đề tài thu hút được sự quan tâm của nhiều học giả Việt NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)\n Nam. Dễ nhận thấy rằng phần lớn các nghiên cứu ở Việt Nam thường tiếp cận lý thuyết kiến tạo ở góc độ thực tiễn như vận dụng lý thuyết kiến tạo vào cải tiến hoạt động dạy – học hiệu quả. Có thể kể đến các nghiên cứu tiêu biểu như T. H. Nguyễn (2008), T. L. A.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 60,
+      "paper_id": 2,
+      "chunk_index": 8,
+      "page_number": null,
+      "content": "Vũ (2009), L. T. Nguyễn (2018), Đàm (2017) v.v… Điểm khác biệt của các nghiên cứu này là do vận dụng lý thuyết kiến tạo vào các môn học, lĩnh vực khác nhau nên các hoạt động dạy – học triển khai cụ thể không giống nhau. Tức là, lý thuyết kiến tạo đã được vận dụng linh hoạt để tạo nên các sản phẩm giáo dục mang màu sắc đa dạng. Tuy nhiên, đến nay chưa có nghiên cứu nào vận dụng lý thuyết kiến tạo vào đổi mới, cải tiến hoạt động dạy – học của các học phần Hàn Quốc học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 61,
+      "paper_id": 2,
+      "chunk_index": 9,
+      "page_number": null,
+      "content": "Nắm được khoảng trống trong các nghiên cứu đi trước, bài viết này tiếp cận chủ đề Hàn Quốc học theo hướng nghiên cứu cụ thể dựa trên nguyên lý giáo dục của thuyết kiến tạo và trên cơ sở khảo sát lấy ý kiến người học nhằm trả lời hai câu hỏi nghiên cứu: (1) thực trạng dạy – học các học phần chuyên ngành Hàn Quốc học tại Khoa Ngôn ngữ và Văn hóa Hàn Quốc, Trường Đại học Ngoại ngữ, Đại học Quốc gia Hà Nội như thế nào? (2) có thể đưa ra những phương án cụ thể nào nhằm đổi mới nội dung kiến thức và hoạt động dạy – học các học phần Hàn Quốc học tại đây?\n 2. Cơ sở lý luận và phương pháp nghiên cứu 2.1. Cơ sở lý luận Piaget (1923) đã nhấn mạnh đến quá trình tự học, tự khám phá, tự tạo nên kiến thức của mỗi cá nhân. Theo ông, dạy học luôn luôn là phương tiện gián tiếp giúp người học tự nhận ra kiến thức cho riêng mình.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 62,
+      "paper_id": 2,
+      "chunk_index": 10,
+      "page_number": null,
+      "content": "Người học chỉ tiếp thu những gì đang được nói rồi tự diễn giải những gì nghe được dưới góc độ hiểu biết và kinh nghiệm của chính họ. Tức là, kiến thức không phải là thông tin được cung cấp ở một đầu, được mã hóa cố định và truy xuất ở đầu kia. Thay vào đó, mỗi người học dựa vào hiểu biết và kinh nghiệm của mình sẽ biến đổi đầu vào để tạo nên các đầu ra khác nhau (Ackermann, 2001, tr. 3).\nĐây chính là nội dung cốt lõi của Thuyết kiến tạo nội sinh. Năm 1934, nhà tâm lý học người Nga Lev Vygosky (1896-1934) đã phát triển nó thành Thuyết kiến tạo xã hội.\nTheo đó, Lev Vygosky nhấn mạnh rằng kiến thức phải được nảy sinh trong quá trình tương tác xã hội, thông qua tranh luận và trao đổi cộng đồng (Đàm, 2017, tr. 364)\nNhư vậy, kết hợp quan điểm của Piaget và Lev Vygosky có thể thấy thuyết kiến tạo nhấn mạnh tính tự chủ, sáng tạo của người học và tính tương tác giữa người học với các chủ thể khác như giáo viên, người học, giáo cụ v.v... trong quá trình tiếp thu tri thức.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 63,
+      "paper_id": 2,
+      "chunk_index": 11,
+      "page_number": null,
+      "content": "Dựa trên các nội dung cốt lõi của hai quan điểm trên, nhiều nhà nghiên cứu đã phân tích và chỉ ra những nguyên tắc dạy và học kiến tạo. Về nguyên tắc học kiến tạo, J.\nDewey nhấn mạnh học tập không phải là sự chấp nhận thụ động kiến thức tồn tại \"ngoài kia\" mà học tập liên quan đến việc người học gắn kết với thế giới (Dewey, 1916, tr. 256).\nBên cạnh đó, Edwards và Mercer (1987) tiếp tục khẳng định vai trò quan trọng của tương tác xã hội trong học tập: học tập là một hoạt động xã hội, gắn liền chúng ta với con người khác như giáo viên, đồng nghiệp, gia đình hay những người quen biết thông thường.\nPhần lớn giáo dục truyền thống hướng tới việc cô lập người học khỏi mọi tương tác xã hội và hướng tới việc xem giáo dục là mối quan hệ một chiều giữa người học và tài liệu khách quan cần học. Ngược lại, giáo dục tiến bộ nhận ra khía cạnh xã hội của việc học và sử dụng hội thoại, tương tác với người khác như một khía cạnh không thể thiếu của việc học (Edwards & Mercer, 1987, tr. 70-71).",
+      "embedding_dim": 768
+    },
+    {
+      "id": 64,
+      "paper_id": 2,
+      "chunk_index": 12,
+      "page_number": null,
+      "content": "Khẳng định này khá tương đồng với quan NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)\n điểm kiến tạo xã hội của Lev Vygosky. Điểm chung của hai tác giả là nhấn mạnh rằng học kiến tạo phải thông qua tương tác.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 65,
+      "paper_id": 2,
+      "chunk_index": 13,
+      "page_number": null,
+      "content": "Về nguyên tắc dạy kiến tạo, Duckworth, Easley, Hawkins và Henriques (1990) nhấn mạnh vai trò của người dạy khi nhận định rằng hành động quan trọng để tạo nên ý tưởng kiến tạo là cần tạo ra các tình huống kích thích tư duy. Trong khi đó, George E. Hein (1991) lại nhấn mạnh đến tính logic, tính kế thừa giữa các nội dung giảng dạy, giữa kiến thức mới với kiến thức cũ. Ông khẳng định: không thể đồng hóa kiến thức mới mà không có một số cấu trúc được phát triển từ kiến thức trước đó để xây dựng. Chúng ta càng biết nhiều, chúng ta càng có thể học hỏi. Do đó, mọi nỗ lực giảng dạy phải được kết nối với trạng thái của người học, phải cung cấp một đường dẫn đến chủ đề cho người học dựa trên kiến thức trước đó (Hein, 1991, tr. 9). Điều này được hiểu là các nội dung, hoạt động giảng dạy mới cần đảm bảo tính tiếp nối và liên quan nhất định với các nội dung đã dạy trước đó để người học có thể tiếp nhận các kiến thức một cách hệ thống hơn. Bên cạnh đó, George E.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 66,
+      "paper_id": 2,
+      "chunk_index": 14,
+      "page_number": null,
+      "content": "Bên cạnh đó, George E. Hein cũng khẳng định: động lực là một thành phần quan trọng và cần thiết cho học tập (Hein, 1991, tr. 10). Tức là, người dạy đóng vai trò là người tạo ra động lực cho người học bằng nhiều hình thức như khen ngợi, cộng điểm, thưởng quà v.v...",
+      "embedding_dim": 768
+    },
+    {
+      "id": 67,
+      "paper_id": 2,
+      "chunk_index": 15,
+      "page_number": null,
+      "content": "Tổng hợp các quan điểm về dạy – học kiến tạo nêu trên, bài viết này rút ra một số nguyên tắc dạy – học có thể áp dụng cho các học phần Hàn Quốc học như sau:\n1) Dạy – học lấy người học làm trung tâm, phát huy tối đa tính tự chủ, sáng tạo của người học 2) Dạy – học thông qua tương tác nhiều chiều giữa người học với người học, người học với giáo viên, người học với các giáo cụ v.v...\n3) Thiết kế các hoạt động dạy – học theo hệ thống, logic 4) Phải tạo ra động lực cho việc dạy – học Dựa trên 4 nguyên tắc dạy – học kiến tạo này, bài viết sẽ đề xuất các phương án đổi mới hoạt động dạy – học các học phần Hàn Quốc học hiệu quả.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 68,
+      "paper_id": 2,
+      "chunk_index": 16,
+      "page_number": null,
+      "content": "Hàn Quốc học là môn học nghiên cứu về đất nước và con người Hàn Quốc, trong đó nổi bật nhất là các phạm trù về lịch sử, kinh tế, văn hóa (văn hóa truyền thống và công nghiệp văn hóa Hallyu). Về lịch sử và văn hóa, Hàn Quốc có nhiều điểm tương đồng với Việt Nam. Về kinh tế, Hàn Quốc nổi tiếng thế giới với kì tích sông Hàn và hiện là đối tác chiến lược với Việt Nam. Bên cạnh đó, Hàn Quốc còn được biết đến rộng rãi bởi sự phát triển vượt trội của ngành công nghiệp văn hóa mà minh chứng là Hallyu – làn sóng văn hóa Hàn Quốc đã và đang tạo ảnh hưởng sâu rộng trên toàn thế giới. Trong đó, phải kể đến một số thành công nổi bật ở các ngành công nghiệp như điện ảnh, âm nhạc, làm đẹp v.v...\nNắm rõ được các đặc điểm của Hàn Quốc học như trên, trên cơ sở áp dụng 4 nguyên tắc dạy và học kiến tạo, cần sử dụng tối đa các dữ liệu phim ảnh sinh động (phim tài liệu, phim điện ảnh, phim truyền hình)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 69,
+      "paper_id": 2,
+      "chunk_index": 17,
+      "page_number": null,
+      "content": "của Hàn Quốc làm tài liệu, giáo cụ dạy và học cho các học phần Hàn Quốc học như lịch sử, văn hóa, văn học... Bên cạnh đó, hoạt động tự tìm hiểu về Hàn Quốc trong sự đối chiếu so sánh với Việt Nam cũng là một trong những hoạt động dạy và học kiến tạo phát huy tính tự chủ sáng tạo của người dạy và người học. Mặt khác, các hoạt động trải nghiệm trực tiếp như học làm món ăn Hàn Quốc, học theo điệu múa, bài nhảy của người Hàn Quốc, đóng vai các nhân vật lịch sử của Hàn Quốc v.v... cũng được xem là hoạt động dạy và học kiến tạo hiệu quả phát huy tối đa sự tương tác nhiều chiều giữa người học với người học, người học với giáo viên, người học với các giáo cụ v.v...\n NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 70,
+      "paper_id": 2,
+      "chunk_index": 18,
+      "page_number": null,
+      "content": "2.3. Phương pháp nghiên cứu Tác giả tiếp cận vấn đề nghiên cứu xuất phát từ góc độ thực tiễn quan sát hoạt động dạy – học Hàn Quốc học tại Khoa và kinh nghiệm giảng dạy một số môn học thuộc chuyên ngành Hàn Quốc học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 71,
+      "paper_id": 2,
+      "chunk_index": 19,
+      "page_number": null,
+      "content": "Từ đó, tác giả nhận thấy hoạt động dạy – học các học phần Hàn Quốc học của Khoa còn tồn tại một số hạn chế như: (1) nội dung các môn học chưa có sự phân chia hệ thống, logic, (2) hoạt động dạy – học còn mang tính thụ động truyền thống như: các hoạt động lấy người học làm trung tâm còn chiếm tỷ trọng ít (do người dạy còn mang nhiều tâm lý muốn tranh thủ tối đa thời gian để cung cấp nhiều nhất có thể các kiến thức cho người học theo phương thức thuyết giảng truyền thống); các hoạt động dạy – học nhằm phát huy tính tự chủ, sáng tạo của người học cũng chưa được thực hiện một cách bài bản, hệ Bài viết này sử dụng 3 phương pháp thu thập dữ liệu chính là (1) quan sát thực tiễn hoạt động dạy - học các phần Hàn Quốc học, (2) tổng hợp các nguồn tài liệu sẵn có từ sách, báo, tạp chí, Internet..., (3) khảo sát xã hội học bằng bảng hỏi lấy ý kiến người học về nội dung và hoạt động dạy – học các học phần Hàn Quốc học được thực hiện từ ngày 1/12/2020 đến ngày 10/12/2020.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 72,
+      "paper_id": 2,
+      "chunk_index": 20,
+      "page_number": null,
+      "content": "Đối tượng khảo sát là 286 sinh viên năm thứ 3, năm thứ 4 đã và đang được học các môn chuyên ngành Hàn Quốc học. Tổng số đối tượng khảo sát được chia thành 4 nhóm: 52 sinh viên hệ sư phạm, 48 sinh viên hệ chuẩn định hướng Hàn Quốc học, 140 sinh viên hệ chuẩn định hướng phiên dịch, 46 sinh viên hệ chất lượng cao.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 73,
+      "paper_id": 2,
+      "chunk_index": 21,
+      "page_number": null,
+      "content": "thống theo các nguyên lý của lý thuyết kiến tạo như khơi gợi niềm yêu thích và ý thức tự giác của người học với môn học, tạo các tình huống khó khăn nhằm giúp người học vận động tư duy giải quyết vấn đề v.v...\n Từ thực tiễn trên, tác giả nhận thấy cần có phương án điều chỉnh, làm mới nội dung và hoạt động dạy – học các học phần nhằm thúc đẩy hoạt động dạy – học Hàn Quốc học tại Khoa.\n Tuy nhiên, mục đích cuối cùng của việc đổi mới phương pháp dạy – học là đáp ứng được tối đa nhu cầu của người học. Do vậy, việc khảo sát lấy ý kiến từ người học về các hoạt động dạy – học dự kiến triển khai là rất cần thiết.\n Từ những lập luận trên, thiết kế nghiên cứu của bài viết này được sơ đồ hóa theo các giai đoạn như sau:\n Từ các dữ liệu thu thập được, bài viết sử dụng các phương pháp thống kê, phân tích tỷ lệ % các phương án trả lời và phương pháp so sánh, phân tích sự khác biệt trong việc lựa chọn phương án trả lời giữa các nhóm đối tượng khảo sát.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 74,
+      "paper_id": 2,
+      "chunk_index": 22,
+      "page_number": null,
+      "content": "3. Thực trạng dạy – học các học phần chuyên ngành Hàn Quốc học 3.1. Giới thiệu khái quát về các học phần Theo Khung Chương trình đào tạo Ngành Ngôn ngữ Hàn Quốc hiện hành, các học phần chuyên ngành Hàn Quốc học được giảng dạy cho tất cả các sinh viên thuộc các hệ với tỷ trọng số môn khác nhau tùy thuộc định hướng của mỗi hệ học. Có thể tham khảo danh sách các học phần cụ thể cho từng hệ học trong bảng 1 dưới đây.\n NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 75,
+      "paper_id": 2,
+      "chunk_index": 23,
+      "page_number": null,
+      "content": "Danh mục môn học thuộc chuyên ngành Hàn Quốc học2 Bảng 1 Tên học phần Hệ chất lượng cao Địa lý đại cương x Môi trường và phát triển x Đất nước học Hàn Quốc 1 x Đất nước học Hàn Quốc 2 x Giao tiếp liên văn hóa x Kinh tế - Chính trị Hàn Quốc x Nhập môn xã hội Hàn Quốc Lịch sử Hàn Quốc Hàn Quốc học 1 Văn học Hàn Quốc 1 Tìm hiểu văn hóa truyền thống Hàn Quốc Văn hóa Hàn Quốc và Hallyu Nhìn vào bảng 1 có thể thấy sinh viên thuộc hệ chuẩn định hướng Hàn Quốc học sẽ được học tổng số môn nhiều hơn hẳn so với sinh viên thuộc các hệ còn lại. Ngoại trừ hai học phần Địa lý đại cương và Môi trường và phát triển được giảng dạy từ năm thứ 2 thì các học phần còn lại sẽ được dạy lần lượt ở năm thứ 3 và năm thứ 4. Trong đó, các học phần như Địa lý đại cương, Môi trường và phát triển và Đất nước học Hàn Quốc 1 là các môn học được giảng dạy chung cho cả 4 hệ học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 76,
+      "paper_id": 2,
+      "chunk_index": 24,
+      "page_number": null,
+      "content": "Trong đó, các học phần như Địa lý đại cương, Môi trường và phát triển và Đất nước học Hàn Quốc 1 là các môn học được giảng dạy chung cho cả 4 hệ học. Tuy nhiên, trong khuôn khổ nghiên cứu này, nhóm tác giả chỉ lựa chọn 4 học phần do chính các thành viên trong nhóm đang trực tiếp đảm nhận giảng dạy để khảo sát lấy ý kiến người học. Đó là các học phần như Địa lý đại cương, Đất nước học Hàn Quốc 1, Đất nước học Hàn Quốc 2, Kinh tế đối tượng nghiên cứu và khảo sát của nghiên cứu này.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 77,
+      "paper_id": 2,
+      "chunk_index": 25,
+      "page_number": null,
+      "content": "Hệ chuẩn Hệ Sư phạm Định hướng Phiên dịch Định hướng Hàn Quốc học x x x x x x x x x x x x x x x x x x x x x x x - Chính trị Hàn Quốc.\nPhần lớn sinh viên được hỏi đều đánh giá danh mục và sự phân bổ các học phần cho từng hệ học nêu trên là tương đối phù hợp, chiếm 79,3%. Nếu tính cả 15% sinh viên trả lời là hoàn toàn phù hợp thì có đủ độ tin cậy để khẳng danh mục các học phần Hàn Quốc học đã đáp ứng được phần lớn nhu cầu của người học. Tuy nhiên, bên cạnh những điểm hài lòng về môn học, người học cũng phản hồi về một số điểm hạn chế. Kết quả khảo sát này sẽ được làm rõ trong mục 3.2 dưới đây.\n 3.2. Một số điểm hạn chế trong nội dung kiến thức và hoạt động dạy – học Như đã đề cập ở trên, nhóm tác giả đã tiến hành rà soát đề cương học phần và kế nay. Các học phần có tên trong Khung CTĐT ngành Ngôn ngữ Hàn Quốc nhưng được thực dạy sẽ không thuộc NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 78,
+      "paper_id": 2,
+      "chunk_index": 26,
+      "page_number": null,
+      "content": "hoạch giảng dạy của các học phần Hàn Quốc học trong bảng 1 nêu trên kết hợp dự giờ, quan sát trực tiếp hoạt động dạy – học trên lớp. Bên cạnh đó, nhóm nghiên cứu đã thực hiện khảo sát bằng bảng hỏi lấy ý kiến phản hồi từ người học. Từ đó, có thể rút ra một số vấn đề còn tồn tại chung trong hoạt động dạy – học các học phần Hàn Quốc học như sau.\nThứ nhất, các hoạt động thực hành cùng phương thức tiến hành một giờ dạy chưa được miêu tả rõ ràng trong Đề cương học phần hay Kế hoạch giảng dạy.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 79,
+      "paper_id": 2,
+      "chunk_index": 27,
+      "page_number": null,
+      "content": "Thứ nhất, các hoạt động thực hành cùng phương thức tiến hành một giờ dạy chưa được miêu tả rõ ràng trong Đề cương học phần hay Kế hoạch giảng dạy.\nThứ hai, hoạt động mang tính thực hành còn hạn chế. Hay nói cách khác, phần lớn thời lượng của môn học được dành cho hoạt động thuyết giảng của giáo viên. Hoạt động thực hành được sử dụng phổ biến nhất trong hầu hết các học phần Hàn Quốc học là nghe nhìn hình ảnh, video, thuyết trình cá nhân, thuyết trình nhóm. Một số học phần như Lịch sử Hàn Quốc, Địa lý đại cương, Văn học Hàn Quốc v.v... đã và đang áp dụng một số hoạt động dạy – học khác như đóng kịch phân vai, dạy học qua website môn học v.v... Các hoạt động thực hành đa dạng khác như làm bài tập dự án, thiết kế bài thi quiz v.v... còn chưa được áp dụng.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 80,
+      "paper_id": 2,
+      "chunk_index": 28,
+      "page_number": null,
+      "content": "Theo kết quả khảo sát của nghiên cứu này, 88,6% là tỷ lệ khá cao cho rằng hoạt động thuyết trình cá nhân là không phù hợp với các học phần Hàn Quốc học. Hoạt động đóng kịch phân vai và hoạt động dạy học qua website môn học cũng được đánh giá là không phù hợp dưới góc nhìn của người học với tỷ lệ không tán thành lần lượt là 77,9% và 84,6%. Tuy nhiên, do khảo sát chỉ được tiến hành với 4 môn học Địa lý đại cương, Đất nước học Hàn Quốc 1, 2, Kinh tế - Chính trị Hàn Quốc nên khó có thể khẳng định kết quả khảo sát này đúng với toàn bộ các học phần thuộc chuyên ngành Hàn Quốc học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 81,
+      "paper_id": 2,
+      "chunk_index": 29,
+      "page_number": null,
+      "content": "Mặc dù vậy, đây cũng là một cơ sở đáng tin cậy để người dạy tham khảo, từ đó tiến hành khảo sát ý kiến người học trước và sau khi áp dụng các hoạt động dạy – học để có những điều chỉnh hiệu quả. Ví dụ với môn Văn học Hàn Quốc, người dạy có thể thấy hoạt động đóng kịch phân vai là phù hợp nhưng cần khảo sát cụ thể để đánh giá xem nó có thật sự thu hút được sự hứng thú của người học hay không? Hoặc yêu cầu đặt ra cho hoạt động này có đang ở mức quá sức với người học hay không?\nThứ ba, hoạt động dạy – học chưa phát huy tối đa tính làm chủ, sáng tạo của người học. 60,4% là tỷ lệ trả lời cao nhất đồng ý với nhận định này. Điều này chủ yếu xuất phát từ tâm lý của người dạy muốn tranh thủ tối đa thời gian để cung cấp nhiều nhất có thể các kiến thức cho người học theo phương thức thuyết giảng truyền thống.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 82,
+      "paper_id": 2,
+      "chunk_index": 30,
+      "page_number": null,
+      "content": "Trong khi đó, dạy – học theo nguyên lý kiến tạo là phải nhấn mạnh vai trò tự sản sinh kiến thức của người học và tầm quan trọng của hoạt động tương tác. Thuyết giảng của người dạy chỉ đóng vai trò là cầu dẫn gián tiếp, chiếm tỷ trọng thứ yếu chứ không thể là hoạt động chủ yếu trong dạy – học sáng tạo.\nThứ tư, nội dung hay phạm vi kiến thức của nhiều học phần còn tương đối khó, ôm đồm, dàn trải và chưa được sắp xếp một cách logic, hệ thống. 39,6% sinh viên được hỏi cho rằng Nội dung các học phần tương đối khó với trình độ người học. Gần một nửa số người học đánh giá nội dung các học phần khó là con số đáng suy ngẫm để người dạy cân nhắc điều chỉnh và đơn giản hóa các nội dung được xem là quá sức với người học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 83,
+      "paper_id": 2,
+      "chunk_index": 31,
+      "page_number": null,
+      "content": "Tuy nhiên, phản hồi của người học về độ khó của nội dung kiến thức cũng có sự khác biệt giữa các nhóm đối tượng. Theo đó, sinh viên các hệ như hệ chuẩn định hướng phiên dịch, hệ sư phạm, hệ chất lượng cao có tỷ lệ cảm thấy nội dung môn học bị khó nhiều hơn tỷ lệ này của sinh viên hệ chuẩn định hướng Hàn Quốc học. Cụ thể, chỉ có 27,9% sinh viên hệ Hàn Quốc học đồng ý với nhận định rằng Nội dung môn học quá khó với trình độ người học. Trong khi tỷ lệ này ở sinh viên các hệ phiên dịch, hệ sư phạm, hệ chất lượng cao lần lượt là 38,2%, 48,9% và 73,9%. Kết quả này một phần phản ánh rõ tính định hướng và tính chuyên môn sâu của từng NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 84,
+      "paper_id": 2,
+      "chunk_index": 32,
+      "page_number": null,
+      "content": "chuyên ngành. Do định hướng chuyên sâu về Hàn Quốc học nên sinh viên thuộc hệ đào tạo này sẽ không cảm thấy nội dung kiến thức được tiếp nhận về Hàn Quốc học quá nặng so với sinh viên các hệ đào tạo khác cũng là điều dễ hiểu. Mặt khác, kết quả này cũng giúp người dạy cân nhắc điều chỉnh nội dung Bảng 2 Nội dung kiến thức ít được người học quan tâm Môn Địa lý đại cương Nội dung (%)\nĐịa lý khu vực đại cương: Châu Âu (22,5%)\n (16,07%)\n Địa lý tự nhiên đại cương: trái đất (25%)\n Bảng 2 đã cho thấy rõ ở mỗi học phần có hai nội dung ít nhận được sự quan tâm nhất của người học. Điều này có nghĩa là phần lớn người học nhận thấy các nội dung kiến thức này không thật sự cần thiết hoặc không tạo nhiều hứng thú với bản thân.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 85,
+      "paper_id": 2,
+      "chunk_index": 33,
+      "page_number": null,
+      "content": "Kết quả này phần nào giúp người dạy có thể cân nhắc giảm tải một số nội dung kiến thức hoặc chỉ giảm tải một số nội hàm nhỏ hơn thuộc phạm trù nội dung kiến thức không phù hợp với nhu cầu của người học. Ví dụ như, người dạy có thể cân nhắc không đưa nội dung “lịch sử ngôn ngữ tiếng Hàn” vào kế hoạch giảng dạy học phần Đất nước học Hàn Quốc 1, 2 do nội dung này có thể phù hợp hơn khi đưa vào các học phần liên quan đến ngôn ngữ. Bên cạnh đó, người dạy có thể lựa chọn phương án giữ nguyên nội dung “lịch sử ngôn ngữ tiếng Hàn” nhưng chỉ giới thiệu các kiến thức ở mức độ cơ bản nhất hoặc giới thiệu đan cài vào các nội dung chính khác. Mặc dù việc điều chỉnh nội dung môn học còn phụ thuộc nhiều yếu tố khác như năng lực đội ngũ giáo viên, mức độ quan trọng của nội dung kiến thức theo đánh giá của giới chuyên môn v.v... nhưng ý kiến phản hồi của người học cũng là một kênh thông tin đáng để tham khảo giúp người dạy môn học phù hợp với định hướng và trình độ chuyên môn của từng hệ học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 86,
+      "paper_id": 2,
+      "chunk_index": 34,
+      "page_number": null,
+      "content": "Bên cạnh đó, trong phạm vi khảo sát với 4 môn học nêu trên, những nội dung kiến thức nhận được ít sự quan tâm của người học nhất được trình bày trong bảng 2 dưới đây.\n Đất nước học Hàn Quốc 1, 2 Kinh tế - Chính trị Hàn Quốc Tôn giáo Hàn Quốc Phát triển kinh tế nông thôn (11,8%)\n Lịch sử ngôn ngữ tiếng Hàn (18,6%)\nLịch sử chính trị cận đại (20%)\n có những điều chỉnh phù hợp. Trong trường hợp ý kiến phản hồi của người học không thỏa đáng, người dạy cũng cần tìm các giải pháp hướng dẫn người học hiểu đúng hơn về môn học.\n 4. Phương án đổi mới nội dung kiến thức và hoạt động dạy - học các học phần chuyên ngành Hàn Quốc học 4.1. Một số phương án chung Nắm được những vấn đề còn tồn tại được rút ra từ quá trình trực tiếp quan sát hoạt động dạy – học và kết quả khảo sát phản hồi của người học, nhóm tác giả mạnh dạn đề xuất một số phương án khắc phục nhằm đổi mới nội dung kiến thức và hoạt động dạy – học các học phần Hàn Quốc học tại Khoa Ngôn ngữ và Văn hóa Hàn Quốc hiệu quả hơn.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 87,
+      "paper_id": 2,
+      "chunk_index": 35,
+      "page_number": null,
+      "content": "Thứ nhất, cần tiến hành khảo sát lấy ý kiến phản hồi của người học sau khi kết thúc môn học về những mặt hiệu quả và hạn chế trong nội dung học phần cũng như phương thức tổ chức hoạt động dạy – học.\nTừ đó, có những điều chỉnh về nội dung, phương thức tổ chức hoạt động phù hợp với từng nhóm đối tượng người học. Như đã đề NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)\n cập ở trên, về cơ bản các học phần Hàn Quốc học do đặc thù chung là cùng tìm hiểu các lĩnh vực liên quan đến đất nước, con người Hàn Quốc nên có thể áp dụng nhiều hoạt động dạy – học giống nhau như thuyết trình nhóm, nghe nhìn bằng các học liệu hình ảnh, video, làm bài tập dự án v.v... Tuy nhiên, mỗi học phần lại có những đặc trưng kiến thức riêng nên có thể sử dụng một số hoạt động dạy – học khác biệt. Bên cạnh đó, định hướng và tính chuyên môn của mỗi hệ học cũng không giống nhau, do vậy, cùng một môn học nhưng nội dung kiến thức có thể điều chỉnh khác nhau cho phù hợp với từng hệ học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 88,
+      "paper_id": 2,
+      "chunk_index": 36,
+      "page_number": null,
+      "content": "Thứ hai, cần lựa chọn nội dung dạy – học theo chiều sâu, thiên về chất lượng hơn Bảng 3 Kinh tế - Chính trị Hàn Quốc Môn Địa lý đại cương Đất nước học Hàn Quốc 1, 2 Nội dung (%)\nĐịa lý Hàn Quốc (74,1%)\n Văn hóa Hàn Quốc (90,2%)\n Kinh tế Hàn Quốc (66,4%)\n Xã hội Hàn Quốc (87%)\n Giáo dục Hàn Quốc (52,8%)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 89,
+      "paper_id": 2,
+      "chunk_index": 37,
+      "page_number": null,
+      "content": "Địa lý Hàn Quốc (74,1%)\n Văn hóa Hàn Quốc (90,2%)\n Kinh tế Hàn Quốc (66,4%)\n Xã hội Hàn Quốc (87%)\n Giáo dục Hàn Quốc (52,8%)\n Bảng 3 cho thấy phần lớn sinh viên được hỏi chỉ thấy một nội dung cần được dạy – học chuyên sâu hơn cả ở học phần Địa lý đại cương. Đó là nội dung về Địa lý Hàn Quốc. Tỷ lệ lựa chọn cần chuyên sâu các nội dung kiến thức khác của học phần này chỉ chiếm dưới 50%. Điều này phần nào phản ánh nguyện vọng của người học cần giảm tải các nội dung kiến thức khác để tăng thời lượng và hàm lượng kiến thức cho nội dung liên quan đến địa lý Hàn Quốc. Tương tự như số lượng. Tức là cần phân bổ trọng số cho từng nội dung kiến thức như đi sâu vào một số nội dung quan trọng thay vì đi lướt nhiều nội dung, giảm tải hoặc thay thế một số nội dung quá khó hoặc không tạo hứng thú cho người học (dựa theo các khảo sát định kì).",
+      "embedding_dim": 768
+    },
+    {
+      "id": 90,
+      "paper_id": 2,
+      "chunk_index": 38,
+      "page_number": null,
+      "content": "Điều này sẽ đảm bảo nguyên tắc dạy kiến tạo là phải luôn đổi mới, sáng tạo và sắp xếp các nội dung môn học một cách hợp lý với trạng thái của người học. Nhóm tác giả đã tiến hành khảo sát lấy phản hồi của người học về việc cần tập trung sâu hơn vào những nội dung kiến thức nào đối với các học phần Địa lý đại cương, Đất nước học Hàn Quốc 1, 2 và Kinh tế - Chính trị Hàn Quốc. Những nội dung cần chuyên sâu được lựa chọn nhiều nhất với tỷ lệ 50% trở lên được hiển thị trong bảng 3 dưới đây:\n Kinh tế - Chính trị Hàn Quốc Quan hệ hợp tác kinh tế Việt – Hàn (79%)\n Các chính sách phát triển kinh tế nổi bật (55,2%)\n Thành tựu và vấn đề tồn tại nổi bật của quá trình phát triển kinh tế (60,5%)\n Văn hóa chính trị (53,8%)\n Chế độ chính trị (50,7%)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 91,
+      "paper_id": 2,
+      "chunk_index": 39,
+      "page_number": null,
+      "content": "Các chính sách phát triển kinh tế nổi bật (55,2%)\n Thành tựu và vấn đề tồn tại nổi bật của quá trình phát triển kinh tế (60,5%)\n Văn hóa chính trị (53,8%)\n Chế độ chính trị (50,7%)\n vậy, các nội dung về văn hóa, kinh tế, xã hội, giáo dục của học phần Đất nước học Hàn Quốc 1, 2 và các nội dung về quan hệ hợp tác kinh tế Việt – Hàn, các chính sách phát triển kinh tế nổi bật, thành tựu và vấn đề tồn tại của quá trình phát triển kinh tế, văn hóa chính trị, chế độ chính trị của học phần Kinh tế - Chính trị Hàn Quốc là những nội dung được người học đánh giá là cần chuyên sâu hơn các nội dung kiến thức khác.\n Nội dung cần chuyên sâu ở các học phần Địa lý đại cương, Đất nước học Hàn Quốc 1, 2 và NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 92,
+      "paper_id": 2,
+      "chunk_index": 40,
+      "page_number": null,
+      "content": "Nội dung cần chuyên sâu ở các học phần Địa lý đại cương, Đất nước học Hàn Quốc 1, 2 và NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)\n Thứ ba, nội dung môn học nên có những chủ đề do giáo viên chỉ định và những chủ đề do sinh viên tự lựa chọn. Việc tạo cơ hội cho người học chủ động tìm hiểu những gì họ thích chính là phương pháp cốt lõi của dạy – học kiến tạo. Người học sẽ có nhiều động lực hơn khi được tự xây dựng lên kiến thức cho bản thân và chia sẻ với giáo viên cùng những người học khác. Để đảm bảo điều này, giáo viên có thể phản ánh trong các kế hoạch giảng dạy. Ví dụ phân bổ trong số 15 tuần học sẽ có khoảng 8 tuần dạy – học theo các chủ đề giáo viên đã định sẵn và 7 tuần còn lại sẽ hiển thị là chủ đề tự chọn. Ở các tuần học về chủ đề tự chọn này, giáo viên có thể định hướng cho sinh viên lựa chọn các chủ đề thích hợp để thuyết trình nhóm hay làm bài tập dự án hay thiết kế bài thi quiz v.v...",
+      "embedding_dim": 768
+    },
+    {
+      "id": 93,
+      "paper_id": 2,
+      "chunk_index": 41,
+      "page_number": null,
+      "content": "Thứ tư, trong suốt 15 tuần học, cần thiết kế nhiều hoạt động dạy – học đa dạng, sáng tạo thay vì chỉ lặp đi lặp lại một hai hoạt động quen thuộc. Kết quả khảo sát của nghiên cứu này cho thấy phần lớn sinh viên ở cả 4 hệ học đều lựa chọn các hoạt động dạy – học như nghe nhìn bằng các học liệu tranh ảnh và video, thuyết trình nhóm, làm bài tập dự án (thu thập, giới thiệu tài liệu hay, dịch tài liệu, xây dựng ngân hàng câu hỏi, tổng hợp và phân tích tin tức hàng tuần...), thiết kế bài thi quiz liên quan đến nội dung bài học là hoạt động phù hợp nhất với các học phần được khảo sát bao gồm Địa lý đại cương, Đất nước học Hàn Quốc 1, 2, Kinh tế - Chính trị Hàn Quốc. Ví dụ, với học phần Đất nước học Hàn Quốc 1, 2, ba hoạt động dạy – học được lựa chọn là phù hợp nhất có tỷ lệ lựa chọn lần lượt là nghe nhìn bằng các học liệu tranh ảnh và video chiếm 79,6%, làm bài tập dự án chiếm 55,4% và thiết kế bài thi quiz chiếm 45,7%.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 94,
+      "paper_id": 2,
+      "chunk_index": 42,
+      "page_number": null,
+      "content": "Đáng chú ý là hoạt động thuyết trình nhóm cũng là một phương pháp giúp phát huy tính tự chủ, sáng tạo của người học nhưng do cách thức tiến hành truyền thống theo khuôn mẫu là giáo viên cung cấp chủ đề cho sinh viên thuyết trình nên đã dần mất đi tính sáng tạo và mới mẻ. Do vậy, trong kết quả khảo sát của nghiên cứu này, tỷ lệ sinh viên lựa chọn hoạt động thuyết trình nhóm là hoạt động dạy – học yêu thích chỉ chiếm 37,1%. Theo đó, người dạy có thể cân nhắc để thay đổi hình thức tiến hành của hoạt động thuyết trình nhóm như cho sinh viên được tự lựa chọn chủ đề, thuyết trình nhóm kết hợp hoạt động khác v.v...",
+      "embedding_dim": 768
+    },
+    {
+      "id": 95,
+      "paper_id": 2,
+      "chunk_index": 43,
+      "page_number": null,
+      "content": "Tuy nhiên, hoạt động dạy – học phải được cân nhắc đảm bảo phù hợp với từng nội dung kiến thức và nhiều yếu tố khác. Ví dụ với nội dung kiến thức là “Tìm hiểu về một nhân vật lịch sử của Hàn Quốc” thì thay vì phương pháp truyền thống như thuyết giảng gây nhàm chán hoặc cho nghe – nhìn tranh ảnh, video cũng không thật sự giúp người học ghi nhớ lâu và sâu thì có thể sử dụng nhiều phương pháp tổ chức hoạt động dạy – học khác như làm bài tập dự án, đóng kịch phân vai, thiết kế bài thi quiz v.v... Tuy nhiên, hình thức đóng kịch phân vai đòi hỏi trình độ tiếng Hàn và kiến thức phông nền ở mức cao hơn nên có thể chỉ áp dụng cho sinh viên hệ Hàn Quốc học hay nhóm sinh viên có năng lực tiếng vượt trội hơn.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 96,
+      "paper_id": 2,
+      "chunk_index": 44,
+      "page_number": null,
+      "content": "4.2. Thiết kế mẫu hoạt động dạy – học học phần Đất nước học Hàn Quốc Vận dụng nguyên lý dạy – học kiến tạo và dựa trên cơ sở khảo sát lấy ý kiến phản hồi từ người học nêu trên, với mục đích nâng cao tính tự chủ, sáng tạo của người học, bài viết này muốn đề xuất một số hoạt động dạy – học mẫu và cách thức tổ chức hoạt động có thể áp dụng cho chủ đề về Văn hóa Hàn Quốc của học phần Đất nước học Hàn Quốc.\nCác nội dung cụ thể được trình bày trong bảng 4 dưới đây.\n NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)\n Bảng 4 Thiết kế hoạt động dạy – học về Văn hóa Hàn Quốc Hoạt động Nội dung Nghe – nhìn bằng học liệu hình ảnh, video Thuyết trình nhóm Văn hóa ẩm thực - SV xem hình ảnh, video về ẩm thực Hàn Quốc - SV ghi chú và tự rút ra kiến thức thu được từ việc nghe – nhìn - SV tự đặt câu hỏi  GV và các SV khác giải đáp - ...",
+      "embedding_dim": 768
+    },
+    {
+      "id": 97,
+      "paper_id": 2,
+      "chunk_index": 45,
+      "page_number": null,
+      "content": "- GV chỉ định hoặc SV tự lựa chọn chủ đề để thuyết trình - Nhóm SV giới thiệu về quá trình chuẩn bị bài thuyết trình: hình thành ý tưởng, thu thập tài liệu, xây dựng nội dung v.v...\n- Nhóm SV thuyết trình (bắt buộc tương tác với các đối tượng nghe bài thuyết trình)\n- GV và SV cùng nhận xét và chấm điểm cho nhóm thuyết trình Văn hóa mặc - SV xem hình ảnh, video về trang phục truyền thống và hiện đại của người Hàn Quốc - SV ghi chú và tự rút ra kiến thức thu được từ việc nghe – nhìn - SV tự đặt câu hỏi  GV và các SV khác giải đáp - ...\n - Tương tự hoạt động với nội dung văn hóa Ăn Văn hóa ở - SV xem hình ảnh, video về - Tương tự hoạt động với nội Bài tập dự án Quiz Đóng kịch phân vai - Tập làm kim chi tại nhà - Thuyết trình hoặc làm poster/ sổ tay... trình bày lại qui trình làm kim chi, giá trị sức khỏe, giá trị văn hóa của kim chi...\n- Điều tra khảo sát về mức độ yêu thích kim chi của người Việt Nam và báo cáo kết quả khảo sát (so sánh với thế giới)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 98,
+      "paper_id": 2,
+      "chunk_index": 46,
+      "page_number": null,
+      "content": "- Điều tra khảo sát về mức độ yêu thích kim chi của người Việt Nam và báo cáo kết quả khảo sát (so sánh với thế giới)\n- Viết báo cáo hoặc làm video so sánh ẩm thực Việt – Hàn - ...\n - SV Sử dụng các ứng dụng như Quizizz, Kahoot... để thiết kế các câu hỏi ôn lại các nội dung GV đã thuyết giảng hoặc các nội dung SV quan tâm và muốn chia sẻ - Đóng vai chủ nhà hàng và khách hàng hoặc giáo viên và sinh viên để tìm hiểu và giới thiệu về ẩm thực Hàn Quốc - Tương tự hoạt động với văn hóa Ăn - Dịch một tài liệu được chỉ định hoặc tự chọn về văn hóa Mặc - ...\n - Tương tự hoạt động với văn hóa Ăn X - Tương tự hoạt động với nội dung - Tương tự hoạt động với X NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)\n nhà ở truyền thống và hiện đại ở Hàn Quốc - SV ghi chú và tự rút ra kiến thức thu được từ việc nghe – nhìn - SV tự đặt câu hỏi  GV và các SV khác giải đáp - ...",
+      "embedding_dim": 768
+    },
+    {
+      "id": 99,
+      "paper_id": 2,
+      "chunk_index": 47,
+      "page_number": null,
+      "content": "dung văn hóa Ăn và Mặc Có thể thấy, điểm chung của các hoạt động dạy – học nêu trên đều là các hoạt động lấy người học làm trung tâm, khuyến khích người học tự tìm tòi và sản sinh ra kiến thức cho bản thân trên cơ sở tương tác với người khác và thế giới xung quanh trong quá trình làm việc nhóm, hỏi đáp với giáo viên, sử dụng các giáo cụ v.v... Hầu hết các nội dung kiến thức đều có thể áp dụng 5 loại hình hoạt động dạy – học này. Tuy nhiên, như đã đề cập ở trên, việc lựa chọn các hoạt động dạy – học cần xem xét đến nhiều yếu tố như trình độ, định hướng chuyên ngành người học, điều kiện thực hiện thực tế v.v... Do vậy, theo quan điểm của bài viết này, hoạt động làm bài tập dự án và đóng kịch phân vai chỉ nên áp dụng với sinh viên có định hướng chuyên ngành Hàn Quốc học. Hoặc nếu muốn áp dụng hoạt động làm bài tập dự án với sinh viên các hệ học khác thì có thể chỉ chọn lọc các yêu cầu đơn giản như làm video giới thiệu về văn hóa ăn, mặc, ở của Hàn Quốc đơn thuần.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 100,
+      "paper_id": 2,
+      "chunk_index": 48,
+      "page_number": null,
+      "content": "Hoặc nếu muốn áp dụng hoạt động làm bài tập dự án với sinh viên các hệ học khác thì có thể chỉ chọn lọc các yêu cầu đơn giản như làm video giới thiệu về văn hóa ăn, mặc, ở của Hàn Quốc đơn thuần. Nội dung chuyên sâu hơn như so sánh văn hóa Việt – Hàn có thể dành riêng cho sinh viên hệ Hàn Quốc học. Bên cạnh đó, trong 3 nội dung văn hóa nêu trên, hoạt động đóng kịch phân vai dường như chỉ phù hợp với nội dung văn hóa ăn mà không khả thi khi triển khai với nội dung về văn hóa mặc và văn hóa ở do điều kiện thực hiện như tìm kiếm trang phục, xây dựng bối cảnh diễn xuất có thể gây khó khăn cho người học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 101,
+      "paper_id": 2,
+      "chunk_index": 49,
+      "page_number": null,
+      "content": "văn hóa Ăn và Mặc nội dung văn hóa Ăn và Mặc 5. Kết luận Nghiên cứu đã trả lời đầy đủ các câu hỏi đặt ra. Thứ nhất, thực trạng dạy – học các học phần chuyên ngành Hàn Quốc học tại Khoa Ngôn ngữ và Văn hóa Hàn Quốc, Trường Đại học Ngoại ngữ, Đại học Quốc gia Hà Nội hiện nay đã và đang còn tồn tại một số điểm hạn chế như sự phân bổ nội dung kiến thức cho các học phần cùng sự chọn lọc hàm lượng kiến thức cho từng nội dung và sự phân hóa phạm vi dạy – học cho từng nhóm đối tượng người học chưa rõ ràng và đồng bộ; hoạt động dạy – học chưa đa dạng và phát huy tối đa tính tự chủ, sáng tạo của người học. Thứ hai, bài viết đã đề xuất một số phương án chung có thể áp dụng cho nhiều học phần Hàn Quốc học và một số hoạt động dạy – học cụ thể cho học phần Đất nước học Hàn Quốc trên cơ sở vận dụng nguyên lý dạy – học kiến tạo và khảo sát nguyện vọng của người học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 102,
+      "paper_id": 2,
+      "chunk_index": 50,
+      "page_number": null,
+      "content": "Một số phương án được đề cập trong nghiên cứu này như khảo sát định kì trước và sau khi áp dụng các hoạt động dạy – học đa dạng, chọn lọc nội dung kiến thức phù hợp với từng nhóm đối tượng người học theo tiêu chí coi trọng chất lượng hơn số lượng, kết hợp nhiều hoạt động dạy – học đa dạng với cùng một nội dung, chủ đề bài học, thường xuyên tạo động lực học tập cho người học.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 103,
+      "paper_id": 2,
+      "chunk_index": 51,
+      "page_number": null,
+      "content": "NGHIÊN CỨU NƯỚC NGOÀI, TẬP 37, SỐ 5 (2021)\n Tóm lại, việc đổi mới, điều chỉnh hoạt động dạy – học các học phần Hàn Quốc học là một việc làm cấp thiết cần sự chung sức của cả tập thể đội ngũ giảng dạy. Ở góc độ hẹp, việc đổi mới này sẽ thúc đẩy hoạt động dạy – học Hàn Quốc học của Trường Đại học Ngoại ngữ, Đại học Quốc gia Hà Nội nhưng ở góc độ rộng hơn, điều này còn mang ý nghĩa nhất định trong việc thúc đẩy hoạt động giáo dục Hàn Quốc học tại Việt Nam nói chung.",
+      "embedding_dim": 768
+    }
+  ]
+}

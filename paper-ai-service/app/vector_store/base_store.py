@@ -1,49 +1,51 @@
-# interface vector DB
-from langchain_postgres import PGVector
-from langchain_postgres.vectorstores import PGVector
+from app.db.postgres import SessionLocal
+from app.db.repository import search_relevant_chunks, upsert_paper_chunks
+
 
 class PGVectorStore:
-    def __init__(self, embeddings_model, collection_name: str = "paper_chunks"):
+    def __init__(self, embeddings_model):
         self.embeddings_model = embeddings_model
-        self.collection_name = collection_name
-        
-        # Gắn cứng cấu hình kết nối DB cho team
-        db_user = "postgres"
-        db_pass = "1111"
-        db_host = "localhost"
-        db_port = "5432"
-        db_name = "summarize_db"
-        
-        self.connection_string = f"postgresql+psycopg://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
-    def save_vectors(self, all_chunks: list, all_metadatas: list, ids: list = None):
-        # Tạo ID cố định nếu user không truyền vào, tránh bị trùng lặp
-        if not ids:
-            ids = []
-            for meta in all_metadatas:
-                file_name = meta.get("source_file", "unknown")
-                chunk_idx = meta.get("chunk_index", 0)
-                ids.append(f"{file_name}_chunk_{chunk_idx}")
+    @staticmethod
+    def _stored_content(text: str) -> str:
+        return text.removeprefix("passage: ").strip()
 
-        # Khởi tạo PGVector object
-        vector_store = PGVector(
-            embeddings=self.embeddings_model,
-            collection_name=self.collection_name,
-            connection=self.connection_string,
-            use_jsonb=True,
-        )
-        
-        # Lưu vào PostgreSQL (Tự động Upsert theo ID nếu đã tồn tại)
-        vector_store.add_texts(texts=all_chunks, metadatas=all_metadatas, ids=ids)
-        return vector_store
+    def save_vectors(
+        self,
+        paper_id: int,
+        all_chunks: list[str],
+        all_metadatas: list[dict],
+        batch_size: int = 100,
+    ):
+        if paper_id is None:
+            raise ValueError("paper_id is required to save chunks into paper_chunks")
+        if len(all_chunks) != len(all_metadatas):
+            raise ValueError("all_chunks and all_metadatas must have the same length")
 
-    def search_vectors(self, query: str, k: int = 3):
-        # Mở database PostgreSQL đã lưu để tìm kiếm với thuật toán tương đồng
-        vector_store = PGVector(
-            embeddings=self.embeddings_model,
-            collection_name=self.collection_name,
-            connection=self.connection_string,
-            use_jsonb=True,
-        )
-        # Trả về danh sách các kết hợp gồm (Đoạn văn - Document, Điểm tương đồng - Score)
-        return vector_store.similarity_search_with_score(query, k=k)
+        with SessionLocal() as db:
+            for start in range(0, len(all_chunks), batch_size):
+                chunk_batch = all_chunks[start : start + batch_size]
+                metadata_batch = all_metadatas[start : start + batch_size]
+                embeddings = self.embeddings_model.embed_documents(chunk_batch)
+
+                rows = []
+                for text, metadata, embedding in zip(chunk_batch, metadata_batch, embeddings):
+                    rows.append(
+                        {
+                            "paper_id": paper_id,
+                            "content": self._stored_content(text),
+                            "embedding": embedding,
+                            "page_number": metadata.get("page_number"),
+                            "chunk_index": metadata["chunk_index"],
+                        }
+                    )
+
+                upsert_paper_chunks(db, rows)
+
+    def search_vectors(self, query: str, paper_id: int, k: int = 3):
+        if paper_id is None:
+            raise ValueError("paper_id is required to search chunks from paper_chunks")
+
+        query_vector = self.embeddings_model.embed_query(query)
+        with SessionLocal() as db:
+            return search_relevant_chunks(db, query_vector=query_vector, paper_id=paper_id, limit=k)

@@ -17,7 +17,7 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/upload" element={<UploadArticle />} />
-        <Route path="/analysis" element={<ArticleAnalysis />} />
+        <Route path="/analysis/:id" element={<ArticleAnalysis />} />
         <Route path="/summaries" element={<MySummaries />} />
         <Route path="/settings" element={<Profile />} />
 

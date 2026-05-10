@@ -1,1 +1,0 @@
-# chạy model local

@@ -15,6 +15,11 @@ langchain-community
 google-generativeai
 sentence-transformers
 faiss-cpu
+SQLAlchemy
+pgvector
+psycopg2-binary
+langchain-huggingface
+langchain-text-splitters
 
 # Evaluation
 rouge-score

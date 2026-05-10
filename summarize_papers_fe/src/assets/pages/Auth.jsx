@@ -14,14 +14,30 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import * as api from "../config/api";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // --- FORM DATA STATE ---
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    username: "",
+    institution: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [resetToken, setResetToken] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const [message, setMessage] = useState({ text: "", type: "" });
   // --- LOGIC FORGOT PASSWORD ---
-  // Các bước: "none" (mặc định), "email", "otp", "reset"
   const [forgotStep, setForgotStep] = useState("none");
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const otpRefs = useRef([]);
@@ -34,22 +50,81 @@ const Auth = () => {
     if (element.value !== "" && index < 5) otpRefs.current[index + 1].focus();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessage({ text: "", type: "" });
 
-    setTimeout(() => {
-      setLoading(false);
-      // Điều hướng theo bước quên mật khẩu
-      if (forgotStep === "email") setForgotStep("otp");
-      else if (forgotStep === "otp") setForgotStep("reset");
-      else if (forgotStep === "reset") {
-        setForgotStep("none");
-        setIsLogin(true);
-      } else {
-        navigate("/dashboard");
+    try {
+      if (forgotStep === "none") {
+        if (isLogin) {
+          // --- API LOGIN ---
+          const res = await api.login({
+            email: formData.email,
+            password: formData.password,
+          });
+          if (res.data.code === 200) {
+            localStorage.setItem("accessToken", res.data.data.accessToken);
+            localStorage.setItem("refreshToken", res.data.data.refreshToken);
+            setMessage({ text: "Đăng nhập thành công!", type: "success" });
+            setTimeout(() => navigate("/dashboard"), 1000);
+          }
+        } else {
+          // --- API REGISTER ---
+          const res = await api.register({
+            email: formData.email,
+            password: formData.password,
+            username: formData.username,
+            institution: formData.institution,
+          });
+          if (res.data.code === 200) {
+            setMessage({ text: "Đăng ký thành công!", type: "success" });
+            setIsLogin(true);
+          }
+        }
+      } else if (forgotStep === "email") {
+        // --- API SEND OTP ---
+        const res = await api.sendOtp(formData.email);
+        if (res.data.code === 200) {
+          setMessage({ text: "Đã gửi mã OTP!", type: "success" });
+          setForgotStep("otp");
+        }
+      } else if (forgotStep === "otp") {
+        // --- API VERIFY OTP ---
+        const res = await api.verifyOtp({
+          email: formData.email,
+          otp: otp.join(""),
+        });
+        if (res.data.code === 200) {
+          setResetToken(res.data.data.resetToken);
+          setMessage({ text: "Xác thực thành công!", type: "success" });
+          setForgotStep("reset");
+        }
+      } else if (forgotStep === "reset") {
+        // --- API RESET PASSWORD ---
+        const res = await api.resetPassword({
+          email: formData.email,
+          resetToken: resetToken,
+          newPassword: formData.newPassword,
+          confirmPassword: formData.confirmPassword,
+        });
+        if (res.data.code === 200) {
+          setMessage({ text: "Đổi mật khẩu thành công!", type: "success" });
+          setForgotStep("none");
+          setIsLogin(true);
+        }
       }
-    }, 1500);
+    } catch (error) {
+      // SỬA TẠI ĐÂY: Lấy message từ server trả về thay vì để chữ cố định
+      const errorMessage =
+        error.response?.data?.message || "Đã có lỗi xảy ra. Vui lòng thử lại!";
+      setMessage({
+        text: errorMessage,
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -72,6 +147,7 @@ const Auth = () => {
             onClick={() => {
               setIsLogin(!isLogin);
               setForgotStep("none");
+              setMessage({ text: "", type: "" });
             }}
             className="h-10 px-6 border border-[#1111d4] text-[#1111d4] hover:bg-blue-50 transition-all rounded-lg text-sm font-bold flex items-center gap-2"
           >
@@ -170,7 +246,10 @@ const Auth = () => {
               {forgotStep !== "none" && (
                 <button
                   type="button"
-                  onClick={() => setForgotStep("none")}
+                  onClick={() => {
+                    setForgotStep("none");
+                    setMessage({ text: "", type: "" });
+                  }}
                   className="absolute -top-1 -left-2 p-2 text-slate-400 hover:text-[#1111d4]"
                 >
                   <ChevronLeft size={20} />
@@ -189,14 +268,24 @@ const Auth = () => {
                       ? "Verify OTP"
                       : "New Password"}
               </h2>
+
+              {/* CHỈ THAY ĐỔI LOGIC HIỂN THỊ TẠI ĐÂY */}
               <p
-                className={`text-slate-500 mt-2 font-medium ${forgotStep !== "none" ? "ml-8" : ""}`}
+                className={`mt-2 font-medium transition-colors duration-300 ${forgotStep !== "none" ? "ml-8" : ""} ${
+                  message.type === "error"
+                    ? "text-red-500"
+                    : message.type === "success"
+                      ? "text-green-500"
+                      : "text-slate-500"
+                }`}
               >
-                {forgotStep === "none"
-                  ? isLogin
-                    ? "Enter your credentials to continue."
-                    : "Start your 14-day free trial today."
-                  : "Follow the steps to secure your account."}
+                {message.text
+                  ? message.text
+                  : forgotStep === "none"
+                    ? isLogin
+                      ? "Enter your credentials to continue."
+                      : "Start your 14-day free trial today."
+                    : "Follow the steps to secure your account."}
               </p>
             </div>
 
@@ -225,20 +314,31 @@ const Auth = () => {
                     <>
                       <InputGroup
                         label="Username"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
                         placeholder="Hoàng Mạnh Duy"
                         icon={<User size={18} />}
                         type="text"
+                        required
                       />
                       <InputGroup
                         label="Institution"
+                        name="institution"
+                        value={formData.institution}
+                        onChange={handleChange}
                         placeholder="VNU University of Science"
                         icon={<Building2 size={18} />}
                         type="text"
+                        required
                       />
                     </>
                   )}
                   <InputGroup
                     label="Work Email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="duy.hm@vnu.edu.vn"
                     icon={<Mail size={18} />}
                     type="email"
@@ -246,6 +346,9 @@ const Auth = () => {
                   />
                   <InputGroup
                     label="Password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     placeholder="••••••••"
                     icon={<Lock size={18} />}
                     type="password"
@@ -255,7 +358,10 @@ const Auth = () => {
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        onClick={() => setForgotStep("email")}
+                        onClick={() => {
+                          setForgotStep("email");
+                          setMessage({ text: "", type: "" });
+                        }}
                         className="text-xs font-bold text-[#1111d4] hover:underline"
                       >
                         Forgot password?
@@ -266,6 +372,9 @@ const Auth = () => {
               ) : forgotStep === "email" ? (
                 <InputGroup
                   label="Email Address"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="duy.hm@vnu.edu.vn"
                   icon={<Mail size={18} />}
                   type="email"
@@ -289,6 +398,9 @@ const Auth = () => {
                 <>
                   <InputGroup
                     label="New Password"
+                    name="newPassword"
+                    value={formData.newPassword}
+                    onChange={handleChange}
                     placeholder="••••••••"
                     icon={<Lock size={18} />}
                     type="password"
@@ -296,6 +408,9 @@ const Auth = () => {
                   />
                   <InputGroup
                     label="Confirm Password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                     placeholder="••••••••"
                     icon={<Lock size={18} />}
                     type="password"
@@ -304,7 +419,6 @@ const Auth = () => {
                 </>
               )}
 
-              {/* PHẦN TERM & PRIVACY (Đã khôi phục) */}
               {!isLogin && forgotStep === "none" && (
                 <div className="flex items-start gap-3 py-2">
                   <input
@@ -367,7 +481,10 @@ const Auth = () => {
                 <p className="text-sm text-slate-500">
                   {isLogin ? "New to SciSum AI?" : "Already have an account?"}{" "}
                   <button
-                    onClick={() => setIsLogin(!isLogin)}
+                    onClick={() => {
+                      setIsLogin(!isLogin);
+                      setMessage({ text: "", type: "" });
+                    }}
                     className="text-[#1111d4] font-bold hover:underline"
                   >
                     {isLogin ? "Create an account" : "Log in here"}
@@ -394,7 +511,16 @@ const Auth = () => {
   );
 };
 
-const InputGroup = ({ label, placeholder, icon, type, required }) => (
+const InputGroup = ({
+  label,
+  placeholder,
+  icon,
+  type,
+  required,
+  name,
+  value,
+  onChange,
+}) => (
   <div className="space-y-1.5">
     <label className="text-sm font-bold text-slate-700 ml-1 font-display">
       {label}
@@ -404,6 +530,9 @@ const InputGroup = ({ label, placeholder, icon, type, required }) => (
         {icon}
       </div>
       <input
+        name={name}
+        value={value}
+        onChange={onChange}
         required={required}
         className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-slate-200 bg-[#f6f6f8] text-slate-900 focus:ring-2 focus:ring-[#1111d4] focus:border-transparent transition-all outline-none text-sm font-display font-light"
         placeholder={placeholder}

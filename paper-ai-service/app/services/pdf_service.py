@@ -1,8 +1,11 @@
 # đọc PDF
 # extract text theo page
 # app/services/pdf_service.py
-from app.data.processed.parser import PDFParser
 import os
+
+import fitz
+
+from app.data.processed.parser import PDFParser
 
 class PDFService:
     @staticmethod
@@ -11,6 +14,26 @@ class PDFService:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Không tìm thấy file: {file_path}")
             
-        # Gọi "Công cụ bóc PDF" chúng ta đã copy từ vnu_pdf_cleaner.py
-        raw_text = PDFParser.extract_text_2_columns(file_path)
-        return raw_text
+        # Bạn cần sửa lại PDFParser.extract_text_2_columns 
+        # để nó trả về List[str] (mỗi phần tử là 1 trang) thay vì join("\n")
+        pages_content = PDFParser.extract_text_2_columns(file_path) 
+        
+        result = []
+        for i, content in enumerate(pages_content):
+            result.append({
+                "content": content,
+                "page": i + 1  # Số trang thực tế
+            })
+        return result
+
+    @staticmethod
+    def extract_front_text(file_path: str, max_pages: int = 2) -> str:
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        pages_text = []
+        with fitz.open(file_path) as doc:
+            for page in doc[: min(max_pages, len(doc))]:
+                pages_text.append(page.get_text("text"))
+
+        return "\n".join(pages_text).strip()

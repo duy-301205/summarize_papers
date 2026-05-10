@@ -30,7 +30,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final UserMapper userMapper;
     private final InvalidedTokenRepository invalidedTokenRepository;
 
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -38,12 +37,21 @@ public class AuthService {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
-        User user = userMapper.toEntity(registerRequest);
+        User user = new User();
+
+        user.setEmail(registerRequest.getEmail());
+        user.setUsername(registerRequest.getUsername());
+        user.setInstitution(registerRequest.getInstitution());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(Role.ROLE_USER);
 
         userRepository.save(user);
-        return userMapper.toRegisterResponse(user);
+        return RegisterResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getActualUsername())
+                .institution(user.getInstitution())
+                .build();
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {

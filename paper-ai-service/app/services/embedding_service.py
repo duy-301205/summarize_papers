@@ -1,33 +1,80 @@
-# convert chunk → vector và điều phối việc nhúng dữ liệu vào embedding
+from app.db.postgres import SessionLocal
+from app.db.models import Paper
+from app.services.pdf_service import PDFService
+from app.services.chunking_service import ChunkingService
 from app.models.embedding.e5_embedding import E5Embedder
 from app.vector_store.base_store import PGVectorStore
 
 class EmbeddingService:
     def __init__(self):
-        # 1. Khởi tạo cỗ máy nhúng (Model E5)
         self.embedder = E5Embedder().get_model()
-        # 2. Khởi tạo kho lưu trữ (PostgreSQL với pgvector)
         self.vector_store = PGVectorStore(embeddings_model=self.embedder)
+        self.chunking_service = ChunkingService()
 
-    def process_and_save_chunks(self, all_chunks: list, all_metadatas: list, batch_size: int = 100):
-        """
-        Nhúng và lưu vào cơ sở dữ liệu.
-        Chia theo batch để không làm tràn RAM/làm Server quá tải.
-        """
-        print(f"Bắt đầu lưu {len(all_chunks)} chunks vào PostgreSQL (PGVector)...")
-        
-        # Nếu tương lai cần nhúng batch by batch thì chia nhỏ bằng vòng lặp ở đây.
-        # Ở ví dụ này ta cũng có thể ném mọt cục cho driver của SQLAlchemy tự lo.
-        # (Để đơn giản ta đẩy thẳng vô hàm save_vectors đã có sẵn cơ chế ID chống trùng lặp)
-        
-        self.vector_store.save_vectors(all_chunks=all_chunks, all_metadatas=all_metadatas)
-        print("Đã lưu xong vào PGVector!")
+    def embedding_workflow(self, paper_id: int):
+        with SessionLocal() as db:
+            paper = None
+            try:
+                # 1. Kiểm tra sự tồn tại của Paper
+                paper = db.query(Paper).filter(Paper.id == paper_id).first()
+                if not paper or not paper.file_path:
+                    print(f"❌ Không tìm thấy Paper ID {paper_id}")
+                    return False
 
-    def search_similar_chunks(self, query: str, top_k: int = 3):
-        """
-        Tìm kiếm các đoạn văn bản tương đồng với câu hỏi.
-        """
-        # Với E5, luôn nhớ gán chữ "query: " vào trước câu hỏi
-        formatted_query = f"query: {query}"
-        results = self.vector_store.search_vectors(formatted_query, k=top_k)
-        return results
+                # 2. Bóc tách nội dung PDF (pages là List[Dict])
+                print(f"📄 Đang bóc tách PDF theo trang: {paper.file_path}")
+                pages = PDFService.extract_text(paper.file_path) 
+                
+                all_chunks_text = []
+                all_metadatas = []
+                global_index = 0
+
+                # 3. Duyệt qua từng trang
+                for page_data in pages:
+                    # Truy cập nội dung và số trang từ dictionary
+                    # Giả sử key là 'content' và 'page'
+                    content = page_data.get("content", "")
+                    page_num = page_data.get("page", 0)
+                    
+                    if not content or not content.strip():
+                        continue
+                    
+                    # Chia nhỏ nội dung của trang hiện tại
+                    page_chunks = self.chunking_service.chunk_article(content)
+                    
+                    for chunk_text in page_chunks:
+                        all_chunks_text.append(chunk_text)
+                        all_metadatas.append({
+                            "chunk_index": global_index,
+                            "page_number": page_num  # Dùng số trang thật từ parser
+                        })
+                        global_index += 1
+
+                if not all_chunks_text:
+                    raise ValueError("Không bóc tách được nội dung nào từ PDF.")
+
+                # 4. Lưu Vector và Metadata
+                print(f"🧬 Đang tạo Vector cho {len(all_chunks_text)} đoạn...")
+                self.vector_store.save_vectors(
+                    paper_id=paper_id,
+                    all_chunks=all_chunks_text,
+                    all_metadatas=all_metadatas,
+                    batch_size=100
+                )
+
+                # 5. Cập nhật trạng thái (Dùng COMPLETED để khớp với Check Constraint của bạn)
+                paper.status = "DONE" 
+                db.commit()
+                print(f"✅ Đã hoàn tất: {paper_id} với {global_index} chunks.")
+                return True
+
+            except Exception as e:
+                db.rollback()
+                if paper:
+                    try:
+                        paper.status = "FAILED"
+                        db.commit()
+                    except:
+                        db.rollback()
+                print(f"❌ Lỗi xử lý Embedding cho Paper {paper_id}: {str(e)}")
+                raise e

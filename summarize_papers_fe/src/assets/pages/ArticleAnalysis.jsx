@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ArrowLeft,
   Download,
   Copy,
   Share2,
   FileText,
-  Target,
-  Beaker,
   Clock,
   Type,
   Zap as ZapIcon,
@@ -14,29 +12,61 @@ import {
   MessageSquare,
   Send,
   Sparkles,
+  Loader2,
+  BookOpen,
+  Tag,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { ARTICLE_DATA, AI_SUMMARY } from "../data/analysisData";
+import { useNavigate, useParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+
+// Import API functions
+import { getPaperDetails, getPaperSummary } from "../config/api";
 
 // Import các thành phần dùng chung
 import Sidebar from "../components/Sidebar";
 import NotificationDropdown from "../components/NotificationDropdown";
 
 const ArticleAnalysis = () => {
+  const { id: paperId } = useParams();
   const navigate = useNavigate();
-  // Quản lý tab hiện tại: 'summary' hoặc 'chat'
+
+  const [paperMetadata, setPaperMetadata] = useState(null);
+  const [summaryData, setSummaryData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const [activeTab, setActiveTab] = useState("summary");
   const [userInput, setUserInput] = useState("");
 
+  useEffect(() => {
+    const loadFullData = async () => {
+      if (!paperId || paperId === "undefined") return;
+
+      setLoading(true);
+      try {
+        const [detailsRes, summaryRes] = await Promise.all([
+          getPaperDetails(paperId),
+          getPaperSummary(paperId),
+        ]);
+
+        setPaperMetadata(detailsRes.data.data);
+        setSummaryData(summaryRes.data.data);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu bài báo:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadFullData();
+  }, [paperId]);
+
   return (
     <div className="flex h-screen bg-[#f6f6f8] font-display text-slate-900 overflow-hidden">
-      {/* 1. SIDEBAR NAVIGATION */}
       <Sidebar />
 
-      {/* 2. MAIN WORKSPACE AREA */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* --- HEADER --- */}
-        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-50 shrink-0 sticky top-0 font-display">
+        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-50 shrink-0 sticky top-0 font-display text-slate-900">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/upload")}
@@ -49,7 +79,7 @@ const ArticleAnalysis = () => {
 
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black border border-emerald-100 mr-2 uppercase tracking-tighter">
-              <CheckCircle2 size={14} /> Summary Generated
+              <CheckCircle2 size={14} /> Analysis Ready
             </div>
             <HeaderAction icon={<Download size={18} />} label="Download" />
             <HeaderAction icon={<Copy size={18} />} label="Copy" />
@@ -65,64 +95,30 @@ const ArticleAnalysis = () => {
 
         {/* --- SPLIT SCREEN CONTENT --- */}
         <div className="flex-1 flex overflow-hidden">
-          {/* LEFT PANEL: Original Article */}
-          <section className="flex-1 flex flex-col border-r border-slate-200 bg-slate-50/50 min-w-0 overflow-hidden font-display">
-            <div className="p-6 border-b border-slate-100 bg-white font-display">
-              <span className="px-2 py-0.5 bg-[#1111d4]/10 text-[#1111d4] text-[10px] font-black rounded uppercase tracking-widest mb-2 inline-block">
+          {/* LEFT PANEL: Chỉ hiển thị "Văn bản gốc" và PDF */}
+          <section className="flex-1 flex flex-col border-r border-slate-200 bg-slate-50 min-w-0 overflow-hidden">
+            <div className="p-4 border-b border-slate-100 bg-white shrink-0">
+              <span className="px-2 py-0.5 bg-[#1111d4]/10 text-[#1111d4] text-[10px] font-black rounded uppercase tracking-widest inline-block">
                 Văn bản gốc
               </span>
-              <h2 className="text-xl font-bold leading-tight mb-2 truncate font-display text-slate-900">
-                {ARTICLE_DATA.title}
-              </h2>
-              <div className="flex items-center gap-4 text-[11px] font-bold text-slate-400 uppercase tracking-tighter font-display">
-                <span className="flex items-center gap-1 font-display">
-                  <Clock size={12} /> {ARTICLE_DATA.date}
-                </span>
-                <span className="flex items-center gap-1 underline underline-offset-2">
-                  {ARTICLE_DATA.journal}
-                </span>
-              </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-10 custom-scrollbar font-display">
-              <div className="max-w-2xl mx-auto space-y-8 text-slate-600 leading-relaxed text-sm md:text-base font-light font-display">
-                {/* Abstract Section */}
-                <div>
-                  <h3 className="font-bold text-lg text-slate-900 font-display uppercase tracking-tight mb-3">
-                    Abstract
-                  </h3>
-                  <p className="text-justify">{ARTICLE_DATA.abstract}</p>
-                </div>
-
-                {/* Highlights Box */}
-                <div className="bg-[#1111d4]/5 border-l-4 border-[#1111d4] p-5 rounded-r-2xl text-slate-700 text-sm font-medium">
-                  <p className="font-bold mb-2 not-italic text-[#1111d4] uppercase text-[10px] tracking-widest">
-                    Điểm nổi bật:
-                  </p>
-                  <ul className="list-disc ml-5 space-y-2 italic">
-                    {ARTICLE_DATA.highlights.map((h, i) => (
-                      <li key={i}>{h}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Introduction Section */}
-                <div>
-                  <h3 className="font-bold text-lg text-slate-900 font-display uppercase tracking-tight mb-3">
-                    Introduction
-                  </h3>
-                  <div className="whitespace-pre-line text-justify">
-                    {ARTICLE_DATA.introduction}
-                  </div>
-                </div>
-              </div>
+            <div className="flex-1 bg-slate-200/50 relative">
+              {paperId && (
+                <iframe
+                  src={`http://localhost:8085/api/papers/view/${paperId}#toolbar=0&navpanes=0`}
+                  width="100%"
+                  height="100%"
+                  className="border-none shadow-inner"
+                  title="PDF Viewer"
+                />
+              )}
             </div>
           </section>
 
-          {/* RIGHT PANEL: AI Analysis + Retrieval Tab */}
-          <section className="flex-1 flex flex-col bg-white min-w-0 overflow-hidden shadow-[-10px_0_30px_rgba(0,0,0,0.02)] z-10 font-display border-l border-slate-100">
-            {/* TAB SELECTOR HEADER */}
-            <div className="p-4 border-b border-slate-100 bg-white flex justify-between items-center">
+          {/* RIGHT PANEL: Thông tin Metadata sắp xếp theo thứ tự + Tóm tắt */}
+          <section className="flex-1 flex flex-col bg-white min-w-0 overflow-hidden shadow-[-10px_0_30px_rgba(0,0,0,0.02)] z-10 font-display border-l border-slate-100 text-slate-900">
+            <div className="p-4 border-b border-slate-100 bg-white flex justify-between items-center shrink-0">
               <div className="flex bg-slate-100 p-1 rounded-2xl">
                 <TabButton
                   active={activeTab === "summary"}
@@ -141,134 +137,149 @@ const ArticleAnalysis = () => {
               <div className="flex items-center gap-4">
                 <MetricSmall
                   icon={<Clock size={12} />}
-                  label="READ TIME"
-                  value={AI_SUMMARY.readingTime}
+                  label="STATUS"
+                  value={summaryData?.status || "COMPLETED"}
                 />
                 <MetricSmall
                   icon={<Type size={12} />}
-                  label="WORDS"
-                  value={AI_SUMMARY.wordCount}
+                  label="PAPER ID"
+                  value={`#${paperId}`}
                 />
               </div>
             </div>
 
-            {/* CONTENT AREA */}
             <div className="flex-1 overflow-hidden flex flex-col relative">
-              {activeTab === "summary" ? (
-                /* TAB 1: HIỂN THỊ TÓM TẮT */
-                <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8 font-display">
-                  {/* 1. BẢN TÓM TẮT */}
+              {loading ? (
+                <div className="flex-1 flex flex-col items-center justify-center space-y-4">
+                  <Loader2 className="w-10 h-10 text-[#1111d4] animate-spin" />
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">
+                    AI đang tải kết quả phân tích...
+                  </p>
+                </div>
+              ) : activeTab === "summary" ? (
+                <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-10">
+                  {/* 1. TITLE SECTION */}
                   <section className="space-y-4">
                     <div className="flex items-center gap-3">
                       <Sparkles size={20} className="text-[#1111d4]" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">
-                        Bản tóm tắt
+                      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                        Phân tích tiêu đề
                       </h3>
                     </div>
-                    <div className="bg-[#1111d4]/5 border border-[#1111d4]/10 p-6 rounded-3xl text-sm text-slate-600 leading-relaxed italic shadow-sm">
-                      {AI_SUMMARY.summary}
+                    <h2 className="text-2xl font-bold leading-tight text-slate-900 tracking-tight">
+                      {paperMetadata?.title}
+                    </h2>
+                  </section>
+
+                  {/* 2. CORE METADATA: Year, Authors, Journal */}
+                  <section className="space-y-6">
+                    <div className="grid grid-cols-1 gap-4 bg-slate-50/80 p-6 rounded-3xl border border-slate-100">
+                      {/* Year */}
+                      <div className="flex items-start gap-4">
+                        <div className="p-2 bg-white rounded-xl shadow-sm text-slate-500">
+                          <Clock size={16} />
+                        </div>
+                        <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                            Năm xuất bản
+                          </p>
+                          <p className="text-sm font-bold text-slate-700">
+                            {paperMetadata?.publicationYear || "N/A"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Authors */}
+                      <div className="flex items-start gap-4">
+                        <div className="p-2 bg-white rounded-xl shadow-sm text-slate-500">
+                          <Type size={16} />
+                        </div>
+                        <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                            Tác giả
+                          </p>
+                          <p className="text-sm font-bold text-slate-700 leading-relaxed">
+                            {paperMetadata?.authors || "N/A"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Journal */}
+                      <div className="flex items-start gap-4">
+                        <div className="p-2 bg-white rounded-xl shadow-sm text-[#1111d4]">
+                          <BookOpen size={16} />
+                        </div>
+                        <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                            Tạp chí / Nguồn
+                          </p>
+                          <p className="text-sm font-bold text-[#1111d4]">
+                            {paperMetadata?.journal || "N/A"}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </section>
 
-                  {/* 2. KEYWORDS */}
+                  {/* 3. KEYWORDS SECTION */}
                   <section className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <ZapIcon size={20} className="text-amber-500" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">
+                      <Tag size={18} className="text-amber-500" />
+                      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
                         Từ khóa
                       </h3>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {AI_SUMMARY.keywords.map((tag, i) => (
-                        <span
-                          key={i}
-                          className="px-4 py-1.5 bg-slate-50 text-slate-600 text-[11px] font-bold rounded-full border border-slate-100 hover:border-[#1111d4]/20 transition-all"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* 3. OBJECTIVES */}
-                  <section className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <Target size={20} className="text-[#1111d4]" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">
-                        Mục tiêu
-                      </h3>
-                    </div>
-                    <div className="rounded-3xl border border-slate-100 p-6 bg-white shadow-sm space-y-4">
-                      {AI_SUMMARY.objectives.map((obj, i) => (
-                        <div
-                          key={i}
-                          className="flex gap-4 items-start text-sm text-slate-600"
-                        >
-                          <span className="w-6 h-6 rounded-lg bg-[#1111d4]/10 text-[#1111d4] flex items-center justify-center shrink-0 font-black text-[10px]">
-                            0{i + 1}
-                          </span>
-                          <p className="leading-snug">{obj}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* 4. METHODOLOGY */}
-                  <section className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <Beaker size={20} className="text-emerald-500" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">
-                        Phương pháp
-                      </h3>
-                    </div>
-                    <div className="rounded-3xl border border-slate-100 p-6 shadow-sm bg-white">
-                      <div className="grid grid-cols-3 gap-3">
-                        {AI_SUMMARY.metrics.map((m, i) => (
-                          <div
+                      {paperMetadata?.keywords ? (
+                        paperMetadata.keywords.split(",").map((tag, i) => (
+                          <span
                             key={i}
-                            className="p-3 bg-slate-50 rounded-2xl text-center border border-slate-100"
+                            className="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-lg border border-slate-200 transition-all hover:border-[#1111d4]/30"
                           >
-                            <p className="text-[9px] text-slate-400 uppercase font-black mb-1 tracking-tighter">
-                              {m.label}
-                            </p>
-                            <p className="text-[11px] font-bold text-[#1111d4]">
-                              {m.value}
-                            </p>
-                          </div>
-                        ))}
+                            #{tag.trim()}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-slate-400 italic text-xs">
+                          Không có từ khóa
+                        </span>
+                      )}
+                    </div>
+                  </section>
+
+                  {/* 4. SUMMARY CONTENT SECTION */}
+                  <section className="space-y-4 pt-4 border-t border-slate-100">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-[#1111d4] rounded-xl text-white">
+                        <ZapIcon size={16} className="fill-current" />
                       </div>
+                      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                        Tóm tắt chuyên sâu
+                      </h3>
+                    </div>
+                    <div className="bg-[#1111d4]/5 border border-[#1111d4]/10 p-8 rounded-[2rem] text-sm text-slate-700 leading-relaxed shadow-sm prose prose-blue max-w-none">
+                      <ReactMarkdown>
+                        {summaryData?.content ||
+                          "Dữ liệu tóm tắt chưa sẵn sàng."}
+                      </ReactMarkdown>
                     </div>
                   </section>
                 </div>
               ) : (
-                /* TAB 2: TRUY XUẤT THÔNG TIN (Giao diện Chat) */
-                <div className="flex-1 flex flex-col h-full bg-slate-50/30">
+                /* TAB 2: TRUY XUẤT THÔNG TIN */
+                <div className="flex-1 flex flex-col h-full bg-slate-50/30 text-slate-900">
                   <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-                    {/* Welcome Message */}
                     <div className="flex gap-3 max-w-[85%]">
-                      <div className="w-8 h-8 rounded-full bg-[#1111d4] flex items-center justify-center shrink-0 shadow-lg shadow-blue-200">
+                      <div className="w-8 h-8 rounded-full bg-[#1111d4] flex items-center justify-center shrink-0">
                         <Sparkles size={14} className="text-white" />
                       </div>
                       <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm text-sm text-slate-700 leading-relaxed">
-                        Chào Tùng, mình đã đọc kỹ bài báo{" "}
-                        <b>{ARTICLE_DATA.title}</b>. Bạn cần mình trích xuất
-                        thông tin gì hay giải thích phần nào không?
-                      </div>
-                    </div>
-
-                    {/* Example User Message */}
-                    <div className="flex gap-3 max-w-[85%] ml-auto flex-row-reverse">
-                      <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        DUY
-                      </div>
-                      <div className="bg-[#1111d4] p-4 rounded-2xl rounded-tr-none shadow-md text-sm text-white leading-relaxed">
-                        Phương pháp chính được sử dụng trong nghiên cứu này là
-                        gì?
+                        Chào Duy, mình đã đọc xong bài báo. Bạn cần mình trích
+                        xuất thông tin cụ thể nào từ văn bản gốc không?
                       </div>
                     </div>
                   </div>
 
-                  {/* Input area */}
                   <div className="p-6 bg-white border-t border-slate-100">
                     <div className="relative flex items-center">
                       <input
@@ -278,13 +289,10 @@ const ArticleAnalysis = () => {
                         onChange={(e) => setUserInput(e.target.value)}
                         className="w-full bg-slate-100 border-none rounded-2xl py-4 pl-6 pr-14 text-sm focus:ring-2 focus:ring-[#1111d4]/20 transition-all outline-none"
                       />
-                      <button className="absolute right-2 p-2 bg-[#1111d4] text-white rounded-xl hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-md">
+                      <button className="absolute right-2 p-2 bg-[#1111d4] text-white rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md">
                         <Send size={18} />
                       </button>
                     </div>
-                    <p className="text-center text-[10px] text-slate-400 mt-3 font-bold uppercase tracking-widest">
-                      Powered by AI Information Retrieval System
-                    </p>
                   </div>
                 </div>
               )}
@@ -296,14 +304,14 @@ const ArticleAnalysis = () => {
   );
 };
 
-// --- HELPER COMPONENTS (Giữ nguyên) ---
+// --- HELPER COMPONENTS ---
 
 const TabButton = ({ active, onClick, icon, label }) => (
   <button
     onClick={onClick}
     className={`flex items-center gap-2 px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all cursor-pointer ${
       active
-        ? "bg-white text-[#1111d4] shadow-sm"
+        ? "bg-white text-[#1111d4] shadow-sm border border-slate-100"
         : "text-slate-400 hover:text-slate-600"
     }`}
   >
@@ -319,10 +327,10 @@ const HeaderAction = ({ icon, label }) => (
 
 const MetricSmall = ({ icon, label, value }) => (
   <div className="text-right">
-    <p className="text-[9px] font-black text-slate-400 tracking-widest font-display">
+    <p className="text-[9px] font-black text-slate-400 tracking-widest">
       {label}
     </p>
-    <div className="flex items-center justify-end gap-1 text-xs font-bold text-[#1111d4] font-display">
+    <div className="flex items-center justify-end gap-1 text-xs font-bold text-[#1111d4]">
       {icon} {value}
     </div>
   </div>

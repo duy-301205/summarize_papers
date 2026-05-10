@@ -1,0 +1,270 @@
+{
+  "paper": {
+    "id": 4,
+    "title": "∗ ĐT.: (44) 755 255 88 51",
+    "file_path": "D:\\summarize_papers\\paper-ai-service\\storage\\raw_pdfs\\SSH_0077.pdf",
+    "file_size": 261177,
+    "file_type": "pdf",
+    "status": "DONE",
+    "checksum": "2eeb8c55d649deb196393c8b480a574d149a144da21b9766b5136692d7ad10a1"
+  },
+  "chunk_count": 32,
+  "chunks": [
+    {
+      "id": 130,
+      "paper_id": 4,
+      "chunk_index": 0,
+      "page_number": null,
+      "content": "1. Lời mở đầu∗ Chỉ mới xuất hiện ở Việt Nam chưa đầy một thập kỉ, truyền thông xã hội (social media)\nđã có những ảnh hưởng rất lớn đến môi trường báo chí-truyền thông Việt Nam. Nó không chỉ làm thay đổi cách thức độc giả tiếp cận thông tin, mà1 còn cả cách xử lý các nguồn thông tin đó. Với truyền thông xã hội, người đọc có thể phản hồi, tranh luận, chia sẻ thông tin với một mạng lưới rất lớn những người đọc khác, điều không thể xảy ra trước đây. Truyền thông xã hội còn tạo không gian để cá nhân thể hiện quan điểm của mình, qua đó hình thành nên nền tảng của báo chí công dân (citizen journalism).\nNhững chuyển biến đó, cả những mặt tích cực ∗ ĐT.: (44) 755 255 88 51 và hạn chế, cần được nghiên cứu kĩ lưỡng để phục vụ cho công tác xây dựng chính sách phù hợp (nhà nước), thay đổi tư duy báo chí để phù hợp hơn với xu thế (tòa soạn), và tự định hướng tốt hơn giữa những luồng thông tin khác nhau, nhiều khi là trái chiều (người đọc).",
+      "embedding_dim": 768
+    },
+    {
+      "id": 131,
+      "paper_id": 4,
+      "chunk_index": 1,
+      "page_number": null,
+      "content": "Tuy đây là một đề tài rất quan trọng và có tính cấp thiết cao, nhưng trong thời gian vừa qua chưa có nhiều nghiên cứu đáng kể về sự phát triển của truyền thông xã hội ở Việt Nam, cũng như tác động của nó đến môi trường báo chí-truyền thông nước nhà. Tác giả mong muốn rằng thông qua bài báo, sẽ có nhiều hơn nữa những tranh luận khoa học về chủ đề này.\n 2. Truyền thông xã hội và quá trình phát triển ở Việt Nam 2.1. Truyền thông xã hội là gì?\n triển của nền báo chí-truyền thông nước nhà, nhưng bản thân nó cũng có những mặt hạn chế nhất Từ khóa: Truyền thông xã hội, báo chí-truyền thông, lá cải hóa, báo chí công dân.\n Khái niệm truyền thông xã hội (social media) ra đời một vài thập kỉ trước đây với sự xuất hiện của mạng internet buổi sơ khai và hệ thống tin nhắn BBS (Bulletin Board System)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 132,
+      "paper_id": 4,
+      "chunk_index": 2,
+      "page_number": null,
+      "content": "Khái niệm truyền thông xã hội (social media) ra đời một vài thập kỉ trước đây với sự xuất hiện của mạng internet buổi sơ khai và hệ thống tin nhắn BBS (Bulletin Board System)\n. Tuy vậy, phải đến khi nền tảng Web 2.0 ra đời, với công nghệ giúp cho người dùng tự xây dựng được nội dung và kết nối với nhau, thì kỉ nguyên của truyền thông xã hội mới thực sự bùng nổ. Truyền thông xã hội đến lúc này được hiểu là các nền tảng (platform) cung cấp cho người sử dụng internet dựa trên công nghệ web 2.0.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 133,
+      "paper_id": 4,
+      "chunk_index": 3,
+      "page_number": null,
+      "content": "Andreas Kaplan và Michael Haenlein định nghĩa truyền thông xã hội là “những ứng dụng internet xây dựng trên nền tảng công nghệ và lý tưởng của web 2.0, mà tạo điều kiện cho việc kiến tạo và trao đổi thông tin của người dùng.” Theo định nghĩa chính thức của Chính phủ nhà nước CHXHCN Việt Nam , dưới đề xuất của bộ Thông Tin và Truyền thông, thì truyền thông xã hội là “là hệ thống thông tin cung cấp cho cộng đồng người sử dụng mạng các dịch vụ lưu trữ, cung cấp, sử dụng, tìm kiếm, chia sẻ và trao đổi thông tin với nhau, bao gồm dịch vụ tạo trang thông tin điện tử cá nhân, diễn đàn (forum), trò chuyện (chat)\ntrực tuyến, chia sẻ âm thanh, hình ảnh và các hình thức dịch vụ tương tự khác.” Murphy thì định nghĩa truyền thông xã hội đơn giản là công cụ truyền thông mà công chúng có thể tạo ra và trao đổi thông tin trên mạng internet.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 134,
+      "paper_id": 4,
+      "chunk_index": 4,
+      "page_number": null,
+      "content": "Cần phải lưu ý sự khác biệt giữa truyền thông xã hội (social media) và mạng xã hội (social network). Về mặt bản chất công nghệ, hai khái niệm này đều cùng chỉ một bản thể: đó là những website dựa trên nền tảng web 2.0 để giúp người sử dụng có thể tạo lập và truyền tải thông tin. Tuy vậy, thuật ngữ truyền thông xã hội mang nghĩa rộng hơn, bao hàm cả phương tiện lẫn nội dung truyền thông, trong khi mạng xã hội nhấn mạnh nhiều hơn đến nền tảng công nghệ tạo ra nó. Trong bài viết, hai thuật ngữ này được sử dụng thay thế cho nhau.\n 2.2. Truyền thông xã hội phát triển ở Việt Nam như thế nào?\n Internet chính thức có mặt ở nước ta từ năm 1997 , tuy vậy, phải mất đến gần một thập kỉ sau thì mạng xã hội đầu tiên (Yahoo 360) mới thực sự xuất hiện ở Việt Nam.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 135,
+      "paper_id": 4,
+      "chunk_index": 5,
+      "page_number": null,
+      "content": "Internet chính thức có mặt ở nước ta từ năm 1997 , tuy vậy, phải mất đến gần một thập kỉ sau thì mạng xã hội đầu tiên (Yahoo 360) mới thực sự xuất hiện ở Việt Nam.\n Trước thời điểm Yahoo 360 ra đời, ở nước ta đã có xuất hiện một số dịch vụ kết nối qua mạng internet (social network), điển hình là Yahoo Messenger và Gmail, nhưng những dịch vụ đó mang tính cá nhân (personal) nhiều hơn là xã hội (social). Lý do là bởi nó vẫn chưa tạo được không gian để người dùng trao đổi và thảo luận thông tin trên quy mô lớn, mở rộng ra với nhiều đối tượng công chúng khác nhau chứ không chỉ giới hạn trong các mối quan hệ quen thuộc của người dùng.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 136,
+      "paper_id": 4,
+      "chunk_index": 6,
+      "page_number": null,
+      "content": "Điều này chỉ thay đổi khi Yahoo công bố thí điểm dịch vụ Yahoo 360 ở Việt Nam vào năm 2005. Điểm khác biệt của Yahoo 360 là giúp cho người dùng tạo được một trang cá nhân riêng, từ đó có thể viết blog, chia sẻ quan điểm, trao đổi và thảo luận thông tin với những người dùng khác. Đối với một quốc gia internet non trẻ như Việt Nam, và với ít thói quen thể hiện quan điểm cá nhân với cộng đồng, Yahoo 360 thực sự mang lại một làn gió mới, đặc biệt là với giới trẻ. Vào những thời điểm hoàng kim nhất, mạng xã hội này thu hút đến hơn hai triệu người dùng ở Việt Nam .",
+      "embedding_dim": 768
+    },
+    {
+      "id": 137,
+      "paper_id": 4,
+      "chunk_index": 7,
+      "page_number": null,
+      "content": "Không chỉ được sử dụng như một dạng nhật kí cá nhân (public diary), rất nhiều người dùng của Yahoo 360 đã cải biến trang cá nhân của mình trở thành một trang thu thập và cung cấp thông tin cho người dùng khác, qua đó tự biến đổi thành một trang tin điện tử và bản thân trở thành “nhà báo” với số lượng người đọc đáng kể. Đó là điểm khởi đầu cho sự phát triển của báo chí công dân (citizen journalism) ở Việt Nam. Nhà sử học Dương Trung Quốc, đại biểu Quốc Hội, cũng là một trong những người tiên phong trong việc sử dụng Yahoo 360 để cung cấp thông tin và đưa ra quan điểm của cá nhân mình, với blog Quốc Xưa và Nay. Sự thành công của Yahoo 360 đã kéo theo nhiều nền tảng blog khác xuất hiện ở Việt Nam, trong đó nổi bật có Multiply và Opera .",
+      "embedding_dim": 768
+    },
+    {
+      "id": 138,
+      "paper_id": 4,
+      "chunk_index": 8,
+      "page_number": null,
+      "content": "Sự bùng nổ của blog dẫn đến sự thay đổi rất lớn trong đời sống cộng đồng người dùng internet Việt Nam, đặc biệt là giới trẻ. Chính trong giai đoạn này, nền “văn hóa ảo,” tức văn hóa sử dụng internet, được hình thành, kéo theo nhiều cuộc tranh luận sôi nổi trên mạng internet. Trong năm 2006, báo điện tử Vietnamnet bình chọn “làn sóng blog” là một trong 10 sự kiện công nghệ-thông tin tiêu biểu nhất trong năm .\n Đến năm 2008, Yahoo tuyên bố đóng cửa dịch vụ blog Yahoo 360. Tuy vậy, với tiềm năng của một thị trường hơn 80 triệu dân cùng với gần một nửa là dân số trẻ (tại thời điểm đó), không ít những dịch vụ blog khác nhảy vào thế chân của Yahoo 360 tại Việt Nam, tiêu biểu nhất là Blogspot và Wordpress. Cũng cùng lúc này, dịch vụ mạng xã hội Facebook, sau một năm thâm nhập vào thị trường Việt Nam đã có những bước phát triển mạnh mẽ.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 139,
+      "paper_id": 4,
+      "chunk_index": 9,
+      "page_number": null,
+      "content": "Sự xuất hiện của Facebook đánh dấu một bước phát triển mới cho truyền thông xã hội ở Việt Nam, đặc biệt khi xét đến quy mô lan tỏa của thông tin. Với nền tảng blog, người dùng có thể tạo ra nội dung, nhưng bị hạn chế về khả năng chia sẻ do blog không hỗ trợ nhiều về chia sẻ nội dung (ngoài trừ những blog nổi tiếng, được người dùng truy cập hoặc tìm kiếm thường xuyên thông qua các công cụ tìm kiếm như Google hay Yahoo). Facebook đã phá vỡ rào cản này, với tính năng “Share” (chia sẻ) rất dễ dàng, kết nối mạng lưới “Friends” (bạn bè)\nnhanh và rộng, cũng như nhờ sự nhạy bén của các tính năng tương tác khác (comment và like).\n Chính Facebook đã thúc đẩy sự phát triển của văn hóa internet Việt Nam sang một giai đoạn mới: từ những vòng tròn “friends” nhỏ, rời rạc và mang tính cá nhân trên Yahoo 360, cộng đồng internet Việt Nam đã chuyển sang một mạng lưới thực sự, với hầu hết tất cả người dùng đều có thể kết nối và chia sẻ thông tin với nhau một cách nhanh chóng và hiệu quả nhất.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 140,
+      "paper_id": 4,
+      "chunk_index": 10,
+      "page_number": null,
+      "content": "Tính đến thời điểm năm 2013, số lượng người dùng Facebook ở Việt Nam đã lên đến con số 19.6 triệu người, 21,42% dân số và chiếm tới 71,4% người sử dụng Internet . Cùng với Facebook, các trang mạng xã hội (social networking site) khác cũng xuất hiện ở Việt Nam, tiêu biểu có Zing Me, với lượng người dùng lên đến 8.5 triệu người trong năm 2012 . Với một cộng đồng lớn mạnh như vậy, số lượng “công dân mạng” (netizens) của Việt Nam đã đủ để hình thành nên một xã hội mạng lưới (network society) thực sự, với sự trợ giúp của các công cụ truyền thông đại chúng mới (mass-self communication), tự tạo ra một lượng thông tin khổng lồ, và cũng tự lan truyền khối lượng thông tin đó đến với nhau .\n Đây cũng là thời điểm mà mạng xã hội bắt đầu tạo ra những ảnh hưởng lớn đến nền báo chí-và truyền thông Việt Nam.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 141,
+      "paper_id": 4,
+      "chunk_index": 11,
+      "page_number": null,
+      "content": "Đây cũng là thời điểm mà mạng xã hội bắt đầu tạo ra những ảnh hưởng lớn đến nền báo chí-và truyền thông Việt Nam.\n 3. Truyền thông xã hội và môi trường báo chí Việt Nam 3.1. Báo chí, internet, và mạng xã hội Báo chí truyền thống ra đời ở Việt Nam từ thế kỷ 19, và phát triển mạnh trong thế kỷ 20 cho đến nay cùng với xu hướng chung của nền báo chí thế giới. Các hình thức truyền tải của báo chí dựa trên nền tảng công nghệ của từng thời đại nhất định: là báo in trên giấy ở thế kỷ 19, sau đó là báo phát thanh nhờ sự ra đời của video, và sau đó là truyền hình.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 142,
+      "paper_id": 4,
+      "chunk_index": 12,
+      "page_number": null,
+      "content": "Vì vậy nói đến tác động của mạng xã hội đến môi trường truyền thông-báo chí Việt Nam không thể không nhắc đến tác động của nền tảng công nghệ tạo ra nó-mạng internet. Tuy nhiên, đó là một đề tài rộng mà tác giả không thể đề cập hết trong phạm vi của bài báo. Trong khuôn khổ bài viết này, tác giả chỉ nhắc đến một xu hướng không thể đảo ngược ở cả nước ta cũng như các nước khác trên thế giới: mạng internet thúc đẩy các tòa soạn phải trở nên “online.” Với dân số internet ở Việt Nam lên tới 31 triệu người ngay cả những tờ báo chính trị-xã hội và ít chịu sự thay đổi của hoạt động kinh doanh như báo Nhân Dân, báo Lao Động, báo Công An Nhân Dân, cũng đã xuất hiện phiên bản online, điều khó có thể nghĩ tới khi internet xuất hiện tại Việt Nam vào năm 1997.\nThêm vào đó, các tòa soạn cũng đã lập trang thông tin riêng của mình trên các mạng xã hội, điển hình là Twitter và Facebook, để kết nối nhanh chóng và dễ hàng hơn với người đọc.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 143,
+      "paper_id": 4,
+      "chunk_index": 13,
+      "page_number": null,
+      "content": "Thêm vào đó, các tòa soạn cũng đã lập trang thông tin riêng của mình trên các mạng xã hội, điển hình là Twitter và Facebook, để kết nối nhanh chóng và dễ hàng hơn với người đọc.\nMột số ví dụ điển hình là fanpage trên Facebook của tờ Tin nhanh Việt Nam (VNexpress) có gần 1,700,000 lượt like, Tuổi trẻ (1,320,000), Thanh niên (588,000) tính đến thời điểm viết bài.\n Xuất hiện online, có nghĩa là các tòa soạn cũng phải tuân thủ những luật chơi của nó. Điều này khiến cho các tờ báo ở Việt Nam bắt đầu nằm dưới tầm ảnh hưởng của một công cụ mà giúp cho các bài báo được phân tán rộng rãi ra công chúng: mạng xã hội.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 144,
+      "paper_id": 4,
+      "chunk_index": 14,
+      "page_number": null,
+      "content": "Nói như vậy không có nghĩa là mạng xã hội chỉ có thể tác động được đến loại hình báo chí hoạt động trong môi trường internet. Với số lượng công dân mạng lên đến hàng chục triệu người, thì những cuộc tranh luận, những phản hồi của độc giả về những bài báo in, những chương trình truyền hình thiếu chất lượng, có vấn đề, đều có sức nặng rất lớn mà kể cả các tòa soạn không hoạt động trong môi trường internet cũng phải lưu ý. Một ví dụ nhỏ gần đây là sự kiện biên tập viên đài truyền hình thành phố Hồ Chí Minh (HTV) gây ra sự cố “chúc quốc tang thật nhiều niềm vui” vào ngày 12/10/2013.\nĐoạn hình đó được khán giả ghi lại và đưa lên trang chia sẻ video Youtube, thu hút được tới gần nửa triệu lượt người xem. Lãnh đạo đài HTV sau đó đã phải chính thức đưa ra lời xin lỗi, một sự kiện chưa từng có trong lịch sử phát thanh-truyền hình Việt Nam.\n Thêm vào đó, trước kỉ nguyên internet, báo chí và người đọc chỉ có mối quan hệ một chiều:",
+      "embedding_dim": 768
+    },
+    {
+      "id": 145,
+      "paper_id": 4,
+      "chunk_index": 15,
+      "page_number": null,
+      "content": "Thêm vào đó, trước kỉ nguyên internet, báo chí và người đọc chỉ có mối quan hệ một chiều:\nđộc giả đón nhận những thông tin được báo chí đem lại, hoàn toàn không có cơ chế giám sát/phản hồi hiệu quả. Những mục tương tác như bạn đọc viết, với khán giả của đài truyền hình không phản ánh được thực tế tâm lý người đọc, bởi những thông tin được đăng lên phương tiện truyền thông đều phải qua sàn lọc của ban biên tập.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 146,
+      "paper_id": 4,
+      "chunk_index": 16,
+      "page_number": null,
+      "content": "Điều này hoàn toàn thay đổi khi các toàn soạn bước vào thế giới online. Trong giai đoạn từ năm 2008 trở đi, hầu hết các tờ báo mạng đều triển khai mục “bình luận của bạn đọc” (comment) và “yêu thích” (like), dưới mỗi bài viết. Một bài báo được nhiều người đọc quan tâm không chỉ còn phụ thuộc vào số lượt truy cập (view), mà còn cả số lượng comment và like. Điều này thúc đẩy các tờ báo nỗ lực tìm kiếm các chủ đề hay, có liên quan mật thiết đến thực tế và cuộc sống của độc giả hơn, với cách tiếp cận dễ hiểu hơn với quần chúng. Dù không phủ nhận vai trò cung cấp thông tin của báo in trong giai đoạn tiền internet, nhưng có thể thấy rằng, báo in chưa bao giờ tạo ra được một diễn đàn chung để công chúng thảo luận những vấn đề cùng quan tâm. Sự cải tiến về công nghệ của báo mạng internet đã giúp hình thành nên điều đó, và nhân tố tác động trực tiếp nhất đến sự cải tiến đó chính là sự phát triển của mạng xã hội.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 147,
+      "paper_id": 4,
+      "chunk_index": 17,
+      "page_number": null,
+      "content": "Không chỉ tác động đến sự cải tiến về công nghệ của báo online, mạng xã hội còn giúp báo chí hoạt động công khai, minh bạch, và chuyên nghiệp hơn nhờ khả năng lan truyền siêu tốc của nó. Với mạng xã hội, một bài báo thu hút sự quan tâm của công chúng có thể được “share” hàng chục nghìn lần, tiếp cận đến hàng triệu người trong vòng vài tiếng đồng hồ, thông qua mạng lưới đan xen dày đặc của nó. Điều này khiến cho những sai sót của báo chí rất dễ bị phát hiện, và một khi được phát hiện thì rất khó để sửa chữa, bởi dù có sửa lỗi/gỡ bài báo ra khỏi hệ thống nhanh chóng, thì nó có thể đã được hàng nghìn người đọc và chia sẻ.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 148,
+      "paper_id": 4,
+      "chunk_index": 18,
+      "page_number": null,
+      "content": "Với sự xuất hiện của các mạng xã hội như Facebook hay Youtube, chưa bao giờ độc giả lại có sức mạnh to lớn đến vậy trong việc giám sát và phản hồi những thông tin có được từ báo chí. Nếu như báo chí truyền thống được coi là “quyền lực thứ tư”, và có chức năng giám sát, kiểm tra hoạt động của nhà nước và tổ chức, doanh, thì với sự xuất hiện của mình, mạng xã hội lại đóng vai trò “quyền lực thứ năm” trong việc giám sát hoạt động của các cơ quan truyền thông. Qua đó, mạng xã hội góp phần tích cực trong việc nâng cao chất lượng sản phẩm báo chí, giúp nó trở nên thiết thực hơn, chất lượng hơn, và gắn bó mật thiết hơn với nhu cầu và mong muốn của công chúng. Báo chí thời đại internet không còn là công cụ truyền thông một chiều từ tòa soạn đến độc giả nữa, mà đang dần trở thành một diễn đàn thực sự để công chúng tiếp nhận thông tin và tranh luận về các vấn đề quan tâm.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 149,
+      "paper_id": 4,
+      "chunk_index": 19,
+      "page_number": null,
+      "content": "3.2. Mạng xã hội và “lá cải hóa” báo chí Tuy vậy, mạng lưới rộng và tính lan truyền nhanh của mạng xã hội cũng tác động tiêu cực đến xu hướng “lá cải hóa” trong nền báo chítruyền thông Việt Nam. Lá cải hóa ở đây có thể hiểu là việc các tờ báo lợi dụng việc đưa các tin tức giật gân (hay còn được các nhà báo, phóng viên gọi là những bài “cướp, giết, hiếp”), đưa tin về người nổi tiếng trong giới giải trí hay thể thao, để thu hút sự chú ý của độc giả, từ đó dẫn đến hành vi tiêu dùng (mua báo hoặc truy cập để đọc bài báo) . Lá cải hóa có xu hướng làm lẫn lộn ranh giới giữa thông tin và giải trí, qua đó làm giảm đi chất lượng những cuộc thảo luận của công chúng (public discourse) về những đề tài quan trọng .\n Dù xu hướng lá cải hóa báo chí bắt đầu từ việc sản phẩm báo chí được thị trường hóa, có thể nhận thấy rằng mạng xã hội góp phần không nhỏ vào việc gia tăng tốc độ “lá cải hóa” ở trong môi trường báo chí-truyền thông Việt Nam.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 150,
+      "paper_id": 4,
+      "chunk_index": 20,
+      "page_number": null,
+      "content": "Lý do cốt yếu nằm ở cơ chế lan truyền. Nền tảng công nghệ giúp cho việc chia sẻ đường link và thông tin giữa các cá nhân trở nên dễ dàng hơn trước rất nhiều. Một thông tin thú vị có khả năng trở nên “viral” (lan truyền nhanh), được truyền tải thông qua mạng xã hội như một thứ virus: tăng lên theo cấp số nhân khi lan từ network của cá nhân này sang cá nhân khác.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 151,
+      "paper_id": 4,
+      "chunk_index": 21,
+      "page_number": null,
+      "content": "Lấy một ví dụ điển hình là trang tin 24h.com.vn. Trang tin này có đến gần 1,5 triệu likes trên mạng xã hội Facebook, điều đó đồng nghĩa với việc bất cứ bài báo nào được “post” lên fanpage của trang tin này thì đều có thể được tiếp cận bởi gần 1,5 triệu người. Về mặt lý thuyết, con số người đọc bài báo có thể tăng lên gấp bội, khi chỉ cần một phần trong số 1,5 triệu người đó share đường link trong network của mình. Điều đó thúc đẩy các tòa soạn tìm kiếm những thông tin “thú vị”: đủ hấp dẫn để độc giả quan tâm, dễ hiểu để tiếp cận với phần đông độc giả, và đa phần là gây tranh cãi để độc giả tích cực tham gia chia sẻ, thảo luận về đề tài, qua đó tăng lượng truy cập. Lượng truy cập cao đồng nghĩa với doanh thu quảng cáo cao hơn cho các tờ báo.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 152,
+      "paper_id": 4,
+      "chunk_index": 22,
+      "page_number": null,
+      "content": "Nhiệm vụ quan trọng nhất của báo chí nước ta là “phổ biến những đường lối, chủ trương của Đảng và nhà nước đến nhân dân”, và là “diễn đàn của nhân dân, phản ánh một cách trung thực tâm tư, nguyện vọng, mong muốn của nhân dân với Đảng và nhà nước” . Xu hướng lá cải hóa khiến cho báo chí xa rời những tiêu chí trên, và một trong những nhân tố quan trọng làm đẩy nhanh xu hướng đó chính là sự bùng nổ của mạng xã hội.\n 3.3. Mạng xã hội và Báo chí công dân (citizen journalism)",
+      "embedding_dim": 768
+    },
+    {
+      "id": 153,
+      "paper_id": 4,
+      "chunk_index": 23,
+      "page_number": null,
+      "content": "3.3. Mạng xã hội và Báo chí công dân (citizen journalism)\n Nền tảng web 2.0 của truyền thông xã hội giúp cho công chúng (ở đây có thể coi là độc giả của báo chí) lần đầu tiên có khả năng mở ra một kênh thông tin của cá nhân mình, và hoạt động với tư cách không khác gì một nhà báo: tự cung cấp, quảng bá, lan truyền những sản phẩm mang tính báo chí của mình ra cộng đồng. Như Gillmor từng nhận xét, web 2.0 đã cho công dân cơ hội được làm công việc mà trước đây chỉ do nhà báo đảm nhiệm. Các học giả truyền thông thống nhất gọi hiện tượng đó là “báo chí công dân” (citizen journalism).\n Điểm tốt của báo chí công dân ở Việt Nam, cũng như xu hướng chung trên thế giới, là nó cung cấp thông tin đa chiều hơn cho độc giả, tạo thêm gia vị cho môi trường truyền thôngbáo chí nước nhà. Vai trò của báo chí công dân, điển hình nhất là blog, là cung cấp sân chơi để công dân được quyền đưa ra những ý kiến cá nhân của mình, đóng góp tích cực vào quá trình thảo luận về những vấn đề chung của xã hội.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 154,
+      "paper_id": 4,
+      "chunk_index": 24,
+      "page_number": null,
+      "content": "Thêm vào đó, trong nhiều trường hợp báo chí công dân đã hỗ trợ tốt cho báo chí truyền thống, sử dụng hiệu quả mạng lưới của mình để cung cấp những thông tin đúng sự thật và cần thiết cho công chúng. Qua thông tin của báo chí công dân, nhiều hành vi sai trái của các tổ chức, cá nhân đã bị lôi ra ánh sáng, giúp cho báo chí chính thống và cả chính quyền vào cuộc để xử lý các sai phạm. Điển hình gần đây có vụ sai phạm trong quản lý đất đai tại Tiên Lãng, Hải Phòng, khi chính quyền xã tịch thu đất đai sai quy định của gia đình ông Đoàn Văn Vươn. Sau khi vụ việc diễn ra, một số blogger (trong đó có những người đang công tác cho các tòa soạn lớn) đã đưa ra những bằng chứng cho thấy dấu hiệu sai phạm của chính quyền địa phương. Sau đó, các tờ báo lớn đồng loạt điều tra và vạch trần sự việc trước công luận. Nhờ nhận được thông tin kịp thời, sự việc đã được cơ quan chức năng xử lý đúng người đúng tội, mang lại niềm tin cho người dân.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 155,
+      "paper_id": 4,
+      "chunk_index": 25,
+      "page_number": null,
+      "content": "Ngoài ra, báo chí công dân với thế mạnh của nó là mạng lưới sâu rộng, tính tương tác rất cao (đặc biệt là Facebook), thúc đẩy nhiều hơn tranh luận xã hội. Đây là một điều tốt, bởi chỉ thông qua tranh luận thì hiệu quả của thông tin mới được kiểm chứng. Nó cũng khiến người dân trở nên quan tâm hơn đến tình hình kinh tếchính trị-xã hội, và qua đó thực hiện được nguyên tắc dân chủ: “Dân biết, dân làm, dân bàn, dân kiểm tra” do Đảng và nhà nước ta đề ra.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 156,
+      "paper_id": 4,
+      "chunk_index": 26,
+      "page_number": null,
+      "content": "Tuy vậy, báo chí công dân cũng có những mặt hạn chế. Thứ nhất, đó là nó không bị kiểm soát, không bị ràng buộc bởi các quy chuẩn hoạt động như các tờ báo chính thống, và do vậy thông tin được đăng tải lên phần lớn là không được kiểm chứng. Điều này tạo ra một “rủi ro đạo đức” cho các blogger, khi họ sẵn sàng đăng những thông tin chưa được kiểm chứng, hoặc sai sự thật, để phục vụ cho mục đích riêng của mình. Thứ hai, với một nền báo chí đang phát triển thì tình trạng dư thừa thông tin diễn ra khá phổ biến, và Việt Nam cũng không phải là ngoại lệ. Cộng với sự xuất hiện của báo chí công dân, công chúng bị lâm vào tình trạng “bội thực thông tin,” khiến cho sự quan tâm đến các vấn đề hệ trọng bị giảm sút nhanh chóng, làm tổn hại đến quyền làm chủ của nhân dân cũng như sự tiến bộ của xã hội.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 157,
+      "paper_id": 4,
+      "chunk_index": 27,
+      "page_number": null,
+      "content": "4. Kết luận Trong vài năm vừa qua, truyền thông xã hội thực sự đã tạo ra những biến đổi mạnh mẽ trong nền báo chí Việt Nam. Không chỉ khiến báo chí tiếp cận được với nhiều người đọc hơn, truyền thông xã hội còn góp phần giúp báo chí cải thiện chất lượng nội dung, nâng cao cải tiến về công nghệ, đáp ứng được nhu cầu thông tin ngày càng tăng của người đọc.\n Mạng xã hội cũng làm tăng cường khả năng tương tác giữa tòa soạn và độc giả, giúp độc giả nắm vai trò giám sát và kiểm định chất lượng các sản phẩm báo chí. Hơn nữa, sự xuất hiện của báo chí công dân cũng hỗ trợ báo chí chính thống rất nhiều trong việc phát hiện ra những vấn đề quan trọng với công chúng.\n Tuy vậy, mạng xã hội cũng có những mặt tiêu cực. Đầu tiên, nó là một trong những nhân tố làm góp phần đẩy nhanh hiện tượng “lá cải hóa” báo chí ở nước ta. Thêm vào đó, mạng xã hội với những thông tin không được kiểm chứng, sự thật bị bóp méo, hay những tin đồn vô căn cứ cũng làm cho môi trường thông tin bị nhiễu loạn.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 158,
+      "paper_id": 4,
+      "chunk_index": 28,
+      "page_number": null,
+      "content": "Một phần lý do của các hiện tượng tiêu cực trên là do chúng ta còn thiếu những cơ chế quản lý mạng xã hội hiệu quả. Mạng xã hội xuất hiện ở nước ta từ năm 2004-2005, nhưng phải đến năm 2008 thì văn bản pháp luật đầu tiên đề cập đến nó mới được ban hành (Nghị định 97 NĐCP ban hành năm 2008) . Từ “mạng xã hội” chính thức được đề cập đến ở nghị định 72 TTCP ban hành vào tháng 7, 2013. Đây có thể coi là một sự chậm trễ về mặt chính sách, bởi những biến đổi trong môi trường internet, đặc biệt là mạng xã hội, diễn ra rất nhanh nhưng có tác động cực kì to lớn đến đời sống của công chúng.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 159,
+      "paper_id": 4,
+      "chunk_index": 29,
+      "page_number": null,
+      "content": "Chính vì vậy, nghiên cứu về truyền thông xã hội (hay mạng xã hội) cần phải được đẩy mạnh hơn nữa để tạo ra nền tảng thông tin và kiến thức vững chắc cho nhà nước tạo lập ra những chính sách quản lý hợp lý hơn, cho các tòa soạn đề ra phương hướng phát triển bền vững hơn, và cho các tổ chức, cá nhân, cũng như công chúng sử dụng công cụ truyền thông xã hội tốt hơn, hiệu quả hơn, phục vụ cho lợi ích chung của cả cộng đồng.\n Các ảnh hưởng của truyền thông xã hội đến báo chí không chỉ là hiện tượng ở Việt Nam mà còn là khắp nơi trên thế giới. Các quốc gia thường có cách xử lý vấn đề này khác nhau tùy thuộc vào điều kiện của mỗi nước. Các nước thị trường tự do như Anh và Mỹ hầu như không có sự can thiệp về chính sách nào đế mạng xã hội, và để cho các tổ chức báo chí tự điều tiết. Trong khi một số nước như Trung Quốc quản lý rất chặt chẽ, với nhiều cơ quan khác nhau điều tiết hoạt động của mạng xã hội.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 160,
+      "paper_id": 4,
+      "chunk_index": 30,
+      "page_number": null,
+      "content": "Với điều kiện chính trị-xã hội nhất định của Việt Nam, tác giả khuyến nghị các nhà làm chính sách cần phải để ý nhiều hơn đến sự phát triển của mạng xã hội. “Để ý” không có nghĩa là kìm kẹp quá chặt, không cho nó điều kiện phát triển (vì như vậy là đi ngược lại xu hướng toàn cầu hóa của thế giới), mà là hạn chế những ảnh hưởng tiêu cực của nó đối với báo chí cũng như công chúng nói chung. Điều này có thể thực hiện được bằng việc xây dựng một hành lang pháp lý cụ thể để điều chỉnh các hành vi trên mạng xã hội. Một cộng đồng với hơn 30 triệu người tham gia như mạng xã hội, nếu không có cơ chế quản lý đúng đắn sẽ dễ dẫn đến những tác hại tiêu cực. Tất nhiên vai trò quan trọng nhất trong việc hạn chế những ảnh hưởng tiêu cực của mạng xã hội đối với báo chí thuộc về chính các cơ quan báo chí. Thực tế các nền báo chí phát triển ở châu Âu và Mỹ cho thấy, báo chí truyền thống phải tích cực tương tác nhiều hơn nữa với mạng xã hội mới không bị bỏ lại trong kỷ nguyên số.",
+      "embedding_dim": 768
+    },
+    {
+      "id": 161,
+      "paper_id": 4,
+      "chunk_index": 31,
+      "page_number": null,
+      "content": "Thực tế các nền báo chí phát triển ở châu Âu và Mỹ cho thấy, báo chí truyền thống phải tích cực tương tác nhiều hơn nữa với mạng xã hội mới không bị bỏ lại trong kỷ nguyên số. Thêm vào đó, báo chí cần phải đảm bảo chất lượng, nâng cao tính chính xác, kịp thời, bổ ích của thông tin. Thực tế cho thấy mạng xã hội có tốc độ đưa tin và lan truyền nhanh, nhưng khi cần những nguồn tin đáng tin cậy, công chúng vẫn tìm đến báo chí truyền thống. Điều đó khẳng định báo chí truyền thống luôn có chỗ đứng vững chắc trong xã hội, vấn đề là phải biết thích nghi như thế nào trong hoàn cảnh mới.",
+      "embedding_dim": 768
+    }
+  ]
+}

@@ -6,9 +6,9 @@ spring:
     name: summarize_paper
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/summarize_db
-    username: postgres
-    password: 1111
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/summarize_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:1111}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -22,7 +22,7 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: ${SPRING_REDIS_HOST:localhost}
       port: 6379
       connect-timeout: 5000ms
       timeout: 5000ms
@@ -59,8 +59,11 @@ spring:
 
 app:
   upload:
-    dir: ${UPLOAD_DIR}
-    max-size: ${UPLOAD_MAX_SIZE}
+    dir: D:/summarize_papers/storage/papers
+    max-size: ${UPLOAD_MAX_SIZE:10MB}
+
+  fastapi:
+    url: http://127.0.0.1:8000
 
 cloudinary:
   cloud-name: ${CLOUDINARY_NAME}

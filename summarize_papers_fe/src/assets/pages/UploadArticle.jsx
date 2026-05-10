@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   UploadCloud,
@@ -11,6 +11,7 @@ import {
   Beaker,
 } from "lucide-react";
 import MainLayout from "../components/MainLayout";
+import * as api from "../config/api";
 
 const UploadArticle = () => {
   const navigate = useNavigate();
@@ -18,19 +19,92 @@ const UploadArticle = () => {
   const [length, setLength] = useState("MEDIUM");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [manualText, setManualText] = useState("");
   const fileInputRef = useRef(null);
+
+  // --- THÊM STATE ĐỂ HIỂN THỊ TIẾN ĐỘ ---
+  const [progress, setProgress] = useState(0);
+  const [statusText, setStatusText] = useState(
+    "Đợi Duy một chút, trí tuệ nhân tạo đang đọc tài liệu của bạn...",
+  );
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) setSelectedFile(file);
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    // 1. Kiểm tra dữ liệu đầu vào
+    if (!selectedFile && !manualText.trim()) {
+      alert("Vui lòng upload file hoặc nhập văn bản!");
+      return;
+    }
+
+    // Bắt đầu trạng thái Loading (Giao diện cũ của chú sẽ hiển thị)
     setIsGenerating(true);
-    setTimeout(() => {
+    setProgress(0);
+    setStatusText("Đang khởi tạo quy trình upload...");
+
+    try {
+      // 2. Chuẩn bị FormData để gửi lên Server
+      const formData = new FormData();
+      if (selectedFile) formData.append("file", selectedFile);
+      if (manualText) formData.append("text", manualText);
+      formData.append("language", language);
+      formData.append("length", length);
+
+      // 3. Gọi API Upload (Hàm này trả về paperId ngay lập tức sau khi lưu DB thành công)
+      const res = await api.uploadPaper(formData);
+
+      // Lấy paperId từ cấu trúc ApiResponse chuẩn
+      const paperId = res.data.data.paperId;
+
+      // 4. Thiết lập kết nối SSE để theo dõi tiến độ thời gian thực
+      // URL này khớp với Endpoint @GetMapping("/status/{paperId}") ở Backend
+      const eventSource = new EventSource(
+        `http://localhost:8085/api/papers/status/${paperId}`,
+      );
+
+      // Lắng nghe sự kiện "PROGRESS" từ SseService của Spring Boot
+      eventSource.addEventListener("PROGRESS", (event) => {
+        const data = JSON.parse(event.data);
+
+        // Cập nhật các State để thanh loading và dòng chữ trạng thái thay đổi
+        setProgress(data.progress);
+        setStatusText(data.status);
+
+        // Kiểm tra nếu quy trình hoàn tất (100%)
+        if (data.progress >= 100) {
+          eventSource.close(); // Đóng kết nối để giải phóng tài nguyên
+
+          // Tạo độ trễ ngắn để người dùng kịp nhìn thấy trạng thái "Hoàn tất"
+          setTimeout(() => {
+            setIsGenerating(false);
+            // Chuyển sang trang kết quả kèm theo paperId để trang đó gọi API summary
+            navigate(`/analysis/${paperId}`);
+          }, 1000);
+        }
+
+        // Kiểm tra nếu có lỗi xảy ra trong Pipeline AI (-1)
+        else if (data.progress === -1) {
+          eventSource.close();
+          setIsGenerating(false);
+          alert("Lỗi phân tích: " + data.status);
+        }
+      });
+
+      // Xử lý lỗi kết nối mạng SSE
+      eventSource.onerror = (err) => {
+        console.error("SSE Connection Error:", err);
+        eventSource.close();
+        setStatusText("Mất kết nối. Đang kiểm tra trạng thái tóm tắt...");
+      };
+    } catch (error) {
+      console.error("Upload Error:", error);
       setIsGenerating(false);
-      navigate("/analysis");
-    }, 3000);
+      const errorMsg = error.response?.data?.message || "Lỗi upload tài liệu!";
+      alert(errorMsg);
+    }
   };
 
   return (
@@ -87,6 +161,8 @@ const UploadArticle = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedFile(null);
+                          if (fileInputRef.current)
+                            fileInputRef.current.value = "";
                         }}
                         className="mt-4 flex items-center gap-1 mx-auto text-[10px] font-black text-red-500 uppercase tracking-widest"
                       >
@@ -117,6 +193,8 @@ const UploadArticle = () => {
                   Manual Text Input
                 </h3>
                 <textarea
+                  value={manualText}
+                  onChange={(e) => setManualText(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm focus:ring-2 focus:ring-[#1111d4]/10 focus:bg-white transition-all outline-none min-h-[220px] font-light leading-relaxed"
                   placeholder="Paste article text or abstract here..."
                 />
@@ -184,21 +262,26 @@ const UploadArticle = () => {
       {isGenerating && (
         <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-300 font-display">
           <div className="relative">
+            {/* Vòng xoay progress thực tế */}
             <div className="size-24 border-4 border-slate-100 border-t-[#1111d4] rounded-full animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <Beaker className="text-[#1111d4] animate-bounce" size={32} />
             </div>
           </div>
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center px-4">
             <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
               AI is Analysing
             </h3>
             <p className="text-slate-500 font-medium italic mt-2">
-              Đợi Duy một chút, trí tuệ nhân tạo đang đọc tài liệu của bạn...
+              {statusText}
             </p>
           </div>
           <div className="mt-8 w-64 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-            <div className="h-full bg-[#1111d4] animate-progress-loading"></div>
+            {/* Thanh loading chạy theo progress thực từ server */}
+            <div
+              className="h-full bg-[#1111d4] transition-all duration-500 ease-out"
+              style={{ width: `${progress}%` }}
+            ></div>
           </div>
         </div>
       )}
