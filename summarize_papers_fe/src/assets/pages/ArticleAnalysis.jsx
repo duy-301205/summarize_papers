@@ -397,7 +397,7 @@ const ArticleAnalysis = () => {
                         <Sparkles size={14} className="text-white" />
                       </div>
                       <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm text-sm text-slate-700 leading-relaxed">
-                        Chào Duy, mình đã đọc xong bài báo. Bạn cần mình trích
+                        Chào bạn, mình đã đọc xong bài báo. Bạn cần mình trích
                         xuất thông tin cụ thể nào từ văn bản gốc không?
                       </div>
                     </div>

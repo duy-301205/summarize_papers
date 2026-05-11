@@ -11,7 +11,6 @@ import com.example.summarize_paper.entity.User;
 import com.example.summarize_paper.repository.ChatMessageRepository;
 import com.example.summarize_paper.repository.ConversationRepository;
 import com.example.summarize_paper.repository.PaperRepository;
-import com.example.summarize_paper.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -111,5 +110,6 @@ public class RagService {
                         .build())
                 .toList();
     }
+
 
 }

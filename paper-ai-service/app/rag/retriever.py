@@ -1,1 +1,0 @@
-# tìm top_k chunk từ pgvector

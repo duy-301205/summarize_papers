@@ -52,3 +52,5 @@ export const askQuestion = (data) => API.post("/chat/ask", data);
 export const getChatHistory = (conversationId) => API.get(`/chat/history/${conversationId}`);
 
 export const getPaperConversations = (paperId) => API.get(`/chat/conversations/${paperId}`);
+
+export const deletePaper = (id) => API.delete(`/papers/${id}`);

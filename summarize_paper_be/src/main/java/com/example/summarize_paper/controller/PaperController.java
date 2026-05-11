@@ -100,4 +100,13 @@ public class PaperController {
                 .data(papers)
                 .build();
     }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<String> deletePaper(@PathVariable Long id) {
+        paperService.deletePaper(id);
+        return ApiResponse.<String>builder()
+                .code(200)
+                .data("Xóa bài báo thành công")
+                .build();
+    }
 }

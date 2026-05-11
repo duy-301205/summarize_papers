@@ -193,4 +193,30 @@ public class PaperService {
         });
     }
 
+    @Transactional
+    public void deletePaper(Long paperId) {
+        User currentUser = userService.getCurrentUser();
+
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new AppException(ErrorCode.PAPER_NOT_FOUND));
+
+        if (!paper.getUser().getId().equals(currentUser.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        try {
+            Path filePath = Paths.get(paper.getFilePath());
+            Files.deleteIfExists(filePath);
+            log.info("Đã xóa file vật lý: {}", paper.getFilePath());
+        } catch (IOException e) {
+            log.error("Lỗi khi xóa file vật lý: {}", e.getMessage());
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        paperRepository.delete(paper);
+        log.info("Đã xóa paper ID {} khỏi database", paperId);
+    }
+
+
 }

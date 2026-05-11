@@ -14,9 +14,10 @@ import {
   Sparkles,
   Users,
   Loader2,
+  Trash2,
 } from "lucide-react";
 import MainLayout from "../components/MainLayout";
-import { getMyPapers } from "../config/api"; // Đảm bảo hàm này gọi tới /api/papers
+import { getMyPapers, deletePaper } from "../config/api";
 
 const MySummaries = () => {
   const navigate = useNavigate();
@@ -28,14 +29,19 @@ const MySummaries = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
 
+  // State quản lý Modal xóa chuyên nghiệp
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    id: null,
+    title: "",
+  });
+
   // Hàm fetch dữ liệu
   const fetchPapers = async (page) => {
     setLoading(true);
     try {
-      // Gọi API với page và size mặc định là 10
       const res = await getMyPapers(page, 10);
-      const pageData = res.data.data; // Đây là đối tượng Page từ Spring
-
+      const pageData = res.data.data;
       setPapers(pageData.content);
       setTotalPages(pageData.totalPages);
       setTotalElements(pageData.totalElements);
@@ -51,7 +57,26 @@ const MySummaries = () => {
     fetchPapers(currentPage);
   }, [currentPage]);
 
-  // Hàm chuyển hướng sang trang phân tích chi tiết
+  // Hàm mở modal khi click nút xóa
+  const handleDeleteClick = (e, id, title) => {
+    e.stopPropagation();
+    setDeleteModal({ isOpen: true, id, title });
+  };
+
+  // Hàm thực hiện xóa thực sự sau khi xác nhận từ Modal
+  const handleConfirmDelete = async () => {
+    try {
+      const res = await deletePaper(deleteModal.id);
+      if (res.data.code === 200) {
+        setDeleteModal({ isOpen: false, id: null, title: "" });
+        fetchPapers(currentPage);
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa bài báo:", error);
+      setDeleteModal({ ...deleteModal, isOpen: false });
+    }
+  };
+
   const handleViewAnalysis = (id) => {
     navigate(`/analysis/${id}`);
   };
@@ -60,6 +85,7 @@ const MySummaries = () => {
     <MainLayout>
       <div className="p-6 font-display">
         <div className="max-w-6xl mx-auto space-y-5">
+          {/* HEADER */}
           <div className="flex justify-between items-end">
             <div>
               <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase italic">
@@ -77,6 +103,7 @@ const MySummaries = () => {
             </button>
           </div>
 
+          {/* FILTERS */}
           <div className="flex flex-wrap items-center gap-2">
             <FilterButton icon={<Calendar size={14} />} label="All Dates" />
             <FilterButton icon={<Globe size={14} />} label="Lang" />
@@ -86,6 +113,7 @@ const MySummaries = () => {
             </div>
           </div>
 
+          {/* TABLE CONTAINER */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <table className="w-full text-left border-collapse table-fixed">
               <thead>
@@ -170,6 +198,14 @@ const MySummaries = () => {
                           >
                             <Eye size={14} strokeWidth={2.5} />
                           </button>
+                          <button
+                            onClick={(e) =>
+                              handleDeleteClick(e, item.id, item.title)
+                            }
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
+                          >
+                            <Trash2 size={14} strokeWidth={2.5} />
+                          </button>
                           <button className="p-1.5 text-slate-400 hover:text-[#1111d4] hover:bg-blue-50 rounded-lg cursor-pointer">
                             <Download size={14} strokeWidth={2.5} />
                           </button>
@@ -184,7 +220,7 @@ const MySummaries = () => {
               </tbody>
             </table>
 
-            {/* Phân trang */}
+            {/* PAGINATION */}
             <div className="px-6 py-2 bg-slate-50/30 border-t border-slate-50 flex items-center justify-between">
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
                 Showing page {currentPage + 1} of {totalPages} ({totalElements}{" "}
@@ -214,6 +250,7 @@ const MySummaries = () => {
             </div>
           </div>
 
+          {/* BANNERS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-6">
             <BannerCard
               variant="primary"
@@ -232,11 +269,56 @@ const MySummaries = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal xác nhận xóa */}
+      <DeleteConfirmModal
+        isOpen={deleteModal.isOpen}
+        title={deleteModal.title}
+        onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })}
+        onConfirm={handleConfirmDelete}
+      />
     </MainLayout>
   );
 };
 
 // --- HELPER COMPONENTS ---
+
+const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, title }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-[28px] shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden">
+        <div className="p-8 text-center">
+          <div className="size-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Trash2 size={32} strokeWidth={2.5} />
+          </div>
+          <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tight mb-2">
+            Confirm Delete
+          </h3>
+          <p className="text-slate-500 text-sm leading-relaxed mb-8">
+            Bạn có chắc chắn muốn xóa bài báo <br />
+            <span className="font-bold text-slate-700">"{title}"</span>? <br />
+            Hành động này sẽ xóa sạch dữ liệu và không thể hoàn tác.
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 transition-all border border-slate-100 cursor-pointer"
+            >
+              Hủy bỏ
+            </button>
+            <button
+              onClick={onConfirm}
+              className="flex-1 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest bg-red-600 text-white hover:bg-red-700 transition-all shadow-lg shadow-red-900/20 active:scale-95 cursor-pointer"
+            >
+              Xác nhận xóa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const FilterButton = ({ icon, label }) => (
   <button className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-[10px] font-black text-slate-600 hover:border-[#1111d4] hover:text-[#1111d4] transition-all cursor-pointer uppercase tracking-tighter">

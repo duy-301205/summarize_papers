@@ -1,1 +1,0 @@
-# tạo prompt cho LLM
