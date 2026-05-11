@@ -2,9 +2,12 @@ package com.example.summarize_paper.service;
 
 import com.example.summarize_paper.dto.event.ChatRequest;
 import com.example.summarize_paper.dto.event.ChatResponse;
+import com.example.summarize_paper.dto.response.MessageResponse;
+import com.example.summarize_paper.entity.ChatMessage;
 import com.example.summarize_paper.entity.Conversation;
 import com.example.summarize_paper.entity.Paper;
 import com.example.summarize_paper.entity.User;
+import com.example.summarize_paper.repository.ChatMessageRepository;
 import com.example.summarize_paper.repository.ConversationRepository;
 import com.example.summarize_paper.repository.PaperRepository;
 import com.example.summarize_paper.repository.UserRepository;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -33,6 +37,7 @@ public class RagService {
     private final ConversationRepository conversationRepository;
     private final PaperRepository paperRepository;
     private final UserService userService;
+    private final ChatMessageRepository chatMessageRepository;
 
     public ChatResponse askQuestion(ChatRequest chatRequest) {
         log.info("💬 RagService: Processing query for Paper ID {}", chatRequest.paperId());
@@ -57,7 +62,7 @@ public class RagService {
             ResponseEntity<ChatResponse> response = restTemplate.postForEntity(url, entity, ChatResponse.class);
             return response.getBody();
         } catch (Exception e) {
-            log.error("❌ RagService Error: {}", e.getMessage());
+            log.error(" RagService Error: {}", e.getMessage());
             throw new RuntimeException("Lỗi kết nối AI Service");
         }
     }
@@ -74,6 +79,19 @@ public class RagService {
 
         conversation = conversationRepository.save(conversation);
         return conversation.getId();
+    }
+
+    public List<MessageResponse> getChatHistory(Long conversationId) {
+        List<ChatMessage> messages = chatMessageRepository.findByConversationIdOrderByCreatedAtAsc(conversationId);
+
+        return messages.stream()
+                .map(msg -> MessageResponse.builder()
+                        .role(msg.getRole().name().toLowerCase())
+                        .content(msg.getContent())
+                        .sourceNodes(msg.getSourceNodes())
+                        .createdAt(msg.getCreatedAt())
+                        .build())
+                .toList();
     }
 
 }

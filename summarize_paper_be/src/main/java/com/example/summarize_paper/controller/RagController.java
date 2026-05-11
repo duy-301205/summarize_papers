@@ -3,12 +3,12 @@ package com.example.summarize_paper.controller;
 import com.example.summarize_paper.dto.event.ChatRequest;
 import com.example.summarize_paper.dto.event.ChatResponse;
 import com.example.summarize_paper.dto.response.ApiResponse;
+import com.example.summarize_paper.dto.response.MessageResponse;
 import com.example.summarize_paper.service.RagService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -21,6 +21,13 @@ public class RagController {
     public ApiResponse<ChatResponse> ask(@RequestBody ChatRequest request) {
         return ApiResponse.<ChatResponse>builder()
                 .data(ragService.askQuestion(request))
+                .build();
+    }
+
+    @GetMapping("/history/{conversationId}")
+    public ApiResponse<List<MessageResponse>> getHistory(@PathVariable Long conversationId) {
+        return ApiResponse.<List<MessageResponse>>builder()
+                .data(ragService.getChatHistory(conversationId))
                 .build();
     }
 }

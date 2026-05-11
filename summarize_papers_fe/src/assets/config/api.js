@@ -46,3 +46,7 @@ export const getDashboardSummary = () => API.get("/analytics/summary");
 export const getVolumeChartData = () => API.get("/analytics/volume");
 
 export const getTopicsChartData = () => API.get("/analytics/topics");
+
+export const askQuestion = (data) => API.post("/chat/ask", data);
+
+export const getChatHistory = (conversationId) => API.get(`/chat/history/${conversationId}`);
