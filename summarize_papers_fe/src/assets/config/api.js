@@ -50,3 +50,5 @@ export const getTopicsChartData = () => API.get("/analytics/topics");
 export const askQuestion = (data) => API.post("/chat/ask", data);
 
 export const getChatHistory = (conversationId) => API.get(`/chat/history/${conversationId}`);
+
+export const getPaperConversations = (paperId) => API.get(`/chat/conversations/${paperId}`);

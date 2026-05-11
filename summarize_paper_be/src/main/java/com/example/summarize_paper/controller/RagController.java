@@ -3,6 +3,7 @@ package com.example.summarize_paper.controller;
 import com.example.summarize_paper.dto.event.ChatRequest;
 import com.example.summarize_paper.dto.event.ChatResponse;
 import com.example.summarize_paper.dto.response.ApiResponse;
+import com.example.summarize_paper.dto.response.ConversationResponse;
 import com.example.summarize_paper.dto.response.MessageResponse;
 import com.example.summarize_paper.service.RagService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,13 @@ public class RagController {
     public ApiResponse<List<MessageResponse>> getHistory(@PathVariable Long conversationId) {
         return ApiResponse.<List<MessageResponse>>builder()
                 .data(ragService.getChatHistory(conversationId))
+                .build();
+    }
+
+    @GetMapping("/conversations/{paperId}")
+    public ApiResponse<List<ConversationResponse>> getConversations(@PathVariable Long paperId) {
+        return ApiResponse.<List<ConversationResponse>>builder()
+                .data(ragService.getConversations(paperId))
                 .build();
     }
 }

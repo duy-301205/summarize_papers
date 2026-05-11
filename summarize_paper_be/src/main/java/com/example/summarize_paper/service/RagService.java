@@ -2,6 +2,7 @@ package com.example.summarize_paper.service;
 
 import com.example.summarize_paper.dto.event.ChatRequest;
 import com.example.summarize_paper.dto.event.ChatResponse;
+import com.example.summarize_paper.dto.response.ConversationResponse;
 import com.example.summarize_paper.dto.response.MessageResponse;
 import com.example.summarize_paper.entity.ChatMessage;
 import com.example.summarize_paper.entity.Conversation;
@@ -82,7 +83,10 @@ public class RagService {
     }
 
     public List<MessageResponse> getChatHistory(Long conversationId) {
-        List<ChatMessage> messages = chatMessageRepository.findByConversationIdOrderByCreatedAtAsc(conversationId);
+        User currentUser = userService.getCurrentUser();
+
+        List<ChatMessage> messages = chatMessageRepository
+                .findByConversationIdAndConversationUserIdOrderByCreatedAtAsc(conversationId, currentUser.getId());
 
         return messages.stream()
                 .map(msg -> MessageResponse.builder()
@@ -90,6 +94,20 @@ public class RagService {
                         .content(msg.getContent())
                         .sourceNodes(msg.getSourceNodes())
                         .createdAt(msg.getCreatedAt())
+                        .build())
+                .toList();
+    }
+
+    public List<ConversationResponse> getConversations(Long paperId) {
+        User currentUser = userService.getCurrentUser();
+
+        List<Conversation> conversations = conversationRepository
+                .findByUserIdAndPaperIdOrderByCreatedAtDesc(currentUser.getId(), paperId);
+
+        return conversations.stream()
+                .map(conv -> ConversationResponse.builder()
+                        .id(conv.getId())
+                        .createdAt(conv.getCreatedAt())
                         .build())
                 .toList();
     }

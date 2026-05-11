@@ -15,6 +15,7 @@ import {
   Loader2,
   BookOpen,
   Tag,
+  Plus, // Thêm icon Plus
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -25,9 +26,9 @@ import {
   getPaperSummary,
   askQuestion,
   getChatHistory,
+  getPaperConversations, // API mới
 } from "../config/api";
 
-// Import các thành phần dùng chung
 import Sidebar from "../components/Sidebar";
 import NotificationDropdown from "../components/NotificationDropdown";
 
@@ -42,29 +43,25 @@ const ArticleAnalysis = () => {
   const [activeTab, setActiveTab] = useState("summary");
   const [userInput, setUserInput] = useState("");
 
-  // --- BỔ SUNG STATE CHO CHAT ---
   const [messages, setMessages] = useState([]);
   const [isChatting, setIsChatting] = useState(false);
   const [conversationId, setConversationId] = useState(null);
+  const [conversations, setConversations] = useState([]); // Danh sách phiên chat
   const chatEndRef = useRef(null);
 
-  // Tự động cuộn xuống khi có tin nhắn mới
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Tải dữ liệu ban đầu (Metadata & Summary)
   useEffect(() => {
     const loadFullData = async () => {
       if (!paperId || paperId === "undefined") return;
-
       setLoading(true);
       try {
         const [detailsRes, summaryRes] = await Promise.all([
           getPaperDetails(paperId),
           getPaperSummary(paperId),
         ]);
-
         setPaperMetadata(detailsRes.data.data);
         setSummaryData(summaryRes.data.data);
       } catch (error) {
@@ -73,11 +70,25 @@ const ArticleAnalysis = () => {
         setLoading(false);
       }
     };
-
     loadFullData();
   }, [paperId]);
 
-  // --- LOGIC TẢI LỊCH SỬ CHAT KHI CHUYỂN TAB ---
+  // --- LOGIC LẤY DANH SÁCH PHIÊN CHAT ---
+  useEffect(() => {
+    const fetchConversations = async () => {
+      if (activeTab === "chat" && paperId) {
+        try {
+          const res = await getPaperConversations(paperId);
+          if (res.data.code === 200) setConversations(res.data.data);
+        } catch (error) {
+          console.error("Lỗi lấy danh sách hội thoại:", error);
+        }
+      }
+    };
+    fetchConversations();
+  }, [activeTab, paperId]);
+
+  // --- LOGIC TẢI LỊCH SỬ KHI CHỌN PHIÊN CHAT ---
   useEffect(() => {
     const loadHistory = async () => {
       if (activeTab === "chat" && paperId && conversationId) {
@@ -85,7 +96,6 @@ const ArticleAnalysis = () => {
           const response = await getChatHistory(conversationId);
           if (response.data.code === 200) {
             const history = response.data.data.map((msg) => {
-              // Parse nguồn từ sourceNodes (Java trả về)
               let parsedSources = [];
               try {
                 if (msg.sourceNodes) {
@@ -97,10 +107,8 @@ const ArticleAnalysis = () => {
               } catch (e) {
                 parsedSources = [];
               }
-
               return {
                 role: msg.role,
-                // SỬA TẠI ĐÂY: Ưu tiên content (từ Java DTO) rồi đến answer
                 content: msg.content || msg.answer || "",
                 sources: parsedSources,
               };
@@ -113,16 +121,19 @@ const ArticleAnalysis = () => {
       }
     };
     loadHistory();
-  }, [activeTab, paperId, conversationId]);
+  }, [activeTab, conversationId]);
 
-  // --- LOGIC XỬ LÝ GỬI TIN NHẮN ---
+  // --- HÀM TẠO CHAT MỚI ---
+  const handleNewChat = () => {
+    setConversationId(null);
+    setMessages([]);
+    setUserInput("");
+  };
+
   const handleSendMessage = async () => {
     if (!userInput.trim() || isChatting) return;
-
     const currentQuestion = userInput;
     setUserInput("");
-
-    // Thêm tin nhắn user vào danh sách
     setMessages((prev) => [
       ...prev,
       { role: "user", content: currentQuestion, sources: [] },
@@ -138,8 +149,6 @@ const ArticleAnalysis = () => {
 
       if (response.data.code === 200) {
         const aiData = response.data.data;
-
-        // Parse sources từ API (có thể là 'sources' hoặc 'sourceNodes')
         let parsedSources = [];
         try {
           const rawSources = aiData.sources || aiData.sourceNodes;
@@ -153,19 +162,22 @@ const ArticleAnalysis = () => {
           parsedSources = [];
         }
 
-        // Cập nhật tin nhắn AI
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant",
-            // SỬA TẠI ĐÂY: Ưu tiên answer (từ API ask) rồi đến content
             content:
               aiData.answer || aiData.content || "Không có nội dung trả về.",
             sources: parsedSources,
           },
         ]);
 
-        if (aiData.conversationId) setConversationId(aiData.conversationId);
+        // Nếu là chat mới, cập nhật lại ID và danh sách phiên chat
+        if (!conversationId && aiData.conversationId) {
+          setConversationId(aiData.conversationId);
+          const res = await getPaperConversations(paperId);
+          if (res.data.code === 200) setConversations(res.data.data);
+        }
       }
     } catch (error) {
       console.error("Chat Error:", error);
@@ -181,20 +193,18 @@ const ArticleAnalysis = () => {
   return (
     <div className="flex h-screen bg-[#f6f6f8] font-display text-slate-900 overflow-hidden">
       <Sidebar />
-
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* --- HEADER --- */}
+        {/* HEADER */}
         <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-50 shrink-0 sticky top-0 font-display text-slate-900">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/upload")}
               className="flex items-center gap-2 text-slate-500 hover:text-[#1111d4] transition-colors text-sm font-bold uppercase tracking-tighter cursor-pointer"
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft size={18} />{" "}
               <span className="hidden sm:inline">Back to Upload</span>
             </button>
           </div>
-
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black border border-emerald-100 mr-2 uppercase tracking-tighter">
               <CheckCircle2 size={14} /> Analysis Ready
@@ -211,7 +221,6 @@ const ArticleAnalysis = () => {
           </div>
         </header>
 
-        {/* --- SPLIT SCREEN CONTENT --- */}
         <div className="flex-1 flex overflow-hidden">
           {/* LEFT PANEL */}
           <section className="flex-1 flex flex-col border-r border-slate-200 bg-slate-50 min-w-0 overflow-hidden">
@@ -220,7 +229,6 @@ const ArticleAnalysis = () => {
                 Văn bản gốc
               </span>
             </div>
-
             <div className="flex-1 bg-slate-200/50 relative">
               {paperId && (
                 <iframe
@@ -251,7 +259,6 @@ const ArticleAnalysis = () => {
                   label="Truy xuất"
                 />
               </div>
-
               <div className="flex items-center gap-4">
                 <MetricSmall
                   icon={<Clock size={12} />}
@@ -290,47 +297,22 @@ const ArticleAnalysis = () => {
 
                   <section className="space-y-6">
                     <div className="grid grid-cols-1 gap-4 bg-slate-50/80 p-6 rounded-3xl border border-slate-100">
-                      <div className="flex items-start gap-4">
-                        <div className="p-2 bg-white rounded-xl shadow-sm text-slate-500">
-                          <Clock size={16} />
-                        </div>
-                        <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                            Năm xuất bản
-                          </p>
-                          <p className="text-sm font-bold text-slate-700">
-                            {paperMetadata?.publicationYear || "N/A"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-4">
-                        <div className="p-2 bg-white rounded-xl shadow-sm text-slate-500">
-                          <Type size={16} />
-                        </div>
-                        <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                            Tác giả
-                          </p>
-                          <p className="text-sm font-bold text-slate-700 leading-relaxed">
-                            {paperMetadata?.authors || "N/A"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-4">
-                        <div className="p-2 bg-white rounded-xl shadow-sm text-[#1111d4]">
-                          <BookOpen size={16} />
-                        </div>
-                        <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                            Tạp chí / Nguồn
-                          </p>
-                          <p className="text-sm font-bold text-[#1111d4]">
-                            {paperMetadata?.journal || "N/A"}
-                          </p>
-                        </div>
-                      </div>
+                      <MetricItem
+                        icon={<Clock size={16} />}
+                        label="Năm xuất bản"
+                        value={paperMetadata?.publicationYear || "N/A"}
+                      />
+                      <MetricItem
+                        icon={<Type size={16} />}
+                        label="Tác giả"
+                        value={paperMetadata?.authors || "N/A"}
+                      />
+                      <MetricItem
+                        icon={<BookOpen size={16} />}
+                        label="Tạp chí / Nguồn"
+                        value={paperMetadata?.journal || "N/A"}
+                        color="text-[#1111d4]"
+                      />
                     </div>
                   </section>
 
@@ -379,8 +361,37 @@ const ArticleAnalysis = () => {
               ) : (
                 /* TAB 2: TRUY XUẤT THÔNG TIN */
                 <div className="flex-1 flex flex-col h-full bg-slate-50/30 text-slate-900 overflow-hidden">
+                  {/* THANH CHỌN PHIÊN CHAT (NEW) */}
+                  <div className="px-6 py-2 border-b border-slate-100 flex items-center bg-white/80 shrink-0">
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                      <button
+                        onClick={handleNewChat}
+                        className="flex items-center gap-1 px-3 py-1.5 bg-[#1111d4] text-white text-[10px] font-black rounded-lg uppercase tracking-tighter shrink-0 cursor-pointer"
+                      >
+                        <Plus size={14} /> Chat mới
+                      </button>
+                      {conversations.map((conv) => (
+                        <button
+                          key={conv.id}
+                          onClick={() => setConversationId(conv.id)}
+                          className={`px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-all shrink-0 cursor-pointer ${
+                            conversationId === conv.id
+                              ? "bg-white border-[#1111d4] text-[#1111d4] shadow-sm"
+                              : "bg-slate-50 border-slate-200 text-slate-400 hover:bg-slate-100"
+                          }`}
+                        >
+                          Phiên{" "}
+                          {new Date(conv.createdAt).toLocaleDateString("vi-VN")}{" "}
+                          {new Date(conv.createdAt).toLocaleTimeString(
+                            "vi-VN",
+                            { hour: "2-digit", minute: "2-digit" },
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-                    {/* Welcome Message */}
                     <div className="flex gap-3 max-w-[85%]">
                       <div className="w-8 h-8 rounded-full bg-[#1111d4] flex items-center justify-center shrink-0">
                         <Sparkles size={14} className="text-white" />
@@ -391,20 +402,13 @@ const ArticleAnalysis = () => {
                       </div>
                     </div>
 
-                    {/* Chat History List */}
                     {messages.map((msg, index) => (
                       <div
                         key={index}
-                        className={`flex gap-3 max-w-[85%] ${
-                          msg.role === "user" ? "ml-auto flex-row-reverse" : ""
-                        }`}
+                        className={`flex gap-3 max-w-[85%] ${msg.role === "user" ? "ml-auto flex-row-reverse" : ""}`}
                       >
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                            msg.role === "user"
-                              ? "bg-slate-800"
-                              : "bg-[#1111d4]"
-                          }`}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === "user" ? "bg-slate-800" : "bg-[#1111d4]"}`}
                         >
                           {msg.role === "user" ? (
                             <Type size={14} className="text-white" />
@@ -413,17 +417,11 @@ const ArticleAnalysis = () => {
                           )}
                         </div>
                         <div
-                          className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed ${
-                            msg.role === "user"
-                              ? "bg-[#1111d4] text-white rounded-tr-none"
-                              : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
-                          }`}
+                          className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed ${msg.role === "user" ? "bg-[#1111d4] text-white rounded-tr-none" : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"}`}
                         >
                           <div className="prose prose-sm max-w-none">
                             <ReactMarkdown>{msg.content || ""}</ReactMarkdown>
                           </div>
-
-                          {/* Sources Tags */}
                           {msg.sources && msg.sources.length > 0 && (
                             <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap gap-2">
                               {msg.sources.map((src, i) => (
@@ -439,8 +437,6 @@ const ArticleAnalysis = () => {
                         </div>
                       </div>
                     ))}
-
-                    {/* Chat Loading State */}
                     {isChatting && (
                       <div className="flex gap-3 animate-pulse">
                         <div className="w-8 h-8 rounded-full bg-slate-200" />
@@ -491,15 +487,24 @@ const ArticleAnalysis = () => {
 };
 
 // --- HELPER COMPONENTS ---
+const MetricItem = ({ icon, label, value, color = "text-slate-700" }) => (
+  <div className="flex items-start gap-4">
+    <div className="p-2 bg-white rounded-xl shadow-sm text-slate-500">
+      {icon}
+    </div>
+    <div>
+      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+        {label}
+      </p>
+      <p className={`text-sm font-bold ${color}`}>{value}</p>
+    </div>
+  </div>
+);
 
 const TabButton = ({ active, onClick, icon, label }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all cursor-pointer ${
-      active
-        ? "bg-white text-[#1111d4] shadow-sm border border-slate-100"
-        : "text-slate-400 hover:text-slate-600"
-    }`}
+    className={`flex items-center gap-2 px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all cursor-pointer ${active ? "bg-white text-[#1111d4] shadow-sm border border-slate-100" : "text-slate-400 hover:text-slate-600"}`}
   >
     {icon} {label}
   </button>
