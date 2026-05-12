@@ -1,6 +1,6 @@
 # Web & Server
 fastapi
-uvicorn
+uvicorn[standard]
 requests
 python-dotenv
 pydantic
@@ -10,16 +10,16 @@ python-multipart
 PyMuPDF
 langchain
 langchain-community
+langchain-text-splitters
 
 # AI & Vector DB
-google-generativeai
+groq
 sentence-transformers
 faiss-cpu
 SQLAlchemy
 pgvector
 psycopg2-binary
 langchain-huggingface
-langchain-text-splitters
 
 # Evaluation
 rouge-score

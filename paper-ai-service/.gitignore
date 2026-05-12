@@ -6,5 +6,28 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Virtual environments
 venv/
 .venv/
+
+# OS / IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build
+dist/
+build/
+
+# Optional storage
+storage/

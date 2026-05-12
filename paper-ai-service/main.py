@@ -1,31 +1,33 @@
-# Khởi tạo FastAPI app
-# Đăng ký toàn bộ routes
-# Khởi tạo global components (DB, model, logger)
-
 from fastapi import FastAPI
-from app.api.routes import extract,embedding, summarize, rag
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from app.api.routes import extract, embedding, summarize, rag
 
-app.include_router(
-    extract.router, 
-    prefix="/api/papers", 
-    tags=["Papers"])
-
-app.include_router(
-    embedding.router, 
-    prefix="/api/papers/embedding", 
-    tags=["Vector Processing"]
+app = FastAPI(
+    title="Paper AI Service",
+    version="1.0.0"
 )
 
-app.include_router(
-    summarize.router, 
-    prefix="/api/papers", 
-    tags=["Analysis"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-app.include_router(
-    rag.router, 
-    prefix="/api/chat", 
-    tags=["Chat"]
-)
+@app.get("/")
+def root():
+    return {"message": "Paper AI Service is running"}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+app.include_router(extract.router, prefix="/api/papers", tags=["Papers"])
+app.include_router(embedding.router, prefix="/api/papers/embedding", tags=["Vector Processing"])
+app.include_router(summarize.router, prefix="/api/papers", tags=["Analysis"])
+app.include_router(rag.router, prefix="/api/chat", tags=["Chat"])
