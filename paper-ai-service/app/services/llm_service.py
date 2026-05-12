@@ -1,61 +1,89 @@
 import os
+import time
 from groq import Groq
 from dotenv import load_dotenv
 
-# Load biến môi trường từ file .env
 load_dotenv()
+
 
 class LLMService:
     def __init__(self):
-        # Khởi tạo Groq client với API Key từ .env
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-        
-        # Sử dụng model mới nhất từ danh sách bạn đã kiểm tra
-        # llama-3.3-70b-versatile là lựa chọn tốt nhất cho tóm tắt học thuật
         self.model_name = os.getenv("GROQ_MAIN_MODEL", "llama-3.3-70b-versatile")
 
-    def summarize_text(self, text: str) -> str:
+    def summarize_text(self, text: str, is_final: bool = False) -> str:
         """
         Tóm tắt văn bản hoặc chunks.
-        Giữ nguyên cấu trúc trả về là chuỗi (string) như bản Gemini cũ.
+        Giữ nguyên cấu trúc trả về là chuỗi string.
         """
+
+        if not text or not text.strip():
+            raise ValueError("Nội dung đầu vào rỗng, không thể tóm tắt.")
+
+        if is_final:
+            task_instruction = """
+            Nhiệm vụ của bạn là tổng hợp các bản tóm tắt thành phần thành một bản tóm tắt cuối cùng.
+            Hãy tránh lặp ý, trình bày mạch lạc và có tính học thuật.
+            """
+            max_tokens = 4096
+        else:
+            task_instruction = """
+            Nhiệm vụ của bạn là tóm tắt một phần nội dung của bài báo khoa học.
+            Chỉ giữ lại các ý quan trọng, bỏ qua thông tin nhiễu như số trang, header, footer.
+            """
+            max_tokens = 2048
+
         prompt = f"""
-        Bạn là một chuyên gia phân tích bài báo khoa học (Scientific Reviewer).
-        Nhiệm vụ của bạn là tóm tắt nội dung bài báo dựa trên các mảnh văn bản được cung cấp.
+Bạn là một chuyên gia phân tích bài báo khoa học (Scientific Reviewer).
 
-        Hãy trình bày bản tóm tắt theo cấu trúc sau:
-        - **Tổng quan**: Ngành nghiên cứu và chủ đề chính.
-        - **Mục tiêu**: Vấn đề mà tác giả muốn giải quyết.
-        - **Phương pháp**: Cách tiếp cận (Ví dụ: đối chiếu khối liệu, mô hình CARS...).
-        - **Kết quả**: Các phát hiện quan trọng (Đặc biệt là sự khác biệt văn hóa giữa các ngôn ngữ).
+{task_instruction}
 
-        Yêu cầu: Ngôn ngữ Tiếng Việt, văn phong học thuật.
-        
-        Nội dung bài báo:
-        {text}
-        """
-        
-        try:
-            # Gọi API Groq thay vì Gemini
-            response = self.client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "Bạn là một trợ lý AI chuyên nghiệp, phản hồi bằng tiếng Việt và tuân thủ định dạng yêu cầu."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                model=self.model_name,
-                temperature=0.2,  # Giữ độ ổn định cho văn phong học thuật
-                max_tokens=4096   # Đảm bảo đủ độ dài cho bản tóm tắt chi tiết
-            )
-            
-            # Trả về kết quả dạng text trực tiếp (tương ứng với response.text của Gemini SDK)
-            return response.choices[0].message.content
-            
-        except Exception as e:
-            print(f"Lỗi tóm tắt văn bản (Groq): {e}")
-            return None
+Hãy trình bày bản tóm tắt theo cấu trúc sau:
+- **Tổng quan**: Lĩnh vực nghiên cứu và chủ đề chính của bài báo.
+- **Mục tiêu**: Vấn đề nghiên cứu hoặc câu hỏi mà tác giả muốn giải quyết.
+- **Phương pháp**: Phương pháp nghiên cứu, mô hình, dữ liệu hoặc cách tiếp cận được sử dụng.
+- **Kết quả**: Các phát hiện, kết quả hoặc nhận định quan trọng của nghiên cứu.
+- **Kết luận**: Ý nghĩa, đóng góp hoặc khuyến nghị chính của nghiên cứu.
+
+Yêu cầu:
+- Ngôn ngữ Tiếng Việt.
+- Văn phong học thuật.
+- Không tự bịa thông tin ngoài nội dung được cung cấp.
+
+Nội dung:
+{text}
+"""
+
+        last_error = None
+
+        for attempt in range(3):
+            try:
+                response = self.client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": "Bạn là một trợ lý AI chuyên tóm tắt bài báo khoa học bằng tiếng Việt."
+                        },
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ],
+                    model=self.model_name,
+                    temperature=0.2,
+                    max_tokens=max_tokens
+                )
+
+                result = response.choices[0].message.content
+
+                if not result or not result.strip():
+                    raise ValueError("Groq trả về kết quả rỗng.")
+
+                return result.strip()
+
+            except Exception as e:
+                last_error = e
+                print(f"Lỗi tóm tắt văn bản Groq lần {attempt + 1}: {e}")
+                time.sleep(2)
+
+        raise RuntimeError(f"Tóm tắt thất bại sau 3 lần thử: {last_error}")

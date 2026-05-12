@@ -1,36 +1,54 @@
-import React, { useState, useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
+  ArrowRight,
+  Beaker,
+  Building2,
+  ChevronLeft,
+  Lock,
+  Mail,
+  User,
+} from "lucide-react-native";
+import React, { useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Beaker,
-  User,
-  Building2,
-  Mail,
-  Lock,
-  ArrowRight,
-  ChevronLeft,
-} from "lucide-react-native";
-import { useRouter } from "expo-router";
+import * as api from "../constants/Api";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // --- GIỮ NGUYÊN LOGIC CỦA DUY ---
-  const [forgotStep, setForgotStep] = useState("none"); // "none", "email", "otp", "reset"
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    username: "",
+    institution: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [resetToken, setResetToken] = useState("");
+
+  const [forgotStep, setForgotStep] = useState("none");
   const [otp, setOtp] = useState(new Array(6).fill(""));
-  const otpRefs = useRef<any>([]);
+
+  // Sửa lỗi gạch đỏ bằng cách định nghĩa kiểu cho useRef
+  const otpRefs = useRef<(TextInput | null)[]>([]);
+
+  const handleInputChange = (name: string, value: string) => {
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleOtpChange = (value: string, index: number) => {
     if (isNaN(Number(value))) return;
@@ -39,23 +57,76 @@ const Auth = () => {
     setOtp(newOtp);
 
     if (value !== "" && index < 5) {
-      otpRefs.current[index + 1].focus();
+      // Dùng optional chaining ?. để an toàn
+      otpRefs.current[index + 1]?.focus();
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      if (forgotStep === "email") setForgotStep("otp");
-      else if (forgotStep === "otp") setForgotStep("reset");
-      else if (forgotStep === "reset") {
-        setForgotStep("none");
-        setIsLogin(true);
-      } else {
-        router.replace("/dashboard");
+    try {
+      if (forgotStep === "none") {
+        if (isLogin) {
+          const res = await api.login({
+            email: formData.email,
+            password: formData.password,
+          });
+          if (res.data.code === 200) {
+            await AsyncStorage.setItem(
+              "accessToken",
+              res.data.data.accessToken,
+            );
+            await AsyncStorage.setItem(
+              "refreshToken",
+              res.data.data.refreshToken,
+            );
+            router.replace("/dashboard");
+          }
+        } else {
+          const res = await api.register({
+            email: formData.email,
+            password: formData.password,
+            username: formData.username,
+            institution: formData.institution,
+          });
+          if (res.data.code === 200) {
+            Alert.alert("Thành công", "Đăng ký thành công!");
+            setIsLogin(true);
+          }
+        }
+      } else if (forgotStep === "email") {
+        const res = await api.sendOtp(formData.email);
+        if (res.data.code === 200) {
+          setForgotStep("otp");
+        }
+      } else if (forgotStep === "otp") {
+        const res = await api.verifyOtp({
+          email: formData.email,
+          otp: otp.join(""),
+        });
+        if (res.data.code === 200) {
+          setResetToken(res.data.data.resetToken);
+          setForgotStep("reset");
+        }
+      } else if (forgotStep === "reset") {
+        const res = await api.resetPassword({
+          email: formData.email,
+          resetToken: resetToken,
+          newPassword: formData.newPassword,
+          confirmPassword: formData.confirmPassword,
+        });
+        if (res.data.code === 200) {
+          Alert.alert("Thành công", "Đổi mật khẩu thành công!");
+          setForgotStep("none");
+          setIsLogin(true);
+        }
       }
-    }, 1500);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Đã có lỗi xảy ra!";
+      Alert.alert("Lỗi", errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,7 +139,6 @@ const Auth = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {/* LOGO ĐÃ ĐƯỢC ĐƯA VÀO TRONG ĐỂ KHÔNG BỊ CHE */}
           <View style={styles.logoWrapper}>
             <TouchableOpacity
               onPress={() => router.push("/")}
@@ -122,11 +192,17 @@ const Auth = () => {
                         label="Username"
                         placeholder="Hoàng Mạnh Duy"
                         icon={<User size={18} color="#94a3b8" />}
+                        value={formData.username}
+                        onChangeText={(v) => handleInputChange("username", v)}
                       />
                       <InputGroup
                         label="Institution"
                         placeholder="VNU-HUS"
                         icon={<Building2 size={18} color="#94a3b8" />}
+                        value={formData.institution}
+                        onChangeText={(v) =>
+                          handleInputChange("institution", v)
+                        }
                       />
                     </>
                   )}
@@ -135,14 +211,17 @@ const Auth = () => {
                     placeholder="duy.hm@vnu.edu.vn"
                     icon={<Mail size={18} color="#94a3b8" />}
                     keyboardType="email-address"
+                    value={formData.email}
+                    onChangeText={(v) => handleInputChange("email", v)}
                   />
                   <InputGroup
                     label="Password"
                     placeholder="••••••••"
                     icon={<Lock size={18} color="#94a3b8" />}
                     secureTextEntry
+                    value={formData.password}
+                    onChangeText={(v) => handleInputChange("password", v)}
                   />
-
                   {isLogin && (
                     <TouchableOpacity
                       onPress={() => setForgotStep("email")}
@@ -158,6 +237,8 @@ const Auth = () => {
                   placeholder="duy.hm@vnu.edu.vn"
                   icon={<Mail size={18} color="#94a3b8" />}
                   keyboardType="email-address"
+                  value={formData.email}
+                  onChangeText={(v) => handleInputChange("email", v)}
                 />
               ) : forgotStep === "otp" ? (
                 <View style={styles.otpRow}>
@@ -180,12 +261,18 @@ const Auth = () => {
                     placeholder="••••••••"
                     icon={<Lock size={18} color="#94a3b8" />}
                     secureTextEntry
+                    value={formData.newPassword}
+                    onChangeText={(v) => handleInputChange("newPassword", v)}
                   />
                   <InputGroup
                     label="Confirm Password"
                     placeholder="••••••••"
                     icon={<Lock size={18} color="#94a3b8" />}
                     secureTextEntry
+                    value={formData.confirmPassword}
+                    onChangeText={(v) =>
+                      handleInputChange("confirmPassword", v)
+                    }
                   />
                 </>
               )}
@@ -229,8 +316,6 @@ const Auth = () => {
               </View>
             )}
           </View>
-
-          {/* Khoảng trống cuối trang để tránh dính sát mép */}
           <View style={{ height: 40 }} />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -238,7 +323,22 @@ const Auth = () => {
   );
 };
 
-const InputGroup = ({ label, icon, ...props }: any) => (
+// Định nghĩa Interface để hết gạch đỏ ở InputGroup
+interface InputGroupProps {
+  label: string;
+  icon: React.ReactNode;
+  value: string;
+  onChangeText: (text: string) => void;
+  [key: string]: any; // Cho phép các props khác như placeholder, secureTextEntry...
+}
+
+const InputGroup = ({
+  label,
+  icon,
+  value,
+  onChangeText,
+  ...props
+}: InputGroupProps) => (
   <View style={styles.inputGroup}>
     <Text style={styles.label}>{label}</Text>
     <View style={styles.inputContainer}>
@@ -246,6 +346,8 @@ const InputGroup = ({ label, icon, ...props }: any) => (
       <TextInput
         style={styles.input}
         placeholderTextColor="#94a3b8"
+        value={value}
+        onChangeText={onChangeText}
         {...props}
       />
     </View>
@@ -260,7 +362,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     justifyContent: "center",
   },
-
   logoWrapper: { alignItems: "center", marginBottom: 25 },
   logoRow: { flexDirection: "row", alignItems: "center" },
   logoBox: { backgroundColor: "#1111d4", padding: 6, borderRadius: 8 },
@@ -270,7 +371,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 10,
   },
-
   formCard: {
     backgroundColor: "#fff",
     borderRadius: 32,
@@ -288,7 +388,6 @@ const styles = StyleSheet.create({
   backBtn: { marginRight: 12 },
   h2: { fontSize: 26, fontWeight: "bold", color: "#0f172a" },
   subtitle: { color: "#64748b", marginTop: 4, fontSize: 14 },
-
   form: { gap: 16 },
   inputGroup: { gap: 6 },
   label: { fontSize: 13, fontWeight: "bold", color: "#334155", marginLeft: 4 },
@@ -303,10 +402,8 @@ const styles = StyleSheet.create({
   },
   inputIcon: { marginRight: 10 },
   input: { flex: 1, paddingVertical: 12, fontSize: 14, color: "#0f172a" },
-
   forgotBtn: { alignSelf: "flex-end" },
   forgotBtnText: { color: "#1111d4", fontSize: 12, fontWeight: "bold" },
-
   otpRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -323,7 +420,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1111d4",
   },
-
   submitBtn: {
     backgroundColor: "#1111d4",
     flexDirection: "row",
@@ -335,7 +431,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   submitBtnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-
   switchBox: { flexDirection: "row", justifyContent: "center", marginTop: 25 },
   switchText: { color: "#64748b", fontSize: 14 },
   linkText: { color: "#1111d4", fontWeight: "bold", fontSize: 14 },

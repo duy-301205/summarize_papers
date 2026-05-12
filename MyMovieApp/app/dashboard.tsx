@@ -1,52 +1,117 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import {
-  FileText,
-  Timer,
-  Database,
-  CheckCircle2,
-  UploadCloud,
-  TrendingUp,
-  MoreHorizontal,
-} from "lucide-react-native";
 import { useRouter } from "expo-router";
+import {
+  CheckCircle2,
+  Database,
+  FileText,
+  MoreHorizontal,
+  Timer,
+  TrendingUp,
+  UploadCloud,
+} from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MainLayout from "../components/sci-sum/MainLayout";
+import {
+  getDashboardSummary,
+  getMyPapers,
+  getTopicsChartData,
+  getVolumeChartData,
+} from "../constants/Api";
 
 const { width } = Dimensions.get("window");
 
 const Dashboard = () => {
   const router = useRouter();
+  const [stats, setStats] = useState<any>(null);
+  const [recentPapers, setRecentPapers] = useState<any[]>([]);
+  const [volumeData, setVolumeData] = useState<any[]>([]);
+  const [topicsData, setTopicsData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const recentActivity = [
-    {
-      id: "1",
-      title: "Neural Network Efficiency in VNU Cloud",
-      status: "Completed",
-      category: "AI / Tech",
-      date: "Oct 24, 2023",
-    },
-    {
-      id: "2",
-      title: "CRISPR-Cas9 Patterns in Rice Genomes",
-      status: "Processing",
-      category: "Genetics",
-      date: "Oct 24, 2023",
-    },
-    {
-      id: "3",
-      title: "Thermal Dynamics of Superconductors",
-      status: "Completed",
-      category: "Physics",
-      date: "Oct 23, 2023",
-    },
-  ];
+  // --- LOGIC XỬ LÝ 12 THÁNG (CHỈ THAY ĐỔI PHẦN NÀY) ---
+  const processVolumeData = (apiData: any[]) => {
+    const monthsShort = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    // Bước 1: Tạo một mảng 12 số 0 đại diện cho 12 tháng
+    const monthlyCounts = new Array(12).fill(0);
+
+    // Bước 2: Duyệt qua dữ liệu API và cộng dồn vào tháng tương ứng
+    apiData?.forEach((item: any) => {
+      if (item.label) {
+        // Chuyển chuỗi ngày tháng thành đối tượng Date
+        const date = new Date(item.label);
+
+        // Kiểm tra xem date có hợp lệ không (tránh lỗi chuỗi lạ)
+        if (!isNaN(date.getTime())) {
+          const monthIndex = date.getMonth(); // Trả về 0-11 (0 là tháng 1)
+          monthlyCounts[monthIndex] += Number(item.value || 0);
+        }
+      }
+    });
+
+    // Bước 3: Map lại thành định dạng cho biểu đồ
+    return monthsShort.map((month, index) => ({
+      label: month,
+      value: monthlyCounts[index],
+    }));
+  };
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        const [statsRes, volumeRes, topicsRes, papersRes] = await Promise.all([
+          getDashboardSummary(),
+          getVolumeChartData(),
+          getTopicsChartData(),
+          getMyPapers(0, 3),
+        ]);
+
+        setStats(statsRes.data.data);
+        // Đổ dữ liệu API vào khung 12 tháng
+        setVolumeData(processVolumeData(volumeRes.data.data));
+        setTopicsData(topicsRes.data.data);
+        setRecentPapers(papersRes.data.data.content);
+      } catch (error) {
+        console.error("Lỗi tích hợp Dashboard:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
+  }, []);
+
+  if (loading && !stats) {
+    return (
+      <MainLayout>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#1111d4" />
+          <Text style={styles.loadingText}>LOADING DATA...</Text>
+        </View>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -54,7 +119,7 @@ const Dashboard = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Dashboard Header */}
+        {/* Header - GIỮ NGUYÊN */}
         <View style={styles.header}>
           <View>
             <Text style={styles.headerTitle}>ANALYTICS DASHBOARD</Text>
@@ -71,50 +136,71 @@ const Dashboard = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Stats Grid */}
+        {/* Stats Grid - GIỮ NGUYÊN */}
         <View style={styles.statsGrid}>
           <StatCard
             icon={<FileText size={20} color="#1111d4" />}
             label="Articles"
-            value="1,284"
+            value={stats?.totalArticles?.toLocaleString() || "0"}
             trend="+12%"
           />
           <StatCard
             icon={<Timer size={20} color="#1111d4" />}
             label="Avg. Time"
-            value="4.2s"
+            value={stats?.avgTime || "0s"}
             trend="-0.5s"
             isGreen
           />
           <StatCard
             icon={<Database size={20} color="#1111d4" />}
             label="Tokens"
-            value="850.4k"
+            value={stats?.tokensConsumed || "0k"}
             trend="+5%"
           />
           <StatCard
             icon={<CheckCircle2 size={20} color="#1111d4" />}
             label="Accuracy"
-            value="98.2%"
+            value={stats?.accuracyScore || "0%"}
             trend="+0.2%"
             isGreen
           />
         </View>
 
-        {/* Chart Card: Volume */}
+        {/* Chart Volume - THAY ĐỔI HIỂN THỊ THEO THÁNG */}
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>RESEARCH VOLUME</Text>
-          <View style={styles.chartPlaceholder}>
-            {[40, 70, 50, 90, 60, 80, 45].map((h, i) => (
-              <View key={i} style={[styles.bar, { height: h }]} />
-            ))}
+          <View style={styles.chartHeader}>
+            <Text style={styles.sectionTitle}>RESEARCH VOLUME</Text>
+            <Text style={styles.chartLegend}>Yearly Overview</Text>
           </View>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.chartPlaceholder}>
+              {volumeData.map((item, i) => {
+                const maxVal = Math.max(...volumeData.map((d) => d.value), 10);
+                const barHeight = (item.value / maxVal) * 80;
+
+                return (
+                  <View key={i} style={styles.barContainer}>
+                    <View style={styles.barValueWrapper}>
+                      {item.value > 0 && (
+                        <Text style={styles.barValueTooltip}>{item.value}</Text>
+                      )}
+                      <View
+                        style={[styles.bar, { height: Math.max(barHeight, 2) }]}
+                      />
+                    </View>
+                    <Text style={styles.barLabel}>{item.label}</Text>
+                  </View>
+                );
+              })}
+            </View>
+          </ScrollView>
         </View>
 
-        {/* Chart Card: Top Topics (MỚI CẬP NHẬT) */}
-        <TopicsChart />
+        {/* Topics Chart - GIỮ NGUYÊN */}
+        <TopicsChart data={topicsData} stats={stats} />
 
-        {/* Activity List */}
+        {/* Recent Activity - GIỮ NGUYÊN */}
         <View style={styles.activityContainer}>
           <View style={styles.activityHeader}>
             <Text style={styles.sectionTitle}>RECENT ACTIVITY</Text>
@@ -122,55 +208,26 @@ const Dashboard = () => {
               <Text style={styles.viewAllText}>VIEW ALL</Text>
             </TouchableOpacity>
           </View>
-
-          {recentActivity.map((item) => (
-            <ActivityItem key={item.id} item={item} />
+          {recentPapers.map((item) => (
+            <ActivityItem
+              key={item.id}
+              item={{
+                id: item.id,
+                title: item.title,
+                status: item.status === "DONE" ? "Completed" : "Processing",
+                category: item.fileType || "Research",
+                date: new Date(item.createdAt).toLocaleDateString("vi-VN"),
+              }}
+            />
           ))}
         </View>
-
         <View style={{ height: 40 }} />
       </ScrollView>
     </MainLayout>
   );
 };
 
-// --- SUB-COMPONENTS ---
-
-const TopicsChart = () => {
-  const topics = [
-    { label: "Computer Science", value: 45, color: "#1111d4" },
-    { label: "Medicine", value: 25, color: "#4f46e5" },
-    { label: "Physics", value: 15, color: "#8b5cf6" },
-    { label: "Other", value: 15, color: "#e2e8f0" },
-  ];
-
-  return (
-    <View style={styles.sectionCard}>
-      <Text style={styles.sectionTitle}>TOP RESEARCH TOPICS</Text>
-      <View style={styles.topicsRow}>
-        <View style={styles.donutWrapper}>
-          <View style={styles.donutBase}>
-            <View style={styles.donutInner}>
-              <Text style={styles.donutTotal}>12.8k</Text>
-              <Text style={styles.donutLabel}>TOTAL</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.topicsList}>
-          {topics.map((t, i) => (
-            <View key={i} style={styles.topicItem}>
-              <View style={[styles.topicDot, { backgroundColor: t.color }]} />
-              <Text style={styles.topicLabelText} numberOfLines={1}>
-                {t.label}
-              </Text>
-              <Text style={styles.topicValueText}>{t.value}%</Text>
-            </View>
-          ))}
-        </View>
-      </View>
-    </View>
-  );
-};
+// --- SUB-COMPONENTS - GIỮ NGUYÊN ---
 
 const StatCard = ({ icon, label, value, trend, isGreen }: any) => (
   <View style={styles.statCard}>
@@ -194,6 +251,51 @@ const StatCard = ({ icon, label, value, trend, isGreen }: any) => (
     <Text style={styles.statValue}>{value}</Text>
   </View>
 );
+
+const TopicsChart = ({ data, stats }: any) => {
+  const topics =
+    data && data.length > 0
+      ? data
+      : [
+          { label: "Computer Science", value: 45, color: "#1111d4" },
+          { label: "Medicine", value: 25, color: "#4f46e5" },
+          { label: "Physics", value: 15, color: "#8b5cf6" },
+          { label: "Other", value: 15, color: "#e2e8f0" },
+        ];
+  return (
+    <View style={styles.sectionCard}>
+      <Text style={styles.sectionTitle}>TOP RESEARCH TOPICS</Text>
+      <View style={styles.topicsRow}>
+        <View style={styles.donutWrapper}>
+          <View style={styles.donutBase}>
+            <View style={styles.donutInner}>
+              <Text style={styles.donutTotal}>
+                {stats?.totalArticles || "0"}
+              </Text>
+              <Text style={styles.donutLabel}>TOTAL</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.topicsList}>
+          {topics.map((t: any, i: number) => (
+            <View key={i} style={styles.topicItem}>
+              <View
+                style={[
+                  styles.topicDot,
+                  { backgroundColor: t.color || "#1111d4" },
+                ]}
+              />
+              <Text style={styles.topicLabelText} numberOfLines={1}>
+                {t.label}
+              </Text>
+              <Text style={styles.topicValueText}>{t.value}%</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+};
 
 const ActivityItem = ({ item }: any) => (
   <View style={styles.activityItem}>
@@ -234,6 +336,13 @@ const ActivityItem = ({ item }: any) => (
 
 const styles = StyleSheet.create({
   scrollContent: { padding: 20 },
+  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  loadingText: {
+    marginTop: 10,
+    color: "#64748b",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -306,6 +415,7 @@ const styles = StyleSheet.create({
     color: "#0f172a",
     marginTop: 2,
   },
+
   sectionCard: {
     backgroundColor: "#fff",
     padding: 20,
@@ -314,22 +424,50 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#e2e8f0",
   },
+  chartHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  chartLegend: { fontSize: 10, color: "#94a3b8", fontWeight: "bold" },
   sectionTitle: {
     fontSize: 12,
     fontWeight: "900",
     color: "#0f172a",
     letterSpacing: 1,
   },
+
+  // STYLES BIỂU ĐỒ THEO THÁNG
   chartPlaceholder: {
-    height: 100,
+    height: 140,
     flexDirection: "row",
     alignItems: "flex-end",
-    justifyContent: "space-around",
-    marginTop: 20,
+    paddingTop: 20,
+    paddingHorizontal: 5,
   },
-  bar: { width: 15, backgroundColor: "#1111d4", borderRadius: 4, opacity: 0.8 },
+  barContainer: { alignItems: "center", width: 45, marginRight: 5 },
+  barValueWrapper: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+    flex: 1,
+    width: "100%",
+  },
+  barValueTooltip: {
+    fontSize: 8,
+    fontWeight: "bold",
+    color: "#1111d4",
+    marginBottom: 2,
+  },
+  bar: {
+    width: 14,
+    backgroundColor: "#1111d4",
+    borderRadius: 4,
+    opacity: 0.85,
+    elevation: 2,
+  },
+  barLabel: { fontSize: 9, color: "#94a3b8", fontWeight: "bold", marginTop: 8 },
 
-  // TOPICS CHART STYLES
   topicsRow: {
     flexDirection: "row",
     alignItems: "center",

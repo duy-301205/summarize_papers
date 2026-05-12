@@ -1,72 +1,133 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowLeft,
-  Download,
-  Copy,
-  Share2,
-  FileText,
-  Target,
-  Beaker,
-  Clock,
-  Type,
-  Zap,
   CheckCircle2,
+  Clock,
+  Copy,
+  Download,
+  FileText,
   MessageSquare,
   Send,
+  Share2,
   Sparkles,
+  Type,
 } from "lucide-react-native";
-import { useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MainLayout from "../components/sci-sum/MainLayout";
+// Import API Duy đã cấu hình
+import {
+  askQuestion,
+  getPaperDetails,
+  getPaperSummary,
+} from "../constants/Api";
 
-// --- DATA TĨNH DUY GỬI ---
-const ARTICLE_DATA = {
-  title:
-    "Deep Learning trong Genomics: Cách mạng hóa Y học Chính xác thông qua Suy luận Quy mô lớn",
-  journal: "Nature Genetics",
-  date: "Tháng 10, 2023",
-  abstract:
-    "Sự hội tụ của học sâu (deep learning) và giải trình tự gen quy mô lớn đã mở ra một kỷ nguyên mới cho khám phá sinh học...",
-  introduction:
-    "Dữ liệu gen vốn dĩ có kích thước cực lớn và độ phức tạp cao...",
-  highlights: [
-    "GenomicTrans giảm độ trễ suy luận xuống 45%.",
-    "Cơ chế Localized Attention xử lý 1 triệu base pairs.",
-    "Đạt chỉ số AUC 0.94 trong phân loại biến thể.",
-  ],
-};
-
-const AI_SUMMARY = {
-  readingTime: "2 min",
-  wordCount: 420,
-  summary:
-    "Dựa trên phân tích chuyên sâu, nghiên cứu này đề xuất một kiến trúc mạng nơ-ron mới nhằm tối ưu hóa việc xử lý dữ liệu genomic quy mô lớn...",
-  keywords: ["Deep Learning", "Genomics", "Transformer", "NLP"],
-  objectives: [
-    "Efficiency architecture",
-    "Clinical genomics",
-    "Biobank validation",
-  ],
-  metrics: [
-    { label: "Architecture", value: "GenomicTrans" },
-    { label: "Training", value: "1.2M Seq" },
-    { label: "Inference", value: "Edge-AI" },
-  ],
-};
-
-const ArticleAnalysis = () => {
+const Analysis = () => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("summary"); // original, summary, chat
+  const { id: paperId } = useLocalSearchParams(); // Lấy paperId từ URL
+
+  const [activeTab, setActiveTab] = useState("summary");
   const [userInput, setUserInput] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // --- STATES DỮ LIỆU ---
+  const [paperMetadata, setPaperMetadata] = useState<any>(null);
+  const [summaryData, setSummaryData] = useState<any>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [isChatting, setIsChatting] = useState(false);
+  const [conversationId, setConversationId] = useState<number | null>(null);
+
+  const chatEndRef = useRef<ScrollView>(null);
+
+  // 1. Tải Metadata và Summary khi vào trang
+  useEffect(() => {
+    const loadFullData = async () => {
+      if (!paperId) return;
+      setLoading(true);
+      try {
+        const [detailsRes, summaryRes] = await Promise.all([
+          getPaperDetails(paperId as string),
+          getPaperSummary(paperId as string),
+        ]);
+        setPaperMetadata(detailsRes.data.data);
+        setSummaryData(summaryRes.data.data);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu bài báo:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFullData();
+  }, [paperId]);
+
+  // 2. Tự động cuộn xuống khi có tin nhắn mới
+  useEffect(() => {
+    setTimeout(() => chatEndRef.current?.scrollToEnd({ animated: true }), 100);
+  }, [messages]);
+
+  // 3. Hàm gửi tin nhắn cho AI
+  const handleSendMessage = async () => {
+    if (!userInput.trim() || isChatting) return;
+
+    const currentQuestion = userInput;
+    setUserInput("");
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: currentQuestion },
+    ]);
+    setIsChatting(true);
+
+    try {
+      const response = await askQuestion({
+        paperId: parseInt(paperId as string),
+        conversationId: conversationId,
+        message: currentQuestion,
+      });
+
+      if (response.data.code === 200) {
+        const aiData = response.data.data;
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: aiData.answer || aiData.content },
+        ]);
+        if (!conversationId && aiData.conversationId) {
+          setConversationId(aiData.conversationId);
+        }
+      }
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Lỗi kết nối dịch vụ AI." },
+      ]);
+    } finally {
+      setIsChatting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <MainLayout>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#1111d4" />
+          <Text style={{ marginTop: 10, color: "#64748b" }}>
+            Đang tải phân tích...
+          </Text>
+        </View>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -123,10 +184,21 @@ const ArticleAnalysis = () => {
 
         {/* Content Area */}
         <View style={styles.content}>
-          {activeTab === "original" && <OriginalContent />}
-          {activeTab === "summary" && <SummaryContent />}
+          {activeTab === "original" && (
+            <OriginalContent metadata={paperMetadata} />
+          )}
+          {activeTab === "summary" && (
+            <SummaryContent metadata={paperMetadata} summary={summaryData} />
+          )}
           {activeTab === "chat" && (
-            <ChatContent userInput={userInput} setUserInput={setUserInput} />
+            <ChatContent
+              messages={messages}
+              userInput={userInput}
+              setUserInput={setUserInput}
+              onSend={handleSendMessage}
+              isChatting={isChatting}
+              chatEndRef={chatEndRef}
+            />
           )}
         </View>
       </View>
@@ -134,52 +206,58 @@ const ArticleAnalysis = () => {
   );
 };
 
-// --- SUB-COMPONENTS ---
+// --- SUB-COMPONENTS TÍCH HỢP DATA ---
 
-const OriginalContent = () => (
+const OriginalContent = ({ metadata }: any) => (
   <ScrollView style={styles.scrollBody} showsVerticalScrollIndicator={false}>
-    <Text style={styles.articleTitle}>{ARTICLE_DATA.title}</Text>
+    <Text style={styles.articleTitle}>{metadata?.title}</Text>
     <View style={styles.metaRow}>
       <Clock size={12} color="#94a3b8" />
       <Text style={styles.metaText}>
-        {ARTICLE_DATA.date} • {ARTICLE_DATA.journal}
+        {metadata?.publicationYear} • {metadata?.journal || "Original Document"}
       </Text>
     </View>
 
     <View style={styles.section}>
-      <Text style={styles.sectionHeader}>ABSTRACT</Text>
-      <Text style={styles.paragraph}>{ARTICLE_DATA.abstract}</Text>
+      <Text style={styles.sectionHeader}>AUTHORS</Text>
+      <Text style={styles.paragraph}>{metadata?.authors || "N/A"}</Text>
     </View>
 
     <View style={styles.highlightBox}>
-      <Text style={styles.highlightLabel}>ĐIỂM NỔI BẬT:</Text>
-      {ARTICLE_DATA.highlights.map((h, i) => (
-        <View key={i} style={styles.bulletRow}>
-          <CheckCircle2 size={14} color="#1111d4" />
-          <Text style={styles.bulletText}>{h}</Text>
-        </View>
-      ))}
+      <Text style={styles.highlightLabel}>FILE INFO:</Text>
+      <View style={styles.bulletRow}>
+        <CheckCircle2 size={14} color="#1111d4" />
+        <Text style={styles.bulletText}>Type: {metadata?.fileType}</Text>
+      </View>
+      <View style={styles.bulletRow}>
+        <CheckCircle2 size={14} color="#1111d4" />
+        <Text style={styles.bulletText}>
+          Size: {(metadata?.fileSize / 1024 / 1024).toFixed(2)} MB
+        </Text>
+      </View>
     </View>
 
     <View style={styles.section}>
-      <Text style={styles.sectionHeader}>INTRODUCTION</Text>
-      <Text style={styles.paragraph}>{ARTICLE_DATA.introduction}</Text>
+      <Text style={styles.sectionHeader}>STATUS</Text>
+      <Text style={styles.paragraph}>
+        Dữ liệu gốc đã được hệ thống SciSum AI xử lý hoàn tất.
+      </Text>
     </View>
     <View style={{ height: 40 }} />
   </ScrollView>
 );
 
-const SummaryContent = () => (
+const SummaryContent = ({ metadata, summary }: any) => (
   <ScrollView style={styles.scrollBody} showsVerticalScrollIndicator={false}>
     <View style={styles.metricRow}>
       <MetricSmall
-        label="READ TIME"
-        value={AI_SUMMARY.readingTime}
+        label="YEAR"
+        value={metadata?.publicationYear}
         icon={<Clock size={12} color="#1111d4" />}
       />
       <MetricSmall
-        label="WORDS"
-        value={AI_SUMMARY.wordCount}
+        label="ID"
+        value={`#${metadata?.id}`}
         icon={<Type size={12} color="#1111d4" />}
       />
     </View>
@@ -189,51 +267,56 @@ const SummaryContent = () => (
         <Sparkles size={18} color="#1111d4" />
         <Text style={styles.aiHeaderText}>BẢN TÓM TẮT AI</Text>
       </View>
-      <Text style={styles.aiBody}>{AI_SUMMARY.summary}</Text>
+      <Text style={styles.aiBody}>
+        {summary?.content || "Đang tạo tóm tắt..."}
+      </Text>
     </View>
 
     <View style={styles.tagWrapper}>
       <Text style={styles.sectionHeader}>TỪ KHÓA</Text>
       <View style={styles.tagContainer}>
-        {AI_SUMMARY.keywords.map((k, i) => (
+        {metadata?.keywords?.split(",").map((k: string, i: number) => (
           <View key={i} style={styles.tag}>
-            <Text style={styles.tagText}>#{k}</Text>
+            <Text style={styles.tagText}>#{k.trim()}</Text>
           </View>
-        ))}
+        )) || (
+          <Text style={{ color: "#94a3b8", fontStyle: "italic" }}>
+            Không có từ khóa
+          </Text>
+        )}
       </View>
     </View>
 
     <View style={styles.section}>
-      <Text style={styles.sectionHeader}>MỤC TIÊU NGHIÊN CỨU</Text>
-      {AI_SUMMARY.objectives.map((obj, i) => (
-        <View key={i} style={styles.objRow}>
-          <Text style={styles.objNum}>0{i + 1}</Text>
-          <Text style={styles.objText}>{obj}</Text>
-        </View>
-      ))}
-    </View>
-
-    <View style={styles.section}>
-      <Text style={styles.sectionHeader}>PHƯƠNG PHÁP</Text>
-      <View style={styles.metricsGrid}>
-        {AI_SUMMARY.metrics.map((m, i) => (
-          <View key={i} style={styles.metricCard}>
-            <Text style={styles.mLabel}>{m.label}</Text>
-            <Text style={styles.mValue}>{m.value}</Text>
-          </View>
-        ))}
+      <Text style={styles.sectionHeader}>THÔNG TIN NGUỒN</Text>
+      <View style={styles.objRow}>
+        <Text style={styles.objNum}>01</Text>
+        <Text style={styles.objText}>{metadata?.journal || "N/A"}</Text>
+      </View>
+      <View style={styles.objRow}>
+        <Text style={styles.objNum}>02</Text>
+        <Text style={styles.objText}>{metadata?.authors || "N/A"}</Text>
       </View>
     </View>
+
     <View style={{ height: 40 }} />
   </ScrollView>
 );
 
-const ChatContent = ({ userInput, setUserInput }: any) => (
+const ChatContent = ({
+  messages,
+  userInput,
+  setUserInput,
+  onSend,
+  isChatting,
+  chatEndRef,
+}: any) => (
   <KeyboardAvoidingView
     behavior={Platform.OS === "ios" ? "padding" : "height"}
     style={{ flex: 1 }}
+    keyboardVerticalOffset={100}
   >
-    <ScrollView style={styles.chatBody}>
+    <ScrollView style={styles.chatBody} ref={chatEndRef}>
       <View style={styles.aiMsg}>
         <View style={styles.aiAvatar}>
           <Sparkles size={14} color="#fff" />
@@ -245,11 +328,39 @@ const ChatContent = ({ userInput, setUserInput }: any) => (
         </View>
       </View>
 
-      <View style={styles.userMsg}>
-        <View style={styles.userBubble}>
-          <Text style={styles.userMsgText}>Phương pháp chính là gì?</Text>
+      {messages.map((msg: any, index: number) => (
+        <View
+          key={index}
+          style={msg.role === "user" ? styles.userMsg : styles.aiMsg}
+        >
+          {msg.role !== "user" && (
+            <View style={styles.aiAvatar}>
+              <Sparkles size={14} color="#fff" />
+            </View>
+          )}
+          <View
+            style={[
+              styles.aiBubble,
+              msg.role === "user" ? styles.userBubble : {},
+            ]}
+          >
+            <Text
+              style={[
+                styles.aiMsgText,
+                msg.role === "user" ? styles.userMsgText : {},
+              ]}
+            >
+              {msg.content}
+            </Text>
+          </View>
         </View>
-      </View>
+      ))}
+
+      {isChatting && (
+        <View style={styles.aiMsg}>
+          <ActivityIndicator size="small" color="#1111d4" />
+        </View>
+      )}
     </ScrollView>
 
     <View style={styles.chatInputRow}>
@@ -258,8 +369,13 @@ const ChatContent = ({ userInput, setUserInput }: any) => (
         placeholder="Hỏi bất cứ điều gì..."
         value={userInput}
         onChangeText={setUserInput}
+        editable={!isChatting}
       />
-      <TouchableOpacity style={styles.sendBtn}>
+      <TouchableOpacity
+        style={[styles.sendBtn, isChatting && { opacity: 0.5 }]}
+        onPress={onSend}
+        disabled={isChatting}
+      >
         <Send size={20} color="#fff" />
       </TouchableOpacity>
     </View>
@@ -290,7 +406,7 @@ const MetricSmall = ({ label, value, icon }: any) => (
   </View>
 );
 
-// --- STYLES ---
+// --- STYLES (GIỮ NGUYÊN) ---
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -462,19 +578,6 @@ const styles = StyleSheet.create({
   },
   objText: { flex: 1, fontSize: 14, color: "#475569" },
 
-  metricsGrid: { flexDirection: "row", gap: 10 },
-  metricCard: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 16,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#f1f5f9",
-  },
-  mLabel: { fontSize: 8, fontWeight: "900", color: "#94a3b8", marginBottom: 4 },
-  mValue: { fontSize: 11, fontWeight: "900", color: "#1111d4" },
-
   chatBody: { flex: 1, padding: 20 },
   aiMsg: { flexDirection: "row", gap: 10, marginBottom: 20 },
   aiAvatar: {
@@ -530,4 +633,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ArticleAnalysis;
+export default Analysis;

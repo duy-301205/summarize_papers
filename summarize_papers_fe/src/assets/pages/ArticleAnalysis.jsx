@@ -15,7 +15,7 @@ import {
   Loader2,
   BookOpen,
   Tag,
-  Plus, // Thêm icon Plus
+  Plus,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -26,7 +26,7 @@ import {
   getPaperSummary,
   askQuestion,
   getChatHistory,
-  getPaperConversations, // API mới
+  getPaperConversations,
 } from "../config/api";
 
 import Sidebar from "../components/Sidebar";
@@ -46,7 +46,7 @@ const ArticleAnalysis = () => {
   const [messages, setMessages] = useState([]);
   const [isChatting, setIsChatting] = useState(false);
   const [conversationId, setConversationId] = useState(null);
-  const [conversations, setConversations] = useState([]); // Danh sách phiên chat
+  const [conversations, setConversations] = useState([]);
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ const ArticleAnalysis = () => {
       }
     };
     loadHistory();
-  }, [activeTab, conversationId]);
+  }, [activeTab, conversationId, paperId]);
 
   // --- HÀM TẠO CHAT MỚI ---
   const handleNewChat = () => {
@@ -361,7 +361,7 @@ const ArticleAnalysis = () => {
               ) : (
                 /* TAB 2: TRUY XUẤT THÔNG TIN */
                 <div className="flex-1 flex flex-col h-full bg-slate-50/30 text-slate-900 overflow-hidden">
-                  {/* THANH CHỌN PHIÊN CHAT (NEW) */}
+                  {/* THANH CHỌN PHIÊN CHAT */}
                   <div className="px-6 py-2 border-b border-slate-100 flex items-center bg-white/80 shrink-0">
                     <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
                       <button
@@ -405,10 +405,16 @@ const ArticleAnalysis = () => {
                     {messages.map((msg, index) => (
                       <div
                         key={index}
-                        className={`flex gap-3 max-w-[85%] ${msg.role === "user" ? "ml-auto flex-row-reverse" : ""}`}
+                        className={`flex gap-3 max-w-[85%] ${
+                          msg.role === "user" ? "ml-auto flex-row-reverse" : ""
+                        }`}
                       >
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === "user" ? "bg-slate-800" : "bg-[#1111d4]"}`}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                            msg.role === "user"
+                              ? "bg-slate-800"
+                              : "bg-[#1111d4]"
+                          }`}
                         >
                           {msg.role === "user" ? (
                             <Type size={14} className="text-white" />
@@ -417,23 +423,15 @@ const ArticleAnalysis = () => {
                           )}
                         </div>
                         <div
-                          className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed ${msg.role === "user" ? "bg-[#1111d4] text-white rounded-tr-none" : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"}`}
+                          className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed ${
+                            msg.role === "user"
+                              ? "bg-[#1111d4] text-white rounded-tr-none"
+                              : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
+                          }`}
                         >
                           <div className="prose prose-sm max-w-none">
                             <ReactMarkdown>{msg.content || ""}</ReactMarkdown>
                           </div>
-                          {msg.sources && msg.sources.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap gap-2">
-                              {msg.sources.map((src, i) => (
-                                <span
-                                  key={i}
-                                  className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-bold uppercase border border-slate-200"
-                                >
-                                  Trang {src.page_number}
-                                </span>
-                              ))}
-                            </div>
-                          )}
                         </div>
                       </div>
                     ))}
@@ -504,7 +502,11 @@ const MetricItem = ({ icon, label, value, color = "text-slate-700" }) => (
 const TabButton = ({ active, onClick, icon, label }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all cursor-pointer ${active ? "bg-white text-[#1111d4] shadow-sm border border-slate-100" : "text-slate-400 hover:text-slate-600"}`}
+    className={`flex items-center gap-2 px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all cursor-pointer ${
+      active
+        ? "bg-white text-[#1111d4] shadow-sm border border-slate-100"
+        : "text-slate-400 hover:text-slate-600"
+    }`}
   >
     {icon} {label}
   </button>

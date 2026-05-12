@@ -1,75 +1,90 @@
-import React from "react";
+import { useRouter } from "expo-router";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import {
-  Plus,
   Calendar,
-  Globe,
-  Tag,
-  MoreHorizontal,
-  FileText,
-  Eye,
-  Download,
   ChevronLeft,
   ChevronRight,
+  Download,
+  Eye,
+  FileText,
+  Globe,
+  MoreHorizontal,
+  Plus,
   Sparkles,
+  Tag,
+  Trash2,
   Users,
 } from "lucide-react-native";
-import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MainLayout from "../components/sci-sum/MainLayout";
+// Import API Duy đã cấu hình
+import { deletePaper, getMyPapers } from "../constants/Api";
 
-// --- DATA TĨNH DUY GỬI ---
-const SUMMARIES_LIST = [
-  {
-    id: 1,
-    title: "Transformers in Computer Vision: A Survey",
-    topic: "Deep Learning, AI",
-    type: "Detailed",
-    language: "English (EN)",
-    date: "Oct 24, 2023",
-  },
-  {
-    id: 2,
-    title: "Climate Change Impact on Mekong Delta Agriculture",
-    topic: "Environmental Science",
-    type: "Bulleted",
-    language: "Vietnamese (VN)",
-    date: "Oct 22, 2023",
-  },
-  {
-    id: 3,
-    title: "CRISPR-Cas9: Gene Editing Breakthroughs in 2023",
-    topic: "Biotechnology",
-    type: "Abstract",
-    language: "English (EN)",
-    date: "Oct 19, 2023",
-  },
-  {
-    id: 4,
-    title: "Quantum Computing in Cryptography: A Review",
-    topic: "Physics, Cyber Security",
-    type: "Detailed",
-    language: "English (EN)",
-    date: "Oct 15, 2023",
-  },
-  {
-    id: 5,
-    title: "Sustainable Architecture in Tropical Regions",
-    topic: "Urban Planning",
-    type: "Bulleted",
-    language: "Vietnamese (VN)",
-    date: "Oct 12, 2023",
-  },
-];
-
-const MySummaries = () => {
+const Summaries = () => {
   const router = useRouter();
+
+  // --- STATES QUẢN LÝ DỮ LIỆU TỪ API ---
+  const [papers, setPapers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
+  // Hàm fetch dữ liệu từ API
+  const fetchPapers = async (page: number) => {
+    setLoading(true);
+    try {
+      const res = await getMyPapers(page, 10);
+      if (res.data.code === 200) {
+        const pageData = res.data.data;
+        setPapers(pageData.content);
+        setTotalPages(pageData.totalPages);
+        setTotalElements(pageData.totalElements);
+        setCurrentPage(pageData.number);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách bài báo:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPapers(currentPage);
+  }, [currentPage]);
+
+  // Hàm xử lý xóa bài báo
+  const handleDelete = (id: number, title: string) => {
+    Alert.alert(
+      "Xác nhận xóa",
+      `Bạn có chắc muốn xóa bài báo "${title}" không?`,
+      [
+        { text: "Hủy", style: "cancel" },
+        {
+          text: "Xóa",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const res = await deletePaper(id);
+              if (res.data.code === 200) {
+                fetchPapers(currentPage); // Refresh lại danh sách
+              }
+            } catch (error) {
+              Alert.alert("Lỗi", "Không thể xóa bài báo này.");
+            }
+          },
+        },
+      ],
+    );
+  };
 
   return (
     <MainLayout>
@@ -118,23 +133,69 @@ const MySummaries = () => {
           </TouchableOpacity>
         </ScrollView>
 
-        {/* Summaries List (Thay thế Table) */}
+        {/* Summaries List */}
         <View style={styles.listContainer}>
-          {SUMMARIES_LIST.map((item) => (
-            <SummaryCard key={item.id} item={item} />
-          ))}
-
-          {/* Pagination Giả lập */}
-          <View style={styles.pagination}>
-            <Text style={styles.paginationInfo}>Showing 5 of 124</Text>
-            <View style={styles.pageActions}>
-              <PageNavBtn icon={<ChevronLeft size={16} color="#94a3b8" />} />
-              <View style={styles.activePage}>
-                <Text style={styles.activePageText}>1</Text>
-              </View>
-              <PageNavBtn icon={<ChevronRight size={16} color="#94a3b8" />} />
+          {loading ? (
+            <View style={{ py: 40 }}>
+              <ActivityIndicator size="large" color="#1111d4" />
             </View>
-          </View>
+          ) : papers.length === 0 ? (
+            <Text style={styles.emptyText}>Bạn chưa có bản tóm tắt nào.</Text>
+          ) : (
+            papers.map((item: any) => (
+              <SummaryCard
+                key={item.id}
+                item={item}
+                onDelete={() => handleDelete(item.id, item.title)}
+              />
+            ))
+          )}
+
+          {/* Pagination */}
+          {!loading && papers.length > 0 && (
+            <View style={styles.pagination}>
+              <Text style={styles.paginationInfo}>
+                Page {currentPage + 1} of {totalPages} ({totalElements})
+              </Text>
+              <View style={styles.pageActions}>
+                <TouchableOpacity
+                  onPress={() =>
+                    setCurrentPage((prev) => Math.max(0, prev - 1))
+                  }
+                  disabled={currentPage === 0}
+                >
+                  <PageNavBtn
+                    icon={
+                      <ChevronLeft
+                        size={16}
+                        color={currentPage === 0 ? "#cbd5e1" : "#94a3b8"}
+                      />
+                    }
+                  />
+                </TouchableOpacity>
+
+                <View style={styles.activePage}>
+                  <Text style={styles.activePageText}>{currentPage + 1}</Text>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => setCurrentPage((prev) => prev + 1)}
+                  disabled={currentPage + 1 >= totalPages}
+                >
+                  <PageNavBtn
+                    icon={
+                      <ChevronRight
+                        size={16}
+                        color={
+                          currentPage + 1 >= totalPages ? "#cbd5e1" : "#94a3b8"
+                        }
+                      />
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Banner Cards Grid */}
@@ -163,12 +224,17 @@ const MySummaries = () => {
 
 // --- SUB-COMPONENTS ---
 
-const SummaryCard = ({ item }: any) => {
+const SummaryCard = ({ item, onDelete }: any) => {
   const router = useRouter();
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => router.push("/analysis")}
+      onPress={() =>
+        router.push({
+          pathname: "/analysis",
+          params: { id: item.id },
+        })
+      }
     >
       <View style={styles.cardHeader}>
         <View style={styles.fileIconBox}>
@@ -178,18 +244,34 @@ const SummaryCard = ({ item }: any) => {
           <Text style={styles.cardTitle} numberOfLines={1}>
             {item.title}
           </Text>
-          <Text style={styles.cardTopic}>{item.topic.toUpperCase()}</Text>
+          <Text style={styles.cardTopic}>
+            {item.authors || "UNKNOWN AUTHOR"}
+          </Text>
         </View>
-        <MoreHorizontal size={20} color="#cbd5e1" />
+        <TouchableOpacity onPress={onDelete}>
+          <Trash2 size={18} color="#ef4444" />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.cardFooter}>
         <View style={styles.cardMeta}>
-          <TypeBadge type={item.type} />
-          <Text style={styles.cardDate}>{item.date}</Text>
+          <TypeBadge
+            type={item.status === "DONE" ? "Completed" : item.status}
+          />
+          <Text style={styles.cardDate}>
+            {new Date(item.createdAt).toLocaleDateString("vi-VN")}
+          </Text>
         </View>
         <View style={styles.cardActions}>
-          <TouchableOpacity style={styles.actionBtn}>
+          <TouchableOpacity
+            style={styles.actionBtn}
+            onPress={() =>
+              router.push({
+                pathname: "/analysis",
+                params: { id: item.id },
+              })
+            }
+          >
             <Eye size={16} color="#64748b" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn}>
@@ -209,27 +291,18 @@ const FilterButton = ({ icon, label }: any) => (
 );
 
 const TypeBadge = ({ type }: any) => {
-  const isDetailed = type === "Detailed";
-  const isAbstract = type === "Abstract";
+  const isDone = type === "Completed";
   return (
     <View
       style={[
         styles.badge,
-        isDetailed
-          ? styles.badgeDetailed
-          : isAbstract
-            ? styles.badgeAbstract
-            : styles.badgeBulleted,
+        isDone ? styles.badgeAbstract : styles.badgeBulleted,
       ]}
     >
       <Text
         style={[
           styles.badgeText,
-          isDetailed
-            ? { color: "#4f46e5" }
-            : isAbstract
-              ? { color: "#059669" }
-              : { color: "#d97706" },
+          isDone ? { color: "#059669" } : { color: "#d97706" },
         ]}
       >
         {type.toUpperCase()}
@@ -239,7 +312,7 @@ const TypeBadge = ({ type }: any) => {
 };
 
 const PageNavBtn = ({ icon }: any) => (
-  <TouchableOpacity style={styles.pageNavBtn}>{icon}</TouchableOpacity>
+  <View style={styles.pageNavBtn}>{icon}</View>
 );
 
 const BannerCard = ({ icon, title, desc, variant, btnText }: any) => {
@@ -386,7 +459,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
   },
-  badgeDetailed: { backgroundColor: "#eef2ff", borderColor: "#e0e7ff" },
   badgeBulleted: { backgroundColor: "#fffbeb", borderColor: "#fef3c7" },
   badgeAbstract: { backgroundColor: "#ecfdf5", borderColor: "#d1fae5" },
   badgeText: { fontSize: 9, fontWeight: "900" },
@@ -439,6 +511,12 @@ const styles = StyleSheet.create({
   bannerDesc: { fontSize: 11, lineHeight: 16, marginBottom: 12 },
   bannerBtn: { flexDirection: "row", alignItems: "center", gap: 4 },
   bannerBtnText: { fontSize: 10, fontWeight: "900" },
+  emptyText: {
+    textAlign: "center",
+    py: 40,
+    color: "#94a3b8",
+    fontStyle: "italic",
+  },
 });
 
-export default MySummaries;
+export default Summaries;

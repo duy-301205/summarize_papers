@@ -1,33 +1,145 @@
-import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  Switch,
-  Modal,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import {
+  AlertCircle,
   Camera,
-  Mail,
-  Shield,
-  Lock,
+  CheckCircle2,
   CreditCard,
   Edit3,
+  Lock,
+  LogOut,
+  Mail,
+  Shield,
   X,
-  ChevronRight,
 } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MainLayout from "../components/sci-sum/MainLayout";
+import * as api from "../constants/Api";
 
 const Profile = () => {
+  const router = useRouter();
   const [is2FA, setIs2FA] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // --- STATE HIỂN THỊ THÔNG BÁO ---
+  const [message, setMessage] = useState({ text: "", type: "" });
+
+  const [profileData, setProfileData] = useState({
+    username: "",
+    email: "",
+    institution: "",
+    researchInterests:
+      "Natural Language Processing, Deep Learning, System Design.",
+    avatarUrl: null,
+  });
+
+  const [pwdData, setPwdData] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Tự động ẩn thông báo sau 3 giây
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const res = await api.getMe();
+      if (res.data.code === 200) {
+        setProfileData({
+          ...profileData,
+          username: res.data.data.username,
+          email: res.data.data.email,
+          institution: res.data.data.institution,
+          avatarUrl: res.data.data.avatarUrl,
+        });
+      }
+    } catch (error) {
+      console.error("Lỗi fetch profile:", error);
+    }
+  };
+
+  const handleToggleEdit = async () => {
+    if (isEditing) {
+      setLoading(true);
+      try {
+        const res = await api.updateProfile({
+          username: profileData.username,
+          institution: profileData.institution,
+        });
+        if (res.data.code === 200) {
+          setMessage({ text: "Cập nhật thành công!", type: "success" });
+          setIsEditing(false);
+        }
+      } catch (error: any) {
+        setMessage({
+          text: error.response?.data?.message || "Cập nhật thất bại!",
+          type: "error",
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setIsEditing(true);
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (pwdData.newPassword !== pwdData.confirmPassword) {
+      setMessage({ text: "Mật khẩu không khớp!", type: "error" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await api.changePassword(pwdData);
+      if (res.data.code === 200) {
+        setMessage({ text: "Đã đổi mật khẩu!", type: "success" });
+        setTimeout(() => setShowPasswordModal(false), 1000);
+        setPwdData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+      }
+    } catch (error: any) {
+      setMessage({
+        text: error.response?.data?.message || "Lỗi đổi mật khẩu!",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await api.logout();
+    } finally {
+      await AsyncStorage.clear();
+      router.replace("/auth");
+    }
+  };
 
   return (
     <MainLayout>
@@ -35,12 +147,41 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* --- PROFILE CARD --- */}
+        {/* --- HIỂN THỊ MESSAGE TRÊN GIAO DIỆN CHÍNH --- */}
+        {message.text !== "" && !showPasswordModal && (
+          <View
+            style={[
+              styles.messageBanner,
+              message.type === "success" ? styles.msgSuccess : styles.msgError,
+            ]}
+          >
+            {message.type === "success" ? (
+              <CheckCircle2 size={16} color="#059669" />
+            ) : (
+              <AlertCircle size={16} color="#ef4444" />
+            )}
+            <Text
+              style={[
+                styles.messageText,
+                message.type === "success"
+                  ? { color: "#059669" }
+                  : { color: "#ef4444" },
+              ]}
+            >
+              {message.text.toUpperCase()}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.profileCard}>
           <View style={styles.avatarSection}>
             <View style={styles.avatarWrapper}>
               <Image
-                source={{ uri: "https://i.pravatar.cc/150?u=duy" }}
+                source={{
+                  uri:
+                    profileData.avatarUrl ||
+                    `https://i.pravatar.cc/150?u=${profileData.username}`,
+                }}
                 style={styles.avatar}
               />
               <TouchableOpacity
@@ -51,8 +192,10 @@ const Profile = () => {
               </TouchableOpacity>
             </View>
             <View style={styles.nameInfo}>
-              <Text style={styles.userName}>DUYHOANG</Text>
-              <Text style={styles.userSub}>Researcher Pro • Jan 2026</Text>
+              <Text style={styles.userName}>
+                {profileData.username?.toUpperCase() || "USER"}
+              </Text>
+              <Text style={styles.userSub}>{profileData.email}</Text>
               <View style={styles.badgeRow}>
                 <View style={styles.badgeBlue}>
                   <Text style={styles.badgeTextBlue}>AI EXPERT</Text>
@@ -60,6 +203,12 @@ const Profile = () => {
                 <View style={styles.badgeGreen}>
                   <Text style={styles.badgeTextGreen}>PREMIUM</Text>
                 </View>
+                <TouchableOpacity
+                  onPress={handleLogout}
+                  style={styles.logoutBtnSmall}
+                >
+                  <LogOut size={12} color="#ef4444" />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -67,19 +216,24 @@ const Profile = () => {
           <View style={styles.form}>
             <ProfileInput
               label="USERNAME"
-              defaultValue="DuyHoang"
+              value={profileData.username}
+              onChangeText={(val: string) =>
+                setProfileData({ ...profileData, username: val })
+              }
               isEditing={isEditing}
             />
             <ProfileInput
               label="EMAIL ADDRESS"
-              defaultValue="m.duy@vnu.edu.vn"
+              value={profileData.email}
               icon={<Mail size={16} color="#94a3b8" />}
-              isEditing={isEditing}
-              keyboardType="email-address"
+              isEditing={false}
             />
             <ProfileInput
               label="INSTITUTION"
-              defaultValue="VNU University of Science"
+              value={profileData.institution}
+              onChangeText={(val: string) =>
+                setProfileData({ ...profileData, institution: val })
+              }
               isEditing={isEditing}
             />
 
@@ -92,7 +246,10 @@ const Profile = () => {
                   styles.textArea,
                   isEditing ? styles.inputActive : styles.inputDisabled,
                 ]}
-                defaultValue="Natural Language Processing, Deep Learning, System Design."
+                value={profileData.researchInterests}
+                onChangeText={(val) =>
+                  setProfileData({ ...profileData, researchInterests: val })
+                }
               />
             </View>
 
@@ -101,29 +258,35 @@ const Profile = () => {
                 styles.editBtn,
                 isEditing ? styles.saveBtn : styles.changeBtn,
               ]}
-              onPress={() => setIsEditing(!isEditing)}
+              onPress={handleToggleEdit}
+              disabled={loading}
             >
-              <Text
-                style={[
-                  styles.editBtnText,
-                  isEditing ? { color: "#fff" } : { color: "#1e293b" },
-                ]}
-              >
-                {isEditing ? "SAVE CHANGES" : "CHANGE PROFILE"}
-              </Text>
-              {!isEditing && <Edit3 size={14} color="#1e293b" />}
+              {loading ? (
+                <ActivityIndicator color={isEditing ? "#fff" : "#1111d4"} />
+              ) : (
+                <>
+                  <Text
+                    style={[
+                      styles.editBtnText,
+                      isEditing ? { color: "#fff" } : { color: "#1e293b" },
+                    ]}
+                  >
+                    {isEditing ? "SAVE CHANGES" : "CHANGE PROFILE"}
+                  </Text>
+                  {!isEditing && <Edit3 size={14} color="#1e293b" />}
+                </>
+              )}
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* --- SETTINGS GRID --- */}
         <View style={styles.settingsGrid}>
           <SettingCard
             icon={<Shield size={18} color="#1111d4" />}
             title="SECURITY"
           >
             <View style={styles.toggleRow}>
-              <Text style={styles.toggleLabel}>Two-Factor Auth</Text>
+              <Text style={styles.toggleLabel}>2FA Auth</Text>
               <Switch
                 value={is2FA}
                 onValueChange={setIs2FA}
@@ -137,79 +300,114 @@ const Profile = () => {
             icon={<Lock size={18} color="#1111d4" />}
             title="PASSWORD"
           >
-            <Text style={styles.settingDesc}>
-              Update password to stay secure.
-            </Text>
             <TouchableOpacity
               style={styles.outlineBtn}
-              onPress={() => setShowPasswordModal(true)}
+              onPress={() => {
+                setMessage({ text: "", type: "" });
+                setShowPasswordModal(true);
+              }}
             >
               <Text style={styles.outlineBtnText}>CHANGE PASSWORD</Text>
             </TouchableOpacity>
           </SettingCard>
         </View>
 
-        {/* --- BILLING CARD --- */}
         <View style={styles.billingCard}>
           <View style={styles.billingInfo}>
             <View style={styles.billingIcon}>
               <CreditCard size={24} color="#1111d4" />
             </View>
             <View>
-              <Text style={styles.billingTitle}>RESEARCHER PRO</Text>
-              <Text style={styles.billingSub}>Next bill: April 12, 2026</Text>
+              <Text style={styles.billingTitle}>PRO PLAN</Text>
+              <Text style={styles.billingSub}>Next bill: Apr 2026</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.manageBtn}>
-            <Text style={styles.manageBtnText}>MANAGE</Text>
-          </TouchableOpacity>
         </View>
-
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* --- PASSWORD MODAL --- */}
-      <Modal visible={showPasswordModal} transparent animationType="fade">
+      {/* --- MODAL ĐỔI MẬT KHẨU --- */}
+      <Modal visible={showPasswordModal} transparent animationType="slide">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>CHANGE PASSWORD</Text>
+              <Text style={styles.modalTitle}>PASSWORD</Text>
               <TouchableOpacity onPress={() => setShowPasswordModal(false)}>
                 <X size={24} color="#94a3b8" />
               </TouchableOpacity>
             </View>
+
+            {/* HIỂN THỊ THÔNG BÁO NGAY TRONG MODAL */}
+            {message.text !== "" && (
+              <View
+                style={[
+                  styles.messageBanner,
+                  { marginBottom: 15 },
+                  message.type === "success"
+                    ? styles.msgSuccess
+                    : styles.msgError,
+                ]}
+              >
+                {message.type === "success" ? (
+                  <CheckCircle2 size={16} color="#059669" />
+                ) : (
+                  <AlertCircle size={16} color="#ef4444" />
+                )}
+                <Text
+                  style={[
+                    styles.messageText,
+                    message.type === "success"
+                      ? { color: "#059669" }
+                      : { color: "#ef4444" },
+                  ]}
+                >
+                  {message.text.toUpperCase()}
+                </Text>
+              </View>
+            )}
+
             <View style={styles.modalForm}>
               <ModalInput
-                label="CURRENT PASSWORD"
+                label="CURRENT"
                 placeholder="••••••••"
                 secureTextEntry
+                value={pwdData.oldPassword}
+                onChangeText={(val: string) =>
+                  setPwdData({ ...pwdData, oldPassword: val })
+                }
               />
               <ModalInput
-                label="NEW PASSWORD"
+                label="NEW"
                 placeholder="••••••••"
                 secureTextEntry
+                value={pwdData.newPassword}
+                onChangeText={(val: string) =>
+                  setPwdData({ ...pwdData, newPassword: val })
+                }
               />
               <ModalInput
-                label="CONFIRM NEW PASSWORD"
+                label="CONFIRM"
                 placeholder="••••••••"
                 secureTextEntry
+                value={pwdData.confirmPassword}
+                onChangeText={(val: string) =>
+                  setPwdData({ ...pwdData, confirmPassword: val })
+                }
               />
-
               <View style={styles.modalActions}>
                 <TouchableOpacity
-                  style={styles.cancelBtn}
-                  onPress={() => setShowPasswordModal(false)}
-                >
-                  <Text style={styles.cancelBtnText}>CANCEL</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
                   style={styles.updateBtn}
-                  onPress={() => setShowPasswordModal(false)}
+                  onPress={handleUpdatePassword}
+                  disabled={loading}
                 >
-                  <Text style={styles.updateBtnText}>UPDATE</Text>
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.updateBtnText}>UPDATE</Text>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
@@ -262,6 +460,21 @@ const ModalInput = ({ label, ...props }: any) => (
 
 const styles = StyleSheet.create({
   scrollContent: { padding: 20 },
+
+  // MESSAGE STYLES
+  messageBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 20,
+    borderWidth: 1,
+    gap: 10,
+  },
+  msgSuccess: { backgroundColor: "#ecfdf5", borderColor: "#a7f3d0" },
+  msgError: { backgroundColor: "#fef2f2", borderColor: "#fecaca" },
+  messageText: { fontSize: 10, fontWeight: "900", letterSpacing: 1 },
+
   profileCard: {
     backgroundColor: "#fff",
     borderRadius: 32,
@@ -272,7 +485,7 @@ const styles = StyleSheet.create({
   avatarSection: {
     alignItems: "center",
     marginBottom: 25,
-    pb: 20,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#f1f5f9",
   },
@@ -296,14 +509,14 @@ const styles = StyleSheet.create({
   },
   cameraBtnActive: { backgroundColor: "#1111d4" },
   nameInfo: { alignItems: "center", marginTop: 15 },
-  userName: {
-    fontSize: 22,
-    fontWeight: "900",
-    color: "#0f172a",
-    letterSpacing: -0.5,
-  },
+  userName: { fontSize: 22, fontWeight: "900", color: "#0f172a" },
   userSub: { fontSize: 13, color: "#64748b", marginTop: 4 },
-  badgeRow: { flexDirection: "row", gap: 8, marginTop: 12 },
+  badgeRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 12,
+    alignItems: "center",
+  },
   badgeBlue: {
     backgroundColor: "#eff6ff",
     paddingHorizontal: 10,
@@ -322,6 +535,13 @@ const styles = StyleSheet.create({
     borderColor: "#d1fae5",
   },
   badgeTextGreen: { color: "#059669", fontSize: 9, fontWeight: "900" },
+  logoutBtnSmall: {
+    padding: 6,
+    borderRadius: 8,
+    backgroundColor: "#fef2f2",
+    borderWidth: 1,
+    borderColor: "#fee2e2",
+  },
 
   form: { gap: 16 },
   inputGroup: { gap: 6 },
@@ -330,7 +550,6 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "#94a3b8",
     letterSpacing: 1,
-    marginLeft: 4,
   },
   inputContainer: { position: "relative", justifyContent: "center" },
   inputIcon: { position: "absolute", left: 12, zIndex: 1 },
@@ -416,7 +635,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     borderLeftWidth: 6,
     borderLeftColor: "#1111d4",
     borderWidth: 1,
@@ -431,13 +649,6 @@ const styles = StyleSheet.create({
     color: "#0f172a",
   },
   billingSub: { fontSize: 12, color: "#64748b" },
-  manageBtn: {
-    backgroundColor: "#0f172a",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 10,
-  },
-  manageBtnText: { color: "#fff", fontSize: 10, fontWeight: "900" },
 
   modalOverlay: {
     flex: 1,
@@ -461,16 +672,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#e2e8f0",
     fontSize: 14,
+    color: "#0f172a",
   },
   modalActions: { flexDirection: "row", gap: 10, marginTop: 20 },
-  cancelBtn: {
-    flex: 1,
-    padding: 16,
-    alignItems: "center",
-    borderRadius: 16,
-    backgroundColor: "#f1f5f9",
-  },
-  cancelBtnText: { fontWeight: "700", color: "#64748b" },
   updateBtn: {
     flex: 1,
     padding: 16,

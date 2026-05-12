@@ -32,7 +32,7 @@ class ChatService:
         relevant_chunks = self.vector_store.search_vectors(
             query=query_text,
             paper_id=paper_id,
-            k=5
+            k=10
         )
 
         if not relevant_chunks:
@@ -58,8 +58,13 @@ class ChatService:
         Bạn là một chuyên gia hỗ trợ nghiên cứu. Hãy trả lời câu hỏi của người dùng dựa TRÊN NGỮ CẢNH được cung cấp từ bài báo khoa học.
         
         Yêu cầu:
-        - Nếu thông tin không có trong ngữ cảnh, hãy trả lời: 'Tôi không tìm thấy thông tin này trong bài báo'.
-        - Trình bày rõ ràng, khách quan, trích dẫn số trang nếu có thể.
+        - Chỉ sử dụng thông tin có trong ngữ cảnh được cung cấp.
+        - Nếu thông tin không có trong ngữ cảnh, hãy trả lời: "Tôi không tìm thấy thông tin này trong bài báo".
+        - Không được tự suy đoán hoặc bổ sung kiến thức bên ngoài bài báo.
+        - Nếu chỉ tìm thấy một phần thông tin, hãy nêu rõ phần thông tin tìm thấy được và phần còn thiếu.
+        - Trình bày tự nhiên theo văn phong học thuật, giống phần mô tả trong bài báo nghiên cứu.
+        - Sau mỗi ý chính hoặc thông tin quan trọng, hãy ghi số trang tương ứng ngay cuối câu theo định dạng: "(trang X)".
+        - Không cần liệt kê bullet nếu không cần thiết.
         - Ngôn ngữ: Tiếng Việt.
 
         NGỮ CẢNH TRÍCH XUẤT:

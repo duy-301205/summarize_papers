@@ -1,34 +1,46 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Modal,
-  ActivityIndicator,
-} from "react-native";
-import {
-  UploadCloud,
-  Paperclip,
-  Edit3,
-  Settings,
-  Zap,
-  CheckCircle2,
-  X,
-  Beaker,
-} from "lucide-react-native";
 import * as DocumentPicker from "expo-document-picker";
 import { useRouter } from "expo-router";
+import {
+  Beaker,
+  CheckCircle2,
+  Edit3,
+  Paperclip,
+  Settings,
+  UploadCloud,
+  X,
+  Zap,
+} from "lucide-react-native";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MainLayout from "../components/sci-sum/MainLayout";
+// Import thư viện hỗ trợ SSE cho React Native
+import EventSource from "react-native-sse";
+// Import API Duy đã cấu hình
+import * as api from "../constants/Api";
 
-const UploadArticle = () => {
+const Upload = () => {
   const router = useRouter();
   const [language, setLanguage] = useState("EN");
   const [length, setLength] = useState("MEDIUM");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [manualText, setManualText] = useState("");
+
+  // --- STATE TIẾN ĐỘ THỜI GIAN THỰC ---
+  const [progress, setProgress] = useState(0);
+  const [statusText, setStatusText] = useState(
+    "Đợi Duy một chút, trí tuệ nhân tạo đang đọc tài liệu của bạn...",
+  );
 
   const pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({
@@ -43,12 +55,77 @@ const UploadArticle = () => {
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    // 1. Kiểm tra đầu vào
+    if (!selectedFile && !manualText.trim()) {
+      Alert.alert("Thông báo", "Vui lòng chọn file hoặc nhập văn bản!");
+      return;
+    }
+
     setIsGenerating(true);
-    setTimeout(() => {
+    setProgress(0);
+    setStatusText("Đang khởi tạo quy trình upload...");
+
+    try {
+      // 2. Chuẩn bị FormData
+      const formData = new FormData();
+      if (selectedFile) {
+        // Đối với React Native, FormData cần cấu trúc này cho file
+        formData.append("file", {
+          uri: selectedFile.uri,
+          name: selectedFile.name,
+          type: selectedFile.mimeType || "application/pdf",
+        } as any);
+      }
+      if (manualText) formData.append("text", manualText);
+      formData.append("language", language);
+      formData.append("length", length);
+
+      // 3. Gọi API Upload
+      const res = await api.uploadPaper(formData);
+      const paperId = res.data.data.paperId;
+
+      // 4. Thiết lập SSE theo dõi tiến độ (SỬA LẠI ĐOẠN NÀY)
+      const eventSource = new EventSource(
+        `http://192.168.0.104:8085/api/papers/status/${paperId}`,
+      );
+
+      eventSource.addEventListener("PROGRESS", (event: any) => {
+        if (event.data) {
+          const data = JSON.parse(event.data);
+          setProgress(data.progress);
+          setStatusText(data.status);
+
+          if (data.progress >= 100) {
+            eventSource.close();
+            setTimeout(() => {
+              setIsGenerating(false);
+              // CHUYỂN TRANG DÙNG OBJECT ĐỂ TRÁNH LỖI ROUTE
+              router.push({
+                pathname: "/analysis",
+                params: { id: paperId },
+              });
+            }, 1000);
+          } else if (data.progress === -1) {
+            eventSource.close();
+            setIsGenerating(false);
+            Alert.alert("Lỗi phân tích", data.status);
+          }
+        }
+      });
+
+      // @ts-ignore
+      eventSource.addEventListener("error", (err) => {
+        console.error("SSE Error:", err);
+        eventSource.close();
+        setStatusText("Mất kết nối. Đang kiểm tra trạng thái...");
+      });
+    } catch (error: any) {
+      console.error("Upload Error:", error);
       setIsGenerating(false);
-      router.push("/analysis");
-    }, 3000);
+      const errorMsg = error.response?.data?.message || "Lỗi upload tài liệu!";
+      Alert.alert("Lỗi", errorMsg);
+    }
   };
 
   return (
@@ -125,6 +202,8 @@ const UploadArticle = () => {
             </View>
             <TextInput
               multiline
+              value={manualText}
+              onChangeText={setManualText}
               style={styles.textArea}
               placeholder="Paste article text or abstract here..."
               placeholderTextColor="#94a3b8"
@@ -191,6 +270,7 @@ const UploadArticle = () => {
             <TouchableOpacity
               style={styles.generateBtn}
               onPress={handleGenerate}
+              disabled={isGenerating}
             >
               <Zap size={20} color="#fff" fill="#fff" />
               <Text style={styles.generateText}>GENERATE SUMMARY</Text>
@@ -201,7 +281,7 @@ const UploadArticle = () => {
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* Generating Modal */}
+      {/* Generating Modal - Tích hợp Progress thật */}
       <Modal visible={isGenerating} transparent animationType="fade">
         <View style={styles.loadingOverlay}>
           <View style={styles.loadingBox}>
@@ -212,11 +292,11 @@ const UploadArticle = () => {
               </View>
             </View>
             <Text style={styles.loadingTitle}>AI IS ANALYSING</Text>
-            <Text style={styles.loadingSub}>
-              Đợi Duy một chút, trí tuệ nhân tạo đang đọc tài liệu của bạn...
-            </Text>
+            <Text style={styles.loadingSub}>{statusText}</Text>
             <View style={styles.progressBarBg}>
-              <View style={styles.progressBarFill} />
+              <View
+                style={[styles.progressBarFill, { width: `${progress}%` }]}
+              />
             </View>
           </View>
         </View>
@@ -241,7 +321,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontStyle: "italic",
   },
-
   mainContainer: { gap: 20 },
   card: {
     backgroundColor: "#fff",
@@ -264,9 +343,8 @@ const styles = StyleSheet.create({
     color: "#0f172a",
     letterSpacing: 0.5,
   },
-
   dropZone: {
-    borderBasis: 2,
+    borderWidth: 2,
     borderStyle: "dashed",
     borderColor: "#e2e8f0",
     backgroundColor: "#f8fafc",
@@ -287,7 +365,6 @@ const styles = StyleSheet.create({
   },
   circleBlue: { shadowColor: "#1111d4" },
   circleGreen: { shadowColor: "#10b981" },
-
   dropZoneText: { alignItems: "center" },
   dropTitle: { fontSize: 14, fontWeight: "800", color: "#1e293b" },
   dropSub: { fontSize: 12, color: "#94a3b8", marginTop: 4, marginBottom: 15 },
@@ -298,9 +375,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   browseText: { color: "#fff", fontSize: 11, fontWeight: "900" },
-
   fileInfo: { alignItems: "center" },
-  fileName: { fontSize: 14, color: "#10b981", fontWeight: "bold" },
+  fileName: {
+    fontSize: 14,
+    color: "#10b981",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   removeBtn: {
     flexDirection: "row",
     alignItems: "center",
@@ -308,7 +389,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   removeText: { fontSize: 9, fontWeight: "900", color: "#ef4444" },
-
   textArea: {
     backgroundColor: "#f8fafc",
     borderRadius: 16,
@@ -318,7 +398,6 @@ const styles = StyleSheet.create({
     color: "#0f172a",
     fontSize: 14,
   },
-
   settingGroup: { marginBottom: 20 },
   settingLabel: {
     fontSize: 10,
@@ -342,7 +421,6 @@ const styles = StyleSheet.create({
   toggleBtnActive: { backgroundColor: "#fff", elevation: 2 },
   toggleText: { fontSize: 11, fontWeight: "900", color: "#94a3b8" },
   toggleTextActive: { color: "#1111d4" },
-
   generateBtn: {
     backgroundColor: "#1111d4",
     flexDirection: "row",
@@ -354,7 +432,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   generateText: { color: "#fff", fontWeight: "900", fontSize: 15 },
-
   loadingOverlay: {
     flex: 1,
     backgroundColor: "rgba(255,255,255,0.9)",
@@ -392,7 +469,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     overflow: "hidden",
   },
-  progressBarFill: { width: "60%", height: "100%", backgroundColor: "#1111d4" }, // Giả lập progress
+  progressBarFill: { height: "100%", backgroundColor: "#1111d4" },
 });
 
-export default UploadArticle;
+export default Upload;
