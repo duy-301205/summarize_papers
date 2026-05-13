@@ -22,17 +22,14 @@ class ChatService:
         self.vector_store = PGVectorStore(embeddings_model=self.embedder)
 
     def chat_with_paper(self, paper_id: int, conversation_id: int, user_query: str):
-        """
-        Hàm thực hiện luồng RAG đã được đồng bộ hóa với Groq API
-        """
-        # 1. Chuẩn bị query cho E5
+        # 1. Chuẩn bị query 
         query_text = f"query: {user_query}"
         
         # 2. Tìm kiếm các đoạn văn bản liên quan nhất từ Database
         relevant_chunks = self.vector_store.search_vectors(
             query=query_text,
             paper_id=paper_id,
-            k=10
+            k=15
         )
 
         if not relevant_chunks:

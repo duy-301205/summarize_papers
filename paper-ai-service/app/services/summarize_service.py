@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.db.models import PaperChunk, AnalysisSession, Analysis
 from app.services.llm_service import LLMService
+import time
 
 
 class SummaryService:
@@ -12,7 +13,7 @@ class SummaryService:
         session = AnalysisSession(
             paper_id=paper_id,
             user_id=user_id,
-            model_name=self.llm.model_name,
+            model_name=self.llm.main_model,
             prompt="Tóm tắt bài báo khoa học",
             status="RUNNING"
         )
@@ -30,10 +31,10 @@ class SummaryService:
             if not chunks:
                 raise ValueError("Không tìm thấy chunk nào cho bài báo này.")
 
-            # 3. Tóm tắt từng nhóm chunk để tránh vượt token limit
+            # 3. Tóm tắt từng nhóm chunk 
             partial_summaries = []
-
-            batch_size = 25
+            
+            batch_size = 10
 
             for i in range(0, len(chunks), batch_size):
                 batch_chunks = chunks[i:i + batch_size]
@@ -46,15 +47,19 @@ class SummaryService:
                 if not batch_text.strip():
                     continue
 
-                batch_summary = self.llm.summarize_text(batch_text)
+                # Gọi tóm tắt thành phần (Sử dụng model nhanh, ít tốn quota)
+                batch_summary = self.llm.summarize_text(batch_text, is_final=False)
                 partial_summaries.append(batch_summary)
+                
+                time.sleep(1)
 
             if not partial_summaries:
                 raise ValueError("Không tạo được bản tóm tắt thành phần.")
 
-            # 4. Gộp các bản tóm tắt nhỏ và tóm tắt lần cuối
+            # 4. Gộp các bản tóm tắt nhỏ và tóm tắt lần cuối (Sử dụng Main Model 70B)
             combined_summary = "\n\n".join(partial_summaries)
 
+            # is_final=True sẽ kích hoạt model llama-3.3-70b-versatile để chốt kết quả chất lượng cao
             summary_result = self.llm.summarize_text(
                 combined_summary,
                 is_final=True

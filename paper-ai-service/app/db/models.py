@@ -114,7 +114,7 @@ class PaperChunk(Base):
     id = Column(BigInteger, primary_key=True)
     paper_id = Column(BigInteger, ForeignKey("papers.id", ondelete="CASCADE"))
     content = Column(Text, nullable=False)
-    embedding = Column(Vector(768), nullable=False)
+    embedding = Column(Vector(1024), nullable=False)
     page_number = Column(Integer)
     chunk_index = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())

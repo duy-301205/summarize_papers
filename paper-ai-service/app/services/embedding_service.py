@@ -59,7 +59,7 @@ class EmbeddingService:
                     paper_id=paper_id,
                     all_chunks=all_chunks_text,
                     all_metadatas=all_metadatas,
-                    batch_size=100
+                    batch_size=32
                 )
 
                 # 5. Cập nhật trạng thái (Dùng COMPLETED để khớp với Check Constraint của bạn)

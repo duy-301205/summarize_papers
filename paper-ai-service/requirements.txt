@@ -14,12 +14,9 @@ langchain-text-splitters
 
 # AI & Vector DB
 groq
-sentence-transformers
-faiss-cpu
 SQLAlchemy
 pgvector
 psycopg2-binary
-langchain-huggingface
 
 # Evaluation
 rouge-score

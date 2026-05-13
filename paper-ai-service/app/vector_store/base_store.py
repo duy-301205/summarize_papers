@@ -17,7 +17,7 @@ class PGVectorStore:
         paper_id: int,
         all_chunks: list[str],
         all_metadatas: list[dict],
-        batch_size: int = 100,
+        batch_size: int = 32,
     ):
         if paper_id is None:
             raise ValueError("paper_id is required to save chunks into paper_chunks")

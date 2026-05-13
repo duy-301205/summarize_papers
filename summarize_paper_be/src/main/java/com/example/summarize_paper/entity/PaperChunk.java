@@ -27,7 +27,7 @@ public class PaperChunk {
     private String content;
 
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @org.hibernate.annotations.Array(length = 1536)
+    @org.hibernate.annotations.Array(length = 1024)
     @Column(name = "embedding")
     private float[] embedding;
 

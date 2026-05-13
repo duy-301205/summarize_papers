@@ -81,7 +81,7 @@ CREATE TABLE paper_chunks (
                               id BIGSERIAL PRIMARY KEY,
                               paper_id BIGINT REFERENCES papers(id) ON DELETE CASCADE,
                               content TEXT NOT NULL ,
-                              embedding VECTOR(768) NOT NULL,
+                              embedding VECTOR(1024) NOT NULL,
                               page_number INT CHECK (page_number >= 0),
                               chunk_index INT NOT NULL CHECK (chunk_index >= 0),
                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
