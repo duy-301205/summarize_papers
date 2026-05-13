@@ -31,7 +31,7 @@ public class PaperController {
     private final PaperExternalService paperExternalService;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<Map<String, Object>> upload(@RequestParam("file") MultipartFile file) throws IOException {
+    public ApiResponse<Map<String, Object>> upload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty() || !Objects.equals(file.getContentType(), "application/pdf")) {
             throw new AppException(ErrorCode.INVALID_FILE_FORMAT);
         }
@@ -43,7 +43,8 @@ public class PaperController {
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("paperId", savedPaper.getId());
         responseData.put("title", savedPaper.getTitle());
-        responseData.put("status", "UPLOADED");
+        responseData.put("status", savedPaper.getStatus());
+        responseData.put("fileUrl", savedPaper.getFileUrl());
 
         return ApiResponse.<Map<String, Object>>builder()
                 .data(responseData)

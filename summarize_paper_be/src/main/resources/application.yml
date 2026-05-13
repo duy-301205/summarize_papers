@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: ${PORT:8085}
 
 spring:
   application:
@@ -23,7 +23,7 @@ spring:
   data:
     redis:
       host: ${SPRING_REDIS_HOST:localhost}
-      port: 6379
+      port: ${SPRING_REDIS_PORT:6379}
       connect-timeout: 5000ms
       timeout: 5000ms
 
@@ -59,11 +59,10 @@ spring:
 
 app:
   upload:
-    dir: D:/summarize_papers/storage/papers
-    max-size: ${UPLOAD_MAX_SIZE:10MB}
+    max-size: ${UPLOAD_MAX_SIZE:5MB}
 
   fastapi:
-    url: http://127.0.0.1:8000
+    url: ${FASTAPI_URL:http://127.0.0.1:8000}
 
 cloudinary:
   cloud-name: ${CLOUDINARY_NAME}

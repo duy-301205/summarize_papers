@@ -23,8 +23,11 @@ public class Paper {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "file_path", nullable = false)
-    private String filePath;
+    @Column(name = "file_url", nullable = false, length = 500)
+    private String fileUrl;
+
+    @Column(name = "cloudinary_public_id", length = 255)
+    private String cloudinaryPublicId;
 
     @Column(name = "file_size")
     private Long fileSize;
@@ -51,6 +54,6 @@ public class Paper {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", updatable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }

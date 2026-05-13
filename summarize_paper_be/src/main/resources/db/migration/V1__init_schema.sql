@@ -16,7 +16,8 @@ CREATE TABLE papers (
                         id BIGSERIAL PRIMARY KEY,
                         user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
                         title VARCHAR(255),
-                        file_path VARCHAR(500),
+                        file_url VARCHAR(500),
+                        cloudinary_public_id VARCHAR(255),
                         file_size BIGINT,
                         file_type VARCHAR(20),
                         status VARCHAR(20) DEFAULT 'UPLOADED'

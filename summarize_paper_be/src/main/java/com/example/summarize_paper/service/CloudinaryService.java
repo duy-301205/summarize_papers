@@ -27,4 +27,34 @@ public class CloudinaryService {
             throw new RuntimeException(e);
         }
     }
+
+    public Map uploadPaper(MultipartFile file) {
+        try {
+            return cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "summarize_paper/papers",
+                            "resource_type", "raw"
+                    )
+            );
+        } catch (java.io.IOException e) {
+            throw new AppException(ErrorCode.ERROR_UPLOAD_FILE);
+        }
+    }
+
+    // Delete PDF/paper
+    public void deletePaper(String publicId) {
+        if (publicId == null || publicId.isBlank()) {
+            return;
+        }
+
+        try {
+            cloudinary.uploader().destroy(
+                    publicId,
+                    ObjectUtils.asMap("resource_type", "raw")
+            );
+        } catch (java.io.IOException e) {
+            throw new AppException(ErrorCode.ERROR_UPLOAD_FILE);
+        }
+    }
 }
