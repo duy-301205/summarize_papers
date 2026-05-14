@@ -32,7 +32,7 @@ spring:
         enabled: true
 
   mail:
-    host: smtp.gmail.com
+    host: smtp-relay.brevo.com
     port: 587
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
@@ -43,9 +43,9 @@ spring:
           starttls:
             enabled: true
             required: true
-          connectiontimeout: 20000
-          timeout: 20000
-          writetimeout: 20000
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
 
   jackson:
     time-zone: Asia/Ho_Chi_Minh
