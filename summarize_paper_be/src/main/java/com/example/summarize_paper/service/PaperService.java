@@ -202,9 +202,7 @@ public class PaperService {
     }
 
     public String getPaperFileUrl(Long paperId) {
-        User currentUser = userService.getCurrentUser();
-
-        Paper paper = paperRepository.findByIdAndUserId(paperId, currentUser.getId())
+        Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new AppException(ErrorCode.PAPER_NOT_FOUND));
 
         return paper.getFileUrl();
