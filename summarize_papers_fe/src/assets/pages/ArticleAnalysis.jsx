@@ -232,7 +232,7 @@ const ArticleAnalysis = () => {
             <div className="flex-1 bg-slate-200/50 relative">
               {paperId && (
                 <iframe
-                  src={`http://localhost:8085/api/papers/view/${paperId}#toolbar=0&navpanes=0`}
+                  src={`${import.meta.env.VITE_API_URL || "http://localhost:8085/api"}/papers/view/${paperId}#toolbar=0&navpanes=0`}
                   width="100%"
                   height="100%"
                   className="border-none shadow-inner"
