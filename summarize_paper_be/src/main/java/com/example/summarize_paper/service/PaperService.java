@@ -201,5 +201,13 @@ public class PaperService {
         log.info("Đã xóa paper ID {} khỏi database", paperId);
     }
 
+    public String getPaperFileUrl(Long paperId) {
+        User currentUser = userService.getCurrentUser();
+
+        Paper paper = paperRepository.findByIdAndUserId(paperId, currentUser.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.PAPER_NOT_FOUND));
+
+        return paper.getFileUrl();
+    }
 
 }

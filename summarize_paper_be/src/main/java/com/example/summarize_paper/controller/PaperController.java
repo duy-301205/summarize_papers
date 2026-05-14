@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -82,13 +84,12 @@ public class PaperController {
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<Resource> viewPdf(@PathVariable Long id) {
-        Resource file = paperService.getPaperFileAsResource(id);
+    public ResponseEntity<Void> viewPdf(@PathVariable Long id) {
+        String fileUrl = paperService.getPaperFileUrl(id);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
-                .body(file);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(fileUrl))
+                .build();
     }
 
     @GetMapping("/getPaper")
