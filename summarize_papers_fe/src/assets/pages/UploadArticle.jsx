@@ -56,10 +56,13 @@ const UploadArticle = () => {
       // Lấy paperId từ cấu trúc ApiResponse chuẩn
       const paperId = res.data.data.paperId;
 
+      const API_URL =
+        import.meta.env.VITE_API_URL || "http://localhost:8085/api";
+
       // 4. Thiết lập kết nối SSE để theo dõi tiến độ thời gian thực
       // URL này khớp với Endpoint @GetMapping("/status/{paperId}") ở Backend
       const eventSource = new EventSource(
-        `http://localhost:8085/api/papers/status/${paperId}`,
+        `${API_URL}/papers/status/${paperId}`,
       );
 
       // Lắng nghe sự kiện "PROGRESS" từ SseService của Spring Boot
