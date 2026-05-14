@@ -41,11 +41,11 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true
+            enabled: true
             required: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
+          connectiontimeout: 20000
+          timeout: 20000
+          writetimeout: 20000
 
   jackson:
     time-zone: Asia/Ho_Chi_Minh
