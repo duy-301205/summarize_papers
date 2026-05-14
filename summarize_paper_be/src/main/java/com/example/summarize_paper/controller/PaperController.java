@@ -84,12 +84,14 @@ public class PaperController {
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<Void> viewPdf(@PathVariable Long id) {
-        String fileUrl = paperService.getPaperFileUrl(id);
+    public ResponseEntity<Resource> viewPdf(@PathVariable Long id) {
+        Resource file = paperService.getPaperFileAsResource(id);
 
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create(fileUrl))
-                .build();
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"paper-" + id + ".pdf\"")
+                .header(HttpHeaders.CACHE_CONTROL, "no-cache")
+                .body(file);
     }
 
     @GetMapping("/getPaper")
