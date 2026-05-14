@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   UploadCloud,
   Paperclip,
-  Edit3,
   Settings,
   Zap,
   CheckCircle2,
@@ -19,7 +18,6 @@ const UploadArticle = () => {
   const [length, setLength] = useState("MEDIUM");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [manualText, setManualText] = useState("");
   const fileInputRef = useRef(null);
 
   // --- THÊM STATE ĐỂ HIỂN THỊ TIẾN ĐỘ ---
@@ -35,8 +33,8 @@ const UploadArticle = () => {
 
   const handleGenerate = async () => {
     // 1. Kiểm tra dữ liệu đầu vào
-    if (!selectedFile && !manualText.trim()) {
-      alert("Vui lòng upload file hoặc nhập văn bản!");
+    if (!selectedFile) {
+      alert("Vui lòng upload file!");
       return;
     }
 
@@ -49,7 +47,6 @@ const UploadArticle = () => {
       // 2. Chuẩn bị FormData để gửi lên Server
       const formData = new FormData();
       if (selectedFile) formData.append("file", selectedFile);
-      if (manualText) formData.append("text", manualText);
       formData.append("language", language);
       formData.append("length", length);
 
@@ -183,21 +180,6 @@ const UploadArticle = () => {
                     </>
                   )}
                 </div>
-              </div>
-
-              <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm font-display">
-                <h3 className="text-lg font-bold mb-6 flex items-center gap-3 text-slate-900 uppercase tracking-tighter">
-                  <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-                    <Edit3 size={20} />
-                  </div>{" "}
-                  Manual Text Input
-                </h3>
-                <textarea
-                  value={manualText}
-                  onChange={(e) => setManualText(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm focus:ring-2 focus:ring-[#1111d4]/10 focus:bg-white transition-all outline-none min-h-[220px] font-light leading-relaxed"
-                  placeholder="Paste article text or abstract here..."
-                />
               </div>
             </div>
 
