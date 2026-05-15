@@ -87,10 +87,10 @@ const Upload = () => {
 
       // 4. Thiết lập SSE theo dõi tiến độ (SỬA LẠI ĐOẠN NÀY)
       const eventSource = new EventSource(
-        `http://192.168.0.104:8085/api/papers/status/${paperId}`,
+        `${api.BASE_URL}/papers/status/${paperId}`,
       );
 
-      eventSource.addEventListener("PROGRESS", (event: any) => {
+      eventSource.addEventListener("PROGRESS" as any, (event: any) => {
         if (event.data) {
           const data = JSON.parse(event.data);
           setProgress(data.progress);
@@ -100,7 +100,6 @@ const Upload = () => {
             eventSource.close();
             setTimeout(() => {
               setIsGenerating(false);
-              // CHUYỂN TRANG DÙNG OBJECT ĐỂ TRÁNH LỖI ROUTE
               router.push({
                 pathname: "/analysis",
                 params: { id: paperId },

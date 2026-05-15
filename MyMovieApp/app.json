@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "MyMovieApp",
+    "name": "SciSum AI",
     "slug": "MyMovieApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,9 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.duyhoang.summarizepaper",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.duyhoang.summarizepaper",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -44,6 +46,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a08e7c11-90c9-48c3-92a7-846ec16a82a8"
+      }
     }
   }
 }

@@ -3,11 +3,12 @@ import axios from "axios";
 
 // 1. THAY ĐỔI BASE_URL: Dùng IP của máy tính thay vì localhost
 // Dựa vào Metro của bạn, IP là 192.168.0.100
-const BASE_URL = "http://192.168.0.104:8085/api";
+export const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL || "http://192.168.0.104:8085/api";
 
 const API = axios.create({
   baseURL: BASE_URL,
-  timeout: 300000,
+  timeout: 200000,
 });
 
 // 2. INTERCEPTOR: Thay localStorage bằng AsyncStorage

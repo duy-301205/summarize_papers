@@ -253,46 +253,60 @@ const StatCard = ({ icon, label, value, trend, isGreen }: any) => (
 );
 
 const TopicsChart = ({ data, stats }: any) => {
-  const topics =
-    data && data.length > 0
-      ? data
-      : [
-          { label: "Computer Science", value: 45, color: "#1111d4" },
-          { label: "Medicine", value: 25, color: "#4f46e5" },
-          { label: "Physics", value: 15, color: "#8b5cf6" },
-          { label: "Other", value: 15, color: "#e2e8f0" },
-        ];
+  const topics = data || [];
+
   return (
     <View style={styles.sectionCard}>
       <Text style={styles.sectionTitle}>TOP RESEARCH TOPICS</Text>
-      <View style={styles.topicsRow}>
-        <View style={styles.donutWrapper}>
-          <View style={styles.donutBase}>
-            <View style={styles.donutInner}>
-              <Text style={styles.donutTotal}>
-                {stats?.totalArticles || "0"}
-              </Text>
-              <Text style={styles.donutLabel}>TOTAL</Text>
+
+      {topics.length === 0 ? (
+        <View
+          style={{
+            paddingVertical: 40,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "#94a3b8",
+              fontSize: 13,
+              fontWeight: "600",
+            }}
+          >
+            Chưa có dữ liệu chủ đề nghiên cứu
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.topicsRow}>
+          <View style={styles.donutWrapper}>
+            <View style={styles.donutBase}>
+              <View style={styles.donutInner}>
+                <Text style={styles.donutTotal}>
+                  {stats?.totalArticles || "0"}
+                </Text>
+                <Text style={styles.donutLabel}>TOTAL</Text>
+              </View>
             </View>
           </View>
+          <View style={styles.topicsList}>
+            {topics.map((t: any, i: number) => (
+              <View key={i} style={styles.topicItem}>
+                <View
+                  style={[
+                    styles.topicDot,
+                    { backgroundColor: t.color || "#1111d4" },
+                  ]}
+                />
+                <Text style={styles.topicLabelText} numberOfLines={1}>
+                  {t.label}
+                </Text>
+                <Text style={styles.topicValueText}>{t.value}%</Text>
+              </View>
+            ))}
+          </View>
         </View>
-        <View style={styles.topicsList}>
-          {topics.map((t: any, i: number) => (
-            <View key={i} style={styles.topicItem}>
-              <View
-                style={[
-                  styles.topicDot,
-                  { backgroundColor: t.color || "#1111d4" },
-                ]}
-              />
-              <Text style={styles.topicLabelText} numberOfLines={1}>
-                {t.label}
-              </Text>
-              <Text style={styles.topicValueText}>{t.value}%</Text>
-            </View>
-          ))}
-        </View>
-      </View>
+      )}
     </View>
   );
 };
