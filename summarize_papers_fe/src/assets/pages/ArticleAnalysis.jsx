@@ -16,11 +16,11 @@ import {
   BookOpen,
   Tag,
   Plus,
+  Menu,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
-// Import API functions
 import {
   getPaperDetails,
   getPaperSummary,
@@ -47,6 +47,7 @@ const ArticleAnalysis = () => {
   const [isChatting, setIsChatting] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [conversations, setConversations] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -73,7 +74,6 @@ const ArticleAnalysis = () => {
     loadFullData();
   }, [paperId]);
 
-  // --- LOGIC LẤY DANH SÁCH PHIÊN CHAT ---
   useEffect(() => {
     const fetchConversations = async () => {
       if (activeTab === "chat" && paperId) {
@@ -88,7 +88,6 @@ const ArticleAnalysis = () => {
     fetchConversations();
   }, [activeTab, paperId]);
 
-  // --- LOGIC TẢI LỊCH SỬ KHI CHỌN PHIÊN CHAT ---
   useEffect(() => {
     const loadHistory = async () => {
       if (activeTab === "chat" && paperId && conversationId) {
@@ -123,7 +122,6 @@ const ArticleAnalysis = () => {
     loadHistory();
   }, [activeTab, conversationId, paperId]);
 
-  // --- HÀM TẠO CHAT MỚI ---
   const handleNewChat = () => {
     setConversationId(null);
     setMessages([]);
@@ -172,7 +170,6 @@ const ArticleAnalysis = () => {
           },
         ]);
 
-        // Nếu là chat mới, cập nhật lại ID và danh sách phiên chat
         if (!conversationId && aiData.conversationId) {
           setConversationId(aiData.conversationId);
           const res = await getPaperConversations(paperId);
@@ -191,39 +188,65 @@ const ArticleAnalysis = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#f6f6f8] font-display text-slate-900 overflow-hidden">
-      <Sidebar />
+    <div className="flex h-dvh bg-[#f6f6f8] font-display text-slate-900 overflow-hidden">
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
+
+      {isSidebarOpen && (
+        <div className="fixed inset-0 z-[999] md:hidden">
+          <div
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          <div className="relative z-50 h-full w-72">
+            <Sidebar onNavigate={() => setIsSidebarOpen(false)} />
+          </div>
+        </div>
+      )}
+
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* HEADER */}
-        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-50 shrink-0 sticky top-0 font-display text-slate-900">
-          <div className="flex items-center gap-4">
+        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-50 shrink-0 sticky top-0 font-display text-slate-900">
+          <div className="flex items-center gap-3 md:gap-4 min-w-0">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="md:hidden size-10 rounded-xl border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-50 transition-all shrink-0"
+            >
+              <Menu size={20} />
+            </button>
+
             <button
               onClick={() => navigate("/upload")}
-              className="flex items-center gap-2 text-slate-500 hover:text-[#1111d4] transition-colors text-sm font-bold uppercase tracking-tighter cursor-pointer"
+              className="flex items-center gap-2 text-slate-500 hover:text-[#1111d4] transition-colors text-sm font-bold uppercase tracking-tighter cursor-pointer shrink-0"
             >
               <ArrowLeft size={18} />{" "}
               <span className="hidden sm:inline">Back to Upload</span>
             </button>
           </div>
-          <div className="flex items-center gap-3">
+
+          <div className="flex items-center gap-1.5 md:gap-3">
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black border border-emerald-100 mr-2 uppercase tracking-tighter">
               <CheckCircle2 size={14} /> Analysis Ready
             </div>
+
             <HeaderAction icon={<Download size={18} />} label="Download" />
             <HeaderAction icon={<Copy size={18} />} label="Copy" />
-            <button className="flex items-center gap-2 bg-[#1111d4] text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-blue-900/20 active:scale-95 uppercase tracking-tighter mr-2 cursor-pointer">
-              <Share2 size={18} /> Share
+
+            <button className="flex items-center gap-2 bg-[#1111d4] text-white px-3 md:px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-blue-900/20 active:scale-95 uppercase tracking-tighter md:mr-2 cursor-pointer">
+              <Share2 size={18} />
+              <span className="hidden sm:inline">Share</span>
             </button>
-            <div className="h-8 w-px bg-slate-200 mx-2"></div>
+
+            <div className="hidden md:block h-8 w-px bg-slate-200 mx-2"></div>
+
             <div className="relative z-[100]">
               <NotificationDropdown />
             </div>
           </div>
         </header>
 
-        <div className="flex-1 flex overflow-hidden">
-          {/* LEFT PANEL */}
-          <section className="flex-1 flex flex-col border-r border-slate-200 bg-slate-50 min-w-0 overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+          <section className="h-[45dvh] lg:h-auto lg:flex-1 flex flex-col border-r border-slate-200 bg-slate-50 min-w-0 overflow-hidden">
             <div className="p-4 border-b border-slate-100 bg-white shrink-0">
               <span className="px-2 py-0.5 bg-[#1111d4]/10 text-[#1111d4] text-[10px] font-black rounded uppercase tracking-widest inline-block">
                 Văn bản gốc
@@ -242,10 +265,9 @@ const ArticleAnalysis = () => {
             </div>
           </section>
 
-          {/* RIGHT PANEL */}
-          <section className="flex-1 flex flex-col bg-white min-w-0 overflow-hidden shadow-[-10px_0_30px_rgba(0,0,0,0.02)] z-10 font-display border-l border-slate-100 text-slate-900">
-            <div className="p-4 border-b border-slate-100 bg-white flex justify-between items-center shrink-0">
-              <div className="flex bg-slate-100 p-1 rounded-2xl">
+          <section className="min-h-[55dvh] lg:min-h-0 lg:flex-1 flex flex-col bg-white min-w-0 overflow-hidden shadow-[-10px_0_30px_rgba(0,0,0,0.02)] z-10 font-display border-l border-slate-100 text-slate-900">
+            <div className="p-3 sm:p-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center shrink-0">
+              <div className="flex bg-slate-100 p-1 rounded-2xl w-full sm:w-auto">
                 <TabButton
                   active={activeTab === "summary"}
                   onClick={() => setActiveTab("summary")}
@@ -259,7 +281,8 @@ const ArticleAnalysis = () => {
                   label="Truy xuất"
                 />
               </div>
-              <div className="flex items-center gap-4">
+
+              <div className="flex items-center justify-between sm:justify-end gap-4">
                 <MetricSmall
                   icon={<Clock size={12} />}
                   label="STATUS"
@@ -282,7 +305,7 @@ const ArticleAnalysis = () => {
                   </p>
                 </div>
               ) : activeTab === "summary" ? (
-                <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-10">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar space-y-6 sm:space-y-10">
                   <section className="space-y-4">
                     <div className="flex items-center gap-3">
                       <Sparkles size={20} className="text-[#1111d4]" />
@@ -290,13 +313,13 @@ const ArticleAnalysis = () => {
                         Phân tích tiêu đề
                       </h3>
                     </div>
-                    <h2 className="text-2xl font-bold leading-tight text-slate-900 tracking-tight">
+                    <h2 className="text-xl sm:text-2xl font-bold leading-tight text-slate-900 tracking-tight">
                       {paperMetadata?.title}
                     </h2>
                   </section>
 
                   <section className="space-y-6">
-                    <div className="grid grid-cols-1 gap-4 bg-slate-50/80 p-6 rounded-3xl border border-slate-100">
+                    <div className="grid grid-cols-1 gap-4 bg-slate-50/80 p-4 sm:p-6 rounded-3xl border border-slate-100">
                       <MetricItem
                         icon={<Clock size={16} />}
                         label="Năm xuất bản"
@@ -350,7 +373,7 @@ const ArticleAnalysis = () => {
                         Tóm tắt chuyên sâu
                       </h3>
                     </div>
-                    <div className="bg-[#1111d4]/5 border border-[#1111d4]/10 p-8 rounded-[2rem] text-sm text-slate-700 leading-relaxed shadow-sm prose prose-blue max-w-none">
+                    <div className="bg-[#1111d4]/5 border border-[#1111d4]/10 p-4 sm:p-8 rounded-[2rem] text-sm text-slate-700 leading-relaxed shadow-sm prose prose-blue max-w-none">
                       <ReactMarkdown>
                         {summaryData?.content ||
                           "Dữ liệu tóm tắt chưa sẵn sàng."}
@@ -359,10 +382,8 @@ const ArticleAnalysis = () => {
                   </section>
                 </div>
               ) : (
-                /* TAB 2: TRUY XUẤT THÔNG TIN */
                 <div className="flex-1 flex flex-col h-full bg-slate-50/30 text-slate-900 overflow-hidden">
-                  {/* THANH CHỌN PHIÊN CHAT */}
-                  <div className="px-6 py-2 border-b border-slate-100 flex items-center bg-white/80 shrink-0">
+                  <div className="px-4 sm:px-6 py-2 border-b border-slate-100 flex items-center bg-white/80 shrink-0">
                     <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
                       <button
                         onClick={handleNewChat}
@@ -391,8 +412,8 @@ const ArticleAnalysis = () => {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-                    <div className="flex gap-3 max-w-[85%]">
+                  <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 sm:space-y-6 custom-scrollbar">
+                    <div className="flex gap-3 max-w-[92%] sm:max-w-[85%]">
                       <div className="w-8 h-8 rounded-full bg-[#1111d4] flex items-center justify-center shrink-0">
                         <Sparkles size={14} className="text-white" />
                       </div>
@@ -405,7 +426,7 @@ const ArticleAnalysis = () => {
                     {messages.map((msg, index) => (
                       <div
                         key={index}
-                        className={`flex gap-3 max-w-[85%] ${
+                        className={`flex gap-3 max-w-[92%] sm:max-w-[85%] ${
                           msg.role === "user" ? "ml-auto flex-row-reverse" : ""
                         }`}
                       >
@@ -423,18 +444,19 @@ const ArticleAnalysis = () => {
                           )}
                         </div>
                         <div
-                          className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed ${
+                          className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed min-w-0 ${
                             msg.role === "user"
                               ? "bg-[#1111d4] text-white rounded-tr-none"
                               : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
                           }`}
                         >
-                          <div className="prose prose-sm max-w-none">
+                          <div className="prose prose-sm max-w-none break-words">
                             <ReactMarkdown>{msg.content || ""}</ReactMarkdown>
                           </div>
                         </div>
                       </div>
                     ))}
+
                     {isChatting && (
                       <div className="flex gap-3 animate-pulse">
                         <div className="w-8 h-8 rounded-full bg-slate-200" />
@@ -444,7 +466,7 @@ const ArticleAnalysis = () => {
                     <div ref={chatEndRef} />
                   </div>
 
-                  <div className="p-6 bg-white border-t border-slate-100 shrink-0">
+                  <div className="p-4 sm:p-6 bg-white border-t border-slate-100 shrink-0">
                     <div className="relative flex items-center">
                       <input
                         type="text"
@@ -459,7 +481,7 @@ const ArticleAnalysis = () => {
                         onKeyDown={(e) =>
                           e.key === "Enter" && handleSendMessage()
                         }
-                        className="w-full bg-slate-100 border-none rounded-2xl py-4 pl-6 pr-14 text-sm focus:ring-2 focus:ring-[#1111d4]/20 transition-all outline-none disabled:opacity-50"
+                        className="w-full bg-slate-100 border-none rounded-2xl py-4 pl-4 sm:pl-6 pr-14 text-sm focus:ring-2 focus:ring-[#1111d4]/20 transition-all outline-none disabled:opacity-50"
                       />
                       <button
                         onClick={handleSendMessage}
@@ -484,17 +506,16 @@ const ArticleAnalysis = () => {
   );
 };
 
-// --- HELPER COMPONENTS ---
 const MetricItem = ({ icon, label, value, color = "text-slate-700" }) => (
-  <div className="flex items-start gap-4">
-    <div className="p-2 bg-white rounded-xl shadow-sm text-slate-500">
+  <div className="flex items-start gap-4 min-w-0">
+    <div className="p-2 bg-white rounded-xl shadow-sm text-slate-500 shrink-0">
       {icon}
     </div>
-    <div>
+    <div className="min-w-0">
       <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
         {label}
       </p>
-      <p className={`text-sm font-bold ${color}`}>{value}</p>
+      <p className={`text-sm font-bold ${color} break-words`}>{value}</p>
     </div>
   </div>
 );
@@ -502,7 +523,7 @@ const MetricItem = ({ icon, label, value, color = "text-slate-700" }) => (
 const TabButton = ({ active, onClick, icon, label }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all cursor-pointer ${
+    className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2 rounded-xl text-xs font-black uppercase tracking-tighter transition-all cursor-pointer ${
       active
         ? "bg-white text-[#1111d4] shadow-sm border border-slate-100"
         : "text-slate-400 hover:text-slate-600"
@@ -513,7 +534,7 @@ const TabButton = ({ active, onClick, icon, label }) => (
 );
 
 const HeaderAction = ({ icon, label }) => (
-  <button className="flex items-center gap-2 px-3 py-2 text-slate-500 hover:text-[#1111d4] hover:bg-slate-50 rounded-xl text-sm font-bold transition-all cursor-pointer uppercase tracking-tighter">
+  <button className="flex items-center gap-2 px-2 md:px-3 py-2 text-slate-500 hover:text-[#1111d4] hover:bg-slate-50 rounded-xl text-sm font-bold transition-all cursor-pointer uppercase tracking-tighter">
     {icon} <span className="hidden lg:inline">{label}</span>
   </button>
 );

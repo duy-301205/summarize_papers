@@ -109,21 +109,21 @@ const UploadArticle = () => {
 
   return (
     <MainLayout>
-      <div className="p-8">
-        <div className="max-w-5xl mx-auto space-y-8">
+      <div className="px-4 py-5 sm:p-8">
+        <div className="max-w-5xl mx-auto space-y-5 sm:space-y-8">
           <div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase italic">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 uppercase italic">
               Upload Article
             </h2>
-            <p className="text-slate-500 mt-1 font-light text-lg italic tracking-tight">
+            <p className="text-slate-500 mt-1 font-light text-sm sm:text-lg italic tracking-tight">
               Synthesize complex research into actionable insights.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-                <h3 className="text-lg font-bold mb-6 flex items-center gap-3 text-slate-900 uppercase tracking-tighter">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
+            <div className="lg:col-span-2 space-y-5 sm:space-y-6">
+              <div className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-8 shadow-sm">
+                <h3 className="text-base sm:text-lg font-bold mb-5 sm:mb-6 flex items-center gap-3 text-slate-900 uppercase tracking-tighter">
                   <div className="p-2 bg-blue-50 rounded-lg text-[#1111d4]">
                     <UploadCloud size={20} />
                   </div>{" "}
@@ -138,10 +138,18 @@ const UploadArticle = () => {
                 />
                 <div
                   onClick={() => fileInputRef.current.click()}
-                  className={`border-2 border-dashed rounded-3xl p-12 flex flex-col items-center justify-center transition-all cursor-pointer ${selectedFile ? "border-emerald-200 bg-emerald-50/30" : "border-slate-200 bg-slate-50 hover:bg-white hover:border-[#1111d4]/40"}`}
+                  className={`border-2 border-dashed rounded-3xl p-6 sm:p-12 flex flex-col items-center justify-center transition-all cursor-pointer ${
+                    selectedFile
+                      ? "border-emerald-200 bg-emerald-50/30"
+                      : "border-slate-200 bg-slate-50 hover:bg-white hover:border-[#1111d4]/40"
+                  }`}
                 >
                   <div
-                    className={`size-20 rounded-full flex items-center justify-center mb-6 shadow-sm ${selectedFile ? "bg-white text-emerald-500" : "bg-white text-[#1111d4]"}`}
+                    className={`size-16 sm:size-20 rounded-full flex items-center justify-center mb-5 sm:mb-6 shadow-sm ${
+                      selectedFile
+                        ? "bg-white text-emerald-500"
+                        : "bg-white text-[#1111d4]"
+                    }`}
                   >
                     {selectedFile ? (
                       <CheckCircle2 size={32} />
@@ -150,11 +158,11 @@ const UploadArticle = () => {
                     )}
                   </div>
                   {selectedFile ? (
-                    <div className="text-center">
-                      <p className="text-emerald-700 font-bold text-lg uppercase tracking-tight">
+                    <div className="text-center w-full">
+                      <p className="text-emerald-700 font-bold text-base sm:text-lg uppercase tracking-tight">
                         File Ready
                       </p>
-                      <p className="text-slate-500 text-sm mt-1 truncate max-w-[250px] mx-auto">
+                      <p className="text-slate-500 text-sm mt-1 truncate max-w-[220px] sm:max-w-[250px] mx-auto">
                         {selectedFile.name}
                       </p>
                       <button
@@ -171,13 +179,13 @@ const UploadArticle = () => {
                     </div>
                   ) : (
                     <>
-                      <p className="text-slate-900 font-bold text-lg uppercase tracking-tighter">
+                      <p className="text-slate-900 font-bold text-base sm:text-lg uppercase tracking-tighter text-center">
                         Drop your PDF or DOCX here
                       </p>
-                      <p className="text-slate-400 text-sm mb-8">
+                      <p className="text-slate-400 text-sm mb-6 sm:mb-8 text-center">
                         Maximum file size: 10MB
                       </p>
-                      <button className="bg-[#1111d4] text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-900/20 uppercase">
+                      <button className="bg-[#1111d4] text-white px-6 sm:px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-900/20 uppercase">
                         Browse Files
                       </button>
                     </>
@@ -186,12 +194,12 @@ const UploadArticle = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm sticky top-8 h-fit font-display">
-              <h3 className="text-lg font-bold mb-8 text-slate-900 flex items-center gap-2 uppercase tracking-tighter">
+            <div className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-8 shadow-sm lg:sticky lg:top-8 h-fit font-display">
+              <h3 className="text-base sm:text-lg font-bold mb-6 sm:mb-8 text-slate-900 flex items-center gap-2 uppercase tracking-tighter">
                 <Settings size={18} className="text-[#1111d4]" /> Summary
                 Settings
               </h3>
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 <div>
                   <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
                     Output Language
@@ -214,7 +222,11 @@ const UploadArticle = () => {
                       <button
                         key={opt}
                         onClick={() => setLength(opt)}
-                        className={`flex-1 py-3 rounded-xl text-[11px] font-black transition-all ${length === opt ? "bg-white text-[#1111d4] shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                        className={`flex-1 py-3 rounded-xl text-[11px] font-black transition-all ${
+                          length === opt
+                            ? "bg-white text-[#1111d4] shadow-sm"
+                            : "text-slate-400 hover:text-slate-600"
+                        }`}
                       >
                         {opt}
                       </button>
@@ -239,23 +251,23 @@ const UploadArticle = () => {
       </div>
 
       {isGenerating && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-300 font-display">
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-300 font-display px-4">
           <div className="relative">
             {/* Vòng xoay progress thực tế */}
-            <div className="size-24 border-4 border-slate-100 border-t-[#1111d4] rounded-full animate-spin"></div>
+            <div className="size-20 sm:size-24 border-4 border-slate-100 border-t-[#1111d4] rounded-full animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <Beaker className="text-[#1111d4] animate-bounce" size={32} />
             </div>
           </div>
           <div className="mt-8 text-center px-4">
-            <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tighter">
               AI is Analysing
             </h3>
-            <p className="text-slate-500 font-medium italic mt-2">
+            <p className="text-slate-500 font-medium italic mt-2 text-sm sm:text-base">
               {statusText}
             </p>
           </div>
-          <div className="mt-8 w-64 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+          <div className="mt-8 w-full max-w-64 h-1.5 bg-slate-100 rounded-full overflow-hidden">
             {/* Thanh loading chạy theo progress thực từ server */}
             <div
               className="h-full bg-[#1111d4] transition-all duration-500 ease-out"
