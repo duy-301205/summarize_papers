@@ -1,6 +1,7 @@
 import React from "react";
 
 const VolumeChart = ({ data = [] }) => {
+  // 1. Tạo danh sách 12 tháng của năm hiện tại (ví dụ: 2026-01 đến 2026-12)
   const currentYear = new Date().getFullYear();
 
   const monthNames = [
@@ -22,6 +23,7 @@ const VolumeChart = ({ data = [] }) => {
     const month = String(i + 1).padStart(2, "0");
     const label = `${currentYear}-${month}`;
 
+    // Tìm xem trong data từ API có tháng này không
     const found = data.find((item) => item.label === label);
 
     return {
@@ -31,6 +33,7 @@ const VolumeChart = ({ data = [] }) => {
     };
   });
 
+  // 2. Tìm giá trị lớn nhất để tính tỉ lệ chiều cao
   const maxValue = Math.max(...fullYearData.map((item) => item.value), 1);
 
   return (
@@ -40,6 +43,7 @@ const VolumeChart = ({ data = [] }) => {
           <h3 className="text-lg font-bold text-slate-900 italic uppercase">
             Summarization Volume
           </h3>
+
           <p className="text-sm text-slate-500 font-medium">
             Monthly processing volume for {currentYear}
           </p>
@@ -62,12 +66,14 @@ const VolumeChart = ({ data = [] }) => {
       </div>
 
       <div className="relative h-[250px] w-full">
+        {/* Grid nền */}
         <div className="absolute inset-0 flex flex-col justify-between">
           {[0, 1, 2, 3].map((line) => (
             <div key={line} className="border-t border-slate-100" />
           ))}
         </div>
 
+        {/* Cột biểu đồ */}
         <div className="relative z-10 h-full flex items-end gap-3 px-1">
           {fullYearData.map((item, i) => {
             const heightPercent =
@@ -79,6 +85,12 @@ const VolumeChart = ({ data = [] }) => {
                 className="flex-1 h-full flex flex-col justify-end items-center group"
               >
                 <div className="relative w-full flex justify-center items-end h-full">
+                  {/* Hiển thị số bài báo */}
+                  <span className="absolute -top-6 text-[10px] font-black text-slate-700">
+                    {item.value}
+                  </span>
+
+                  {/* Cột */}
                   <div
                     className={`w-full max-w-8 rounded-t-xl transition-all duration-300 cursor-pointer ${
                       item.value > 0
@@ -86,13 +98,10 @@ const VolumeChart = ({ data = [] }) => {
                         : "bg-slate-100/70"
                     }`}
                     style={{ height: `${heightPercent}%` }}
-                  >
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 shadow-xl pointer-events-none">
-                      {item.month}: {item.value} bài báo
-                    </div>
-                  </div>
+                  />
                 </div>
 
+                {/* Label tháng */}
                 <span className="mt-3 text-[10px] text-slate-400 font-black uppercase">
                   {item.month}
                 </span>
