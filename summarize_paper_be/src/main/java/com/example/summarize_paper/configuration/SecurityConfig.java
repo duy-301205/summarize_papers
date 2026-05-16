@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/papers/status/**").permitAll()
                         .requestMatchers("/api/papers/view/**").permitAll()
                         .requestMatchers("/api/auth/forgot-password/**").permitAll()
+                        .requestMatchers("/api/health").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
