@@ -8,9 +8,9 @@ import {
 } from "lucide-react";
 import NavItem from "./NavItem";
 
-const Sidebar = () => {
+const Sidebar = ({ onNavigate }) => {
   return (
-    <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 font-display z-20">
+    <aside className="w-72 h-full bg-white border-r border-slate-200 flex flex-col shrink-0 font-display z-20">
       <div className="p-6 flex items-center gap-3">
         <div className="bg-[#1111d4] size-10 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-900/20">
           <Beaker size={24} strokeWidth={2.5} />
@@ -25,26 +25,30 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <nav className="flex-1 px-4 py-4 space-y-1">
+      <nav onClick={onNavigate} className="flex-1 px-4 py-4 space-y-1">
         <NavItem
           to="/upload"
           icon={<UploadCloud size={18} />}
           label="Upload Article"
+          onClick={onNavigate}
         />
         <NavItem
           to="/summaries"
           icon={<FileText size={18} />}
           label="My Summaries"
+          onClick={onNavigate}
         />
         <NavItem
           to="/dashboard"
           icon={<BarChart3 size={18} />}
           label="Analytics"
+          onClick={onNavigate}
         />
         <NavItem
           to="/settings"
           icon={<Settings size={18} />}
           label="Settings Profile"
+          onClick={onNavigate}
         />
       </nav>
 
