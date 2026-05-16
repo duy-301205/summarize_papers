@@ -35,6 +35,8 @@ const TopicsChart = ({ data = [] }) => {
     color: colors[index % colors.length],
   }));
 
+  const INNER_RADIUS = 65;
+
   return (
     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 overflow-hidden">
       <h3 className="text-lg font-bold mb-8 text-center text-slate-900 italic uppercase">
@@ -50,9 +52,9 @@ const TopicsChart = ({ data = [] }) => {
               nameKey="label"
               cx="50%"
               cy="50%"
-              outerRadius={120}
-              innerRadius={0}
-              paddingAngle={1}
+              outerRadius={130}
+              innerRadius={INNER_RADIUS}
+              paddingAngle={2}
               labelLine={false}
               label={({
                 cx,
@@ -65,7 +67,7 @@ const TopicsChart = ({ data = [] }) => {
               }) => {
                 if (percentage < 8) return null;
                 const RADIAN = Math.PI / 180;
-                const r = innerRadius + (outerRadius - innerRadius) * 0.6;
+                const r = innerRadius + (outerRadius - innerRadius) * 0.55;
                 const x = cx + r * Math.cos(-midAngle * RADIAN);
                 const y = cy + r * Math.sin(-midAngle * RADIAN);
                 const short =
@@ -77,7 +79,7 @@ const TopicsChart = ({ data = [] }) => {
                     fill="white"
                     textAnchor="middle"
                     dominantBaseline="central"
-                    fontSize={12}
+                    fontSize={11}
                     fontWeight="bold"
                   >
                     <tspan x={x} dy="-0.6em">
@@ -124,7 +126,6 @@ const TopicsChart = ({ data = [] }) => {
           <span className="text-4xl font-black text-slate-900">
             {totalArticles}
           </span>
-
           <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">
             Total
           </span>
