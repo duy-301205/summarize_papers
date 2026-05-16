@@ -86,7 +86,14 @@ const VolumeChart = ({ data = [] }) => {
               >
                 <div className="relative w-full flex justify-center items-end h-full">
                   {/* Hiển thị số bài báo */}
-                  <span className="absolute -top-6 text-[10px] font-black text-slate-700">
+                  <span
+                    className="absolute text-[10px] font-black text-slate-700"
+                    style={{
+                      bottom: item.value > 0 ? `${heightPercent}%` : "0px",
+                      transform:
+                        item.value > 0 ? "translateY(-8px)" : "translateY(0)",
+                    }}
+                  >
                     {item.value}
                   </span>
 

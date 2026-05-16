@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 const TopicsChart = ({ data = [] }) => {
+  const [hoveredTopic, setHoveredTopic] = useState(null);
+
   const colors = ["#1111d4", "#4f46e5", "#8b5cf6", "#e2e8f0"];
 
   let displayData = [...data];
@@ -71,13 +73,26 @@ const TopicsChart = ({ data = [] }) => {
                   strokeWidth="4"
                   strokeDasharray={strokeDasharray}
                   strokeDashoffset={strokeDashoffset}
-                  className="transition-all duration-500"
+                  className="transition-all duration-500 cursor-pointer"
+                  onMouseEnter={() => setHoveredTopic(t)}
+                  onMouseLeave={() => setHoveredTopic(null)}
                 />
               );
             })}
           </svg>
 
-          <div className="absolute inset-0 flex items-center justify-center flex-col">
+          {hoveredTopic && (
+            <div className="absolute -top-14 left-1/2 -translate-x-1/2 z-20 w-56 rounded-xl bg-slate-900 px-3 py-2 text-center shadow-xl">
+              <p className="text-[11px] font-bold text-white leading-snug">
+                {hoveredTopic.label}
+              </p>
+              <p className="mt-1 text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                {hoveredTopic.value} bài báo · {hoveredTopic.percentage}%
+              </p>
+            </div>
+          )}
+
+          <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
             <span className="text-4xl font-black text-slate-900">
               {totalArticles}
             </span>
@@ -92,24 +107,24 @@ const TopicsChart = ({ data = [] }) => {
             processedTopics.map((t) => (
               <div
                 key={t.label}
-                className="flex items-center gap-4 rounded-2xl px-4 py-3 hover:bg-slate-50 transition-colors"
+                className="flex items-start gap-4 rounded-2xl px-4 py-3 hover:bg-slate-50 transition-colors"
                 title={t.label}
               >
                 <div
-                  className="w-3 h-3 rounded-full shrink-0"
+                  className="w-3 h-3 rounded-full shrink-0 mt-1"
                   style={{ backgroundColor: t.color }}
                 />
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-slate-700 truncate">
+                  <p className="text-sm font-bold text-slate-700 break-words leading-snug">
                     {t.label}
                   </p>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  <p className="mt-1 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     {t.value} bài báo
                   </p>
                 </div>
 
-                <span className="text-sm font-black text-slate-900 shrink-0">
+                <span className="text-sm font-black text-slate-900 shrink-0 mt-0.5">
                   {t.percentage}%
                 </span>
               </div>
