@@ -54,11 +54,41 @@ const TopicsChart = ({ data = [] }) => {
               innerRadius={0}
               paddingAngle={1}
               labelLine={false}
-              label={({ label, percentage }) =>
-                percentage >= 8
-                  ? `${label.length > 12 ? `${label.slice(0, 12)}...` : label}\n${percentage}%`
-                  : ""
-              }
+              label={({
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                label,
+                percentage,
+              }) => {
+                if (percentage < 8) return null;
+                const RADIAN = Math.PI / 180;
+                const r = innerRadius + (outerRadius - innerRadius) * 0.6;
+                const x = cx + r * Math.cos(-midAngle * RADIAN);
+                const y = cy + r * Math.sin(-midAngle * RADIAN);
+                const short =
+                  label.length > 12 ? `${label.slice(0, 12)}...` : label;
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    fill="white"
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    fontSize={12}
+                    fontWeight="bold"
+                  >
+                    <tspan x={x} dy="-0.6em">
+                      {short}
+                    </tspan>
+                    <tspan x={x} dy="1.4em">
+                      {percentage}%
+                    </tspan>
+                  </text>
+                );
+              }}
               onMouseEnter={(_, index) =>
                 setHoveredTopic(processedTopics[index])
               }
