@@ -41,7 +41,7 @@ const TopicsChart = ({ data = [] }) => {
         Top Research Journals
       </h3>
 
-      <div className="flex flex-col xl:flex-row items-center gap-10">
+      <div className="flex flex-col 2xl:flex-row items-center gap-8">
         <div className="relative w-48 h-48 shrink-0">
           <svg
             className="w-full h-full transform -rotate-90"
@@ -107,7 +107,7 @@ const TopicsChart = ({ data = [] }) => {
             processedTopics.map((t) => (
               <div
                 key={t.label}
-                className="flex items-start gap-4 rounded-2xl px-4 py-3 hover:bg-slate-50 transition-colors"
+                className="flex items-start gap-3 rounded-2xl px-4 py-3 hover:bg-slate-50 transition-colors"
                 title={t.label}
               >
                 <div
@@ -116,17 +116,20 @@ const TopicsChart = ({ data = [] }) => {
                 />
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-slate-700 break-words leading-snug">
+                  <p
+                    className="text-sm font-bold text-slate-700 leading-snug overflow-hidden"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
                     {t.label}
                   </p>
                   <p className="mt-1 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     {t.value} bài báo
                   </p>
                 </div>
-
-                <span className="text-sm font-black text-slate-900 shrink-0 mt-0.5">
-                  {t.percentage}%
-                </span>
               </div>
             ))
           ) : (
