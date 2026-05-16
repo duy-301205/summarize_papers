@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 const TopicsChart = ({ data = [] }) => {
-  const [hoveredTopic, setHoveredTopic] = useState(null);
-
   const colors = ["#1111d4", "#4f46e5", "#8b5cf6", "#e2e8f0"];
 
   // Giới hạn hiển thị: top 3 + Others
@@ -91,10 +89,6 @@ const TopicsChart = ({ data = [] }) => {
                   </text>
                 );
               }}
-              onMouseEnter={(_, index) =>
-                setHoveredTopic(processedTopics[index])
-              }
-              onMouseLeave={() => setHoveredTopic(null)}
             >
               {processedTopics.map((entry, index) => (
                 <Cell key={index} fill={entry.color} />
@@ -102,17 +96,16 @@ const TopicsChart = ({ data = [] }) => {
             </Pie>
 
             <Tooltip
-              content={({ active }) => {
-                if (!active || !hoveredTopic) return null;
-
+              content={({ active, payload }) => {
+                if (!active || !payload?.length) return null;
+                const topic = payload[0].payload;
                 return (
                   <div className="rounded-xl bg-slate-900 px-4 py-3 shadow-xl border border-slate-700">
                     <p className="text-xs font-bold text-white leading-snug">
-                      {hoveredTopic.label}
+                      {topic.label}
                     </p>
-
                     <p className="mt-1 text-[10px] font-black text-slate-300 uppercase tracking-widest">
-                      {hoveredTopic.value} bài báo · {hoveredTopic.percentage}%
+                      {topic.value} bài báo · {topic.percentage}%
                     </p>
                   </div>
                 );
